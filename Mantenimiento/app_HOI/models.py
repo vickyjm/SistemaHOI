@@ -7,7 +7,7 @@ class Usuario(models.Model):
     tiposEmpleados = (("tecnico", "Técnico"),
                       ("almacenista", "Almacenista"),
                       ("admin","Administrador"))
-    tipo = models.CharField(choices = tiposEmpleados)
+    tipo = models.CharField(max_length = 100, choices = tiposEmpleados)
     email = models.EmailField()
     
     
