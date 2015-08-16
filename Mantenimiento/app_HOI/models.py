@@ -1,15 +1,16 @@
 from django.db import models
 from django.db.models.fields import TextField
+from django.contrib.auth.models import User
 
 # Esta clase se iría si usamos el User de Django
-class Usuario(models.Model):
-    cedula = models.CharField(max_length = 13,primary_key = True)
-    nombre = models.CharField(max_length = 50)
-    tiposEmpleados = (("tecnico", "Técnico"),
-                      ("almacenista", "Almacenista"),
-                      ("admin","Administrador"))
-    tipo = models.CharField(choices = tiposEmpleados,max_length = 12)
-    email = models.EmailField()
+#class Usuario(models.Model):
+#    cedula = models.CharField(max_length = 13,primary_key = True)
+#    nombre = models.CharField(max_length = 50)
+#    tiposEmpleados = (("tecnico", "Técnico"),
+#                      ("almacenista", "Almacenista"),
+#                      ("admin","Administrador"))
+#    tipo = models.CharField(choices = tiposEmpleados,max_length = 12)
+#    email = models.EmailField()
     
     
 class Categoria(models.Model):
@@ -36,18 +37,18 @@ class Solicitud(models.Model):
     estado = models.CharField(max_length = 1,choices = opciones_estado)
     
 class Crea(models.Model):
-    id_usuario = models.ForeignKey(Usuario)
+    id_usuario = models.ForeignKey(User)
     id_item = models.ForeignKey(Item)
     id_solicitud = models.ForeignKey(Solicitud)
     fecha = models.DateTimeField()
     
 class Aprueba(models.Model):
-    id_usuario = models.ForeignKey(Usuario)
+    id_usuario = models.ForeignKey(User)
     id_solicitud = models.ForeignKey(Solicitud)
     fecha = models.DateTimeField()
     
 class Ingresa(models.Model):
-    id_usuario = models.ForeignKey(Usuario)
+    id_usuario = models.ForeignKey(User)
     id_item = models.ForeignKey(Item)
     fecha = models.DateTimeField()
     cantidad = models.PositiveIntegerField()
@@ -56,4 +57,4 @@ class Reporte(models.Model):
     fecha_ini = models.DateTimeField()
     fecha_fin = models.DateTimeField()
     contenido = TextField(max_length = 100) # Tentativo. Depende de cómo queramos el reporte.
-    ciUsuario = models.ForeignKey(Usuario)
+    ciUsuario = models.ForeignKey(User)
