@@ -1,0 +1,8 @@
+-> Aqui explica todo lo de los usuarios de Django, manejar permisos, cambios de contraseña, etc
+	https://docs.djangoproject.com/en/1.8/topics/auth/default/
+
+-> Esta es la librería que se usa. Explica los campos que tiene la clase User en el models y el API
+	https://docs.djangoproject.com/en/1.8/ref/contrib/auth/#django.contrib.auth.models.User
+
+-> Aquí explican como extender la clase Usuario, pero creo que lo tiene es suficiente para lo que queremos
+	https://docs.djangoproject.com/en/1.8/topics/auth/customizing/
