@@ -6,3 +6,48 @@
 
 -> Aquí explican como extender la clase Usuario, pero creo que lo tiene es suficiente para lo que queremos
 	https://docs.djangoproject.com/en/1.8/topics/auth/customizing/
+
+
+
+========================================================
+						TEMPLATES
+========================================================
+
+-> Aquí explican como "extender" una plantilla base utilizando bloques
+	https://docs.djangoproject.com/en/1.7/topics/templates/
+
+El template verperfil.html es un ejemplo
+
+Hay 4 plantillas bases
+
+base-col1.html : no tiene columnas laterales
+
+	Bloques:
+		page_menu
+		page_title
+		page_content
+
+base-col21.html : tiene 1 columna lateral derecha
+
+	Bloques:
+		page_menu
+		page_title
+		page_content
+		page_right
+
+base-col22.html : tiene 1 columna lateral izquierda
+
+	Bloques:
+		page_menu
+		page_left
+		page_title
+		page_content
+
+base-col3.html : tien 1 columna lateral izquierda y 1 derecha
+
+	Bloques:
+		page_menu
+		page_left
+		page_title
+		page_content
+		page_right

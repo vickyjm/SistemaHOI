@@ -24,11 +24,13 @@
 							<header id="header">
 								<h1><a href="#" id="logo">Departamento de Matenimiento</a></h1>
 								<nav id="nav">
+									{% block page_menu %}
 									<a href="#">Menú1</a>
 									<a href="#">Menú2</a>
 									<a href="#">Menú3</a>
 									<a href="#" class="current-page-item">Menú4</a>
 									<a href="#">Menú5</a>
+									{% endblock page_menu %}
 								</nav>
 							</header>
 
@@ -42,10 +44,12 @@
 						<div class="12u">
 
 							<section>
-								<h2>Plantilla sin barras laterales</h2>
+								<h2>{% block page_title %} Plantilla sin barras laterales{% endblock page_title %}</h2>
+								{% block page_content %}
 								<p>Texto 1.</p>
 								<p>Texto 2.</p>
 								<p>Texto 3.</p>
+								{% endblock page_content %}
 							</section>
 
 						</div>
@@ -54,7 +58,7 @@
 			</div>
 			<div id="footer-wrapper">
 				<div class="container">
-					<div class="row">
+					<!--div class="row">
 						<div class="8u 12u(mobile)">
 
 							<section>
@@ -103,12 +107,12 @@
 							</section>
 
 						</div>
-					</div>
+					</div-->
 					<div class="row">
 						<div class="12u">
 
 							<div id="copyright">
-								&copy; Sistema para el departamento de mantenimiento del Hospital Ortopédico Infantil. Todos los derechos reservados. | Design: <a href="http://html5up.net">HTML5 UP</a>
+								&copy; Sistema para el departamento de mantenimiento del Hospital Ortopédico Infantil. Todos los derechos reservados. | Design: HTML5 UP
 							</div>
 
 						</div>
