@@ -38,6 +38,6 @@ def inicio_sesion(request):
                 print("Usuario o contraseña mala") # Aqui envia un mensaje en el html de que puso las cosas mal
     else:
         form = iniciarSesionForm()
-    return render(request, 'prueba.html', {'form': form}) # Cambiar el nombre del html
+    return render(request, 'inicio_sesion.html', {'form': form}) 
 
 
