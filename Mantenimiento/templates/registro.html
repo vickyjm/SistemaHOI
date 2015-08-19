@@ -1,7 +1,8 @@
-{% extends "base-col1.html" %}
+{% extends "base-col3.html" %}
+
 {% block page_menu %}
 	<a href="..">Iniciar sesión</a>
-	<a href="." class="current-page-item">Registro</a>
+	<a href="./registrar" class="current-page-item">Registro</a>
 {% endblock page_menu%}
 
 {% block page_title %}Registro{% endblock page_title %}
@@ -18,33 +19,31 @@
 				<td align="left"><h3>Cédula:</h3></td>
 			</tr>
 			<tr>
-				{#% form.cedula %}
+				<td><input id="id_cedula" maxlength="11" name="cedula" type="text" style="width:100%"></td>
 			</tr>
 			<tr>
 				<td align="left"><h3>Nombre:</h3></td>
 			</tr>
-				{#% form.nombre %}
 			<tr>
 				<td align="left"><h3>Apellido:</h3></td>
 			</tr>
-				{#% form.apellido %}
 			<tr>
-				<td align="left"><h3>Córreo electrónico:</h3></td>
+				<td align="left"><h3>Correo electrónico:</h3></td>
 			</tr>
-				{#% form.correo %}
 			<tr>
 				<td align="left"><br><h3>Contraseña:</h3></td>
 			</tr>
 			<tr>
-				{#% form.contraseña %}
+				<td><input id="id_contraseña" maxlength="25" name="contraseña" type="text" style="width:100%"></td>
 			</tr>
 			<tr>
 				{{ field.errors }}
 				<td align="right"><br><br>
-				<input type="submit" class="button"value="Aceptar"></td>
+				<input type="submit" class="button"value="Registrar"></td>
 			</tr>
 		</tbody>
 	</table>
 </form>
+	
 {% endblock page_content %}
 {% block page_right %}{% endblock page_right %}

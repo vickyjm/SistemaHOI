@@ -44,4 +44,19 @@ def inicio_sesion(request):
 
 # Vista para registrar un nuevo usuario
 def registro(request):
-   return render(request, 'registro.html')
+    if request.method == 'POST':
+        form = iniciarSesionForm(request.POST)
+        if form.is_valid():
+            # Verifico si el usuario existe, esté activo o no
+            user = authenticate(username = form.cleaned_data['cedula'],password = form.cleaned_data['contraseña'])
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    print("Te loggeaste") # Aqui iria al siguiente html?
+                else:
+                    print("No estas activo") # Aqui envia un mensaje en el html de que no esta activo
+            else:
+                print("Usuario o contraseña mala") # Aqui envia un mensaje en el html de que puso las cosas mal
+    else:
+        form = iniciarSesionForm()
+        return render(request, 'registro.html', {'form': form})
