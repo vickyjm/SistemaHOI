@@ -1,4 +1,4 @@
-{% extends "base-col1.html" %}
+{% extends "base-col3.html" %}
 
 {% block page_menu %}
 	<a href="#" class="current-page-item">Iniciar sesión</a>
@@ -6,4 +6,33 @@
 {% endblock page_menu%}
 
 {% block page_title %}Iniciar sesión{% endblock page_title %}
-{% block page_content %}Mi contenido{% endblock page_content %}
+{% block page_left %}{% endblock page_left %}
+{% block page_content %}
+<esquemaform action="." method="post">
+	<table style="width:100%" >
+		<thead>
+		</thead>
+
+		<tbody>
+			<tr>
+				<td align="left"><h3>Cédula:</h3></td>
+			</tr>
+			<tr>
+				<td><input id="id_cedula" maxlength="11" name="cedula" type="text" style="width:100%"></td>
+			</tr>
+			<tr>
+				<td align="left"><br><h3>Contraseña:</h3></td>
+			</tr>
+			<tr>
+				<td><input id="id_contraseña" maxlength="25" name="contraseña" type="text" style="width:100%"></td>
+			</tr>
+			<tr>
+				{{ field.errors }}
+				<td align="right"><br><br>
+				<button type="submit">Iniciar sesión</button></td>
+			</tr>
+		</tbody>
+	</table>
+</esquemaform>
+{% endblock page_content %}
+{% block page_right %}{% endblock page_right %}
