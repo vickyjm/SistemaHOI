@@ -9,6 +9,7 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$',views.inicio_sesion,name = "inicio_sesion"),
+    url(r'^registro',views.registro,name = "registro"),
     url(r'^col21$', views.basecol21, name = 'base-col21'),
     url(r'^col22$', views.basecol22, name = 'base-col21'),
     url(r'^col3$', views.basecol3, name = 'base-col3'),

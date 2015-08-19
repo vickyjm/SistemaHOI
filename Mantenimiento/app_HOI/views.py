@@ -42,3 +42,6 @@ def inicio_sesion(request):
         form = iniciarSesionForm()
     return render(request, 'inicio_sesion.html', {'form': form})
 
+# Vista para registrar un nuevo usuario
+def registro(request):
+   return render(request, 'registro.html')
