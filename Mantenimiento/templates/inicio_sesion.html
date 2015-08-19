@@ -8,11 +8,12 @@
 {% block page_title %}Iniciar sesión{% endblock page_title %}
 {% block page_left %}{% endblock page_left %}
 {% block page_content %}
-<esquemaform action="." method="post">
+<form action="." method="post">
+
 	<table style="width:100%" >
 		<thead>
 		</thead>
-
+		{% csrf_token %}
 		<tbody>
 			<tr>
 				<td align="left"><h3>Cédula:</h3></td>
@@ -29,10 +30,10 @@
 			<tr>
 				{{ field.errors }}
 				<td align="right"><br><br>
-				<button type="submit">Iniciar sesión</button></td>
+				<input type="submit" class="button"value="Iniciar sesión"></td>
 			</tr>
 		</tbody>
 	</table>
-</esquemaform>
+</form>
 {% endblock page_content %}
 {% block page_right %}{% endblock page_right %}

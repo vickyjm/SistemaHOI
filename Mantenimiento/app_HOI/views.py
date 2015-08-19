@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from django.shortcuts import render
+from django.shortcuts import render_to_response
+from django.template import RequestContext
 from django.contrib.auth import authenticate, login
 from app_HOI.forms import * 
 from app_HOI.models import *
@@ -38,6 +40,5 @@ def inicio_sesion(request):
                 print("Usuario o contraseña mala") # Aqui envia un mensaje en el html de que puso las cosas mal
     else:
         form = iniciarSesionForm()
-    return render(request, 'inicio_sesion.html', {'form': form}) 
-
+    return render_to_response('inicio_sesion.html',  RequestContext(request, {'form': form}))
 
