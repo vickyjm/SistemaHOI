@@ -4,9 +4,9 @@ from django.shortcuts import render
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
 from app_HOI.forms import * 
 from app_HOI.models import *
-
 
 def basecol1(request):
 	return render(request, 'base-col1.html')
@@ -42,21 +42,10 @@ def inicio_sesion(request):
         form = iniciarSesionForm()
     return render(request, 'inicio_sesion.html', {'form': form})
 
-# Vista para registrar un nuevo usuario
 def registro(request):
-    if request.method == 'POST':
-        form = iniciarSesionForm(request.POST)
-        if form.is_valid():
-            # Verifico si el usuario existe, esté activo o no
-            user = authenticate(username = form.cleaned_data['cedula'],password = form.cleaned_data['contraseña'])
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
-                    print("Te loggeaste") # Aqui iria al siguiente html?
-                else:
-                    print("No estas activo") # Aqui envia un mensaje en el html de que no esta activo
-            else:
-                print("Usuario o contraseña mala") # Aqui envia un mensaje en el html de que puso las cosas mal
+    if request.method == "POST":
+        form = registroForm(request.POST)
     else:
-        form = iniciarSesionForm()
-        return render(request, 'registro.html', {'form': form})
+        form = registroForm()
+    return render(request,'registro.html', {'form': form})
+

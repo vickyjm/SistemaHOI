@@ -3,10 +3,6 @@ from django.contrib import admin
 from app_HOI import views
 
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'Mantenimiento.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
-
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$',views.inicio_sesion,name = 'inicio_sesion'),
     url(r'^registrar',views.registro,name = 'registrar'),
