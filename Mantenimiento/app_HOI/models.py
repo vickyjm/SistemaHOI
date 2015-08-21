@@ -1,17 +1,6 @@
 from django.db import models
 from django.db.models.fields import TextField
 from django.contrib.auth.models import User
-
-# Esta clase se iría si usamos el User de Django
-#class Usuario(models.Model):
-#    cedula = models.CharField(max_length = 13,primary_key = True)
-#    nombre = models.CharField(max_length = 50)
-#    tiposEmpleados = (("tecnico", "Técnico"),
-#                      ("almacenista", "Almacenista"),
-#                      ("admin","Administrador"))
-#    tipo = models.CharField(choices = tiposEmpleados,max_length = 12)
-#    email = models.EmailField()
-    
     
 class Categoria(models.Model):
     nombre = models.CharField(max_length = 100)
