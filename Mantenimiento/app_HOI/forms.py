@@ -18,3 +18,25 @@ class iniciarSesionForm(forms.Form):
     contraseña = forms.CharField(max_length = 25,
                                  required = True,
                                  label = "Contraseña")
+    
+class registroForm(forms.Form):
+    cedula = forms.CharField(
+                    max_length = 11,
+                    required = True,
+                    label = "Cédula de Identidad",
+                    validators = [
+                        RegexValidator(
+                            regex = '^([1-9][0-9]{0,2})([0-9]{3}){0,3}$',
+                            message = 'Formato erróneo'
+                        )
+                    ]
+            )
+    nombre = forms.CharField(max_length = 30, required = True, label = "Nombre")
+    apellido = forms.CharField(max_length = 30, required = True, label = "Apellido")
+    correo = forms.EmailField(required = False, label = "Correo electrónico")
+    tipoEmpleado = (("tecnico","Técnico"), ("almacenista", "Almacenista"), ("admin", "Administrador"))
+    tipo = forms.ChoiceField(required = True, choices = tipoEmpleado, 
+                             widget = forms.Select(), label = "Tipo de empleado")
+    contraseña = forms.CharField(max_length = 25,
+                                 required = True,
+                                 label = "Contraseña")

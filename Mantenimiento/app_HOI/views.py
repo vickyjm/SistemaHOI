@@ -2,6 +2,7 @@
 
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
 from app_HOI.forms import * 
 from app_HOI.models import *
 
@@ -37,5 +38,11 @@ def inicio_sesion(request):
                 print("Usuario o contraseña mala") # Aqui envia un mensaje en el html de que puso las cosas mal
     else:
         form = iniciarSesionForm()
-    return render(request, 'prueba.html', {'form': form}) # Cambiar el nombre del html
+    return render(request, 'inicio_sesion.html', {'form': form})
 
+def registro(request):
+    if request.method == "POST":
+        form = registroForm(request.POST)
+    else:
+        form = registroForm()
+    return render(request,'registro.html', {'form': form})
