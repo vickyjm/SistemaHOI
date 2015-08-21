@@ -22,13 +22,29 @@
 				<td><input id="id_cedula" maxlength="11" name="cedula" type="text" style="width:100%"></td>
 			</tr>
 			<tr>
-				<td align="left"><h3>Nombre:</h3></td>
+				<td align="left"><br><h3>Nombre:</h3></td>
+			</tr>
+				<td><input id="id_nombre" maxlength="30" name="nombre" type="text" style="width:100%"></td>
+			<tr>
+				<td align="left"><br><h3>Apellido:</h3></td>
+			</tr>
+				<td><input id="id_apellido" maxlength="30" name="apellido" type="text" style="width:100%"><td>
+			<tr>
+				<td align="left"><br><h3>Correo electrónico:</h3></td>
 			</tr>
 			<tr>
-				<td align="left"><h3>Apellido:</h3></td>
+				<td><input id="id_correo" name="correo" type="email" style="width:100%"></td>
 			</tr>
 			<tr>
-				<td align="left"><h3>Correo electrónico:</h3></td>
+				<td align="left"><br><h3>Cargo:</h3></td>
+			</tr>
+			<tr>
+				<td><select id="id_cargo" name="cargo" style="width:100%; background-color:white">
+						<option value ="" select disable style="display:none;">Seleccione un cargo</option>
+						<option value="tecnico">Técnico</option>
+						<option value="almacenista">Almacenista</option>
+						<option value="admin">Administrador</option>
+					</select></td>
 			</tr>
 			<tr>
 				<td align="left"><br><h3>Contraseña:</h3></td>
@@ -39,7 +55,7 @@
 			<tr>
 				{{ field.errors }}
 				<td align="right"><br><br>
-				<input type="submit" class="button"value="Registrar"></td>
+				<input type="submit" class="button" value="Registrar"></td>
 			</tr>
 		</tbody>
 	</table>
