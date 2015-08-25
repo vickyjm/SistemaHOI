@@ -14,7 +14,7 @@ class Item(models.Model):
                           (1, "Media"),
                           (2, "Alta"))
     prioridad = models.PositiveIntegerField(choices=opciones_prioridad)
-    foto = models.ImageField() # Falta arreglar el tamaño. Creo que pide usar librería Pillow
+    minimo = models.PositiveIntegerField() # Minimo cantidad de items para enviar alerta
     
 class Solicitud(models.Model):
     dpto = models.CharField(max_length = 100) # Preguntar si ponerlo como opciones

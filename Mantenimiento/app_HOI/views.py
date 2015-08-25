@@ -6,6 +6,7 @@ from django.template import RequestContext
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.core import validators
+from django.core.exceptions import ValidationError
 from app_HOI.forms import * 
 from app_HOI.models import *
 
@@ -50,3 +51,9 @@ def registro(request):
         form = registroForm()
     return render(request,'registro.html', {'form': form})
 
+def crearItem(request):
+    if request.method == "POST":
+        form = itemForm(request.POST)
+    else:
+        form = itemForm(initial={'cantidad': '0', 'minimo': '5'})
+    return render(request,'crearItem.html', {'form': form})

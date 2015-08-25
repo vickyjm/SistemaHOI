@@ -39,7 +39,15 @@ class registroForm(forms.Form):
                              widget = forms.Select(), label = "Cargo")
     contraseña1 = forms.CharField(max_length = 25,
                                  required = True,
-                                 label = "Contraseña1", widget=forms.PasswordInput)
+                                 label = "Contraseña", widget=forms.PasswordInput)
     contraseña2 = forms.CharField(max_length = 25,
                                  required = True,
-                                 label = "Contraseña2", widget=forms.PasswordInput)
+                                 label = "Confirmar contraseña", widget=forms.PasswordInput)
+
+class itemForm(forms.Form)
+    nombre = forms.CharField(max_length = 60, required = True, label = "Nombre")
+    cantidad = forms.IntegerField(max_value = 2147483647, min_value = 0, required = True, label = "Cantidad")
+    categoria = forms.ModelChoiceField(queryset = Categoria.objects.all())
+    opciones_prioridad = (("baja", "Baja"),("media", "Media"), ("alta", "Alta"))
+    prioridad = forms.ChoiceField(required = True, choices = opciones_prioridad, widget = forms.Select(), label = "Prioridad")
+    minimo = forms.IntegerField(max_value = 2147483647, min_value = 0, required = True, label = "Mínimo valor para alerta")

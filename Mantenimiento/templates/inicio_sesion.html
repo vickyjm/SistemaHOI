@@ -16,13 +16,13 @@
 		{% csrf_token %}
 		<tbody>
 			<tr>
-				<td align="left"><h3>Cédula:</h3></td>
+				<td align="left"><h3>{{ form.cedula.label_tag }}</h3></td>
 			</tr>
 			<tr>
 				<td><input id="id_cedula" maxlength="11" name="cedula" type="text" style="width:100%"></td>
 			</tr>
 			<tr>
-				<td align="left"><br><h3>Contraseña:</h3></td>
+				<td align="left"><br><h3>{{ form.contraseña.label_tag }}</h3></td>
 			</tr>
 			<tr>
 				<td><input id="id_contraseña" maxlength="25" name="contraseña" type="password" style="width:100%"></td>
