@@ -9,7 +9,9 @@
 {% block page_left %}{% endblock page_left %}
 {% block page_content %}
 <form action="." method="post">
-
+{% if form.errors %}
+	<p> Error </p>
+{% endif %}
 	<table style="width:100%" >
 		<thead>
 		</thead>
@@ -50,16 +52,23 @@
 				<td align="left"><br><h3>Contraseña:</h3></td>
 			</tr>
 			<tr>
-				<td><input id="id_contraseña" maxlength="25" name="contraseña" type="password" style="width:100%"></td>
+				<td><input id="id_contraseña1" maxlength="25" name="contraseña1" type="password" style="width:100%"></td>
 			</tr>
 			<tr>
-				{{ field.errors }}
+				<td align="left"><br><h3>Confirmar contraseña:</h3></td>
+			</tr>
+			<tr>
+				<td><input id="id_contraseña2" maxlength="25" name="contraseña2" type="password" style="width:100%"></td>
+			</tr>
+			<tr>
 				<td align="right"><br><br>
 				<input type="submit" class="button" value="Registrar"></td>
 			</tr>
 		</tbody>
 	</table>
+
 </form>
+
 	
 {% endblock page_content %}
 {% block page_right %}{% endblock page_right %}

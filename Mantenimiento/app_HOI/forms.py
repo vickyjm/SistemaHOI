@@ -17,7 +17,7 @@ class iniciarSesionForm(forms.Form):
             )
     contraseña = forms.CharField(max_length = 25,
                                  required = True,
-                                 label = "Contraseña")
+                                 label = "Contraseña", widget=forms.PasswordInput)
     
 class registroForm(forms.Form):
     cedula = forms.CharField(
@@ -34,9 +34,12 @@ class registroForm(forms.Form):
     nombre = forms.CharField(max_length = 30, required = True, label = "Nombre")
     apellido = forms.CharField(max_length = 30, required = True, label = "Apellido")
     correo = forms.EmailField(required = False, label = "Correo electrónico")
-    cargoEmpleado = (("tecnico","Técnico"), ("almacenista", "Almacenista"), ("admin", "Administrador"))
-    cargo = forms.ChoiceField(required = True, choices = cargoEmpleado, 
+    tipoEmpleado = (("tecnico","Técnico"), ("almacenista", "Almacenista"), ("admin", "Administrador"))
+    tipo = forms.ChoiceField(required = True, choices = tipoEmpleado, 
                              widget = forms.Select(), label = "Cargo")
-    contraseña = forms.CharField(max_length = 25,
+    contraseña1 = forms.CharField(max_length = 25,
                                  required = True,
-                                 label = "Contraseña")
+                                 label = "Contraseña1", widget=forms.PasswordInput)
+    contraseña2 = forms.CharField(max_length = 25,
+                                 required = True,
+                                 label = "Contraseña2", widget=forms.PasswordInput)
