@@ -28,12 +28,17 @@
 				<td><input id="id_contraseña" maxlength="25" name="contraseña" type="password" style="width:100%"></td>
 			</tr>
 			<tr>
-				{{ field.errors }}
+				<td align="right"><a href="#"><br>Recuperar contraseña</a></td>
+			<tr>
+				
 				<td align="right"><br><br>
 				<input type="submit" class="button"value="Iniciar sesión"></td>
 			</tr>
 		</tbody>
 	</table>
 </form>
+{% if field.errors %}
+	<p> Error </p>
+{% endif %}
 {% endblock page_content %}
 {% block page_right %}{% endblock page_right %}
