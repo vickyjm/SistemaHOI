@@ -47,11 +47,15 @@ class registroForm(forms.Form):
                                  required = True,
                                  label = "Confirmar contraseña", widget=forms.PasswordInput(attrs={'style': 'width:100%'}))
 
+class MyModelChoiceField(ModelChoiceField):
+    def label_from_instance(self, obj):
+        return "My Object #%i" % obj.nombre
+
 class itemForm(forms.Form):
     nombre = forms.CharField(max_length = 100, required = True, label = "Nombre", widget = forms.TextInput(attrs={'style': 'width:100%'}))
     cantidad = forms.IntegerField(max_value = 2147483647, min_value = 0, required = True, label = "Cantidad", widget=forms.NumberInput(attrs={'style': 'width:100%'}))
     # Categoria.objects.none() creo que porque no hay nada,  si no seria Categoria.objects.all()
-    categoria = forms.ModelChoiceField(widget=forms.Select(attrs={'style': 'width:100%; background-color:white'}), queryset=Categoria.objects.none(), label = "Categoría")
+    categoria = forms.ModelChoiceField(widget=forms.Select(attrs={'style': 'width:100%; background-color:white'}), queryset=Categoria.objects.all(), to_field_name="nombre", label = "Categoría")
     opciones_prioridad = (("baja", "Baja"),("media", "Media"), ("alta", "Alta"))
     prioridad = forms.ChoiceField(required = True, choices = opciones_prioridad, widget = forms.Select(attrs={'style': 'width:100%; background-color:white'}), label = "Prioridad")
     minimo = forms.IntegerField(max_value = 2147483647, min_value = 0, required = True, label = "Mínimo valor para alerta", widget=forms.NumberInput(attrs={'style': 'width:100%'}))
