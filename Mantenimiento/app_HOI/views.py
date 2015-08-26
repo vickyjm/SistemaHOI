@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.core import validators
 from django.core.exceptions import ValidationError
+from django.core.exceptions import ObjectDoesNotExist
 from app_HOI.forms import * 
 from app_HOI.models import *
 
@@ -61,14 +62,23 @@ def crearItem(request):
 def categoria(request):
     if request.method == "POST":
         form = categoriaForm(request.POST)
-        print("Categoria nueva1")
+    
         if form.is_valid():
-            obj = Categoria(nombre =form.cleaned_data['nombre'])
-            obj.save()
-            categorias = Categoria.objects.all()
-            print("Categoria nueva")
+            catnombre = form.cleaned_data['nombre']
+            try: 
+                cat = Categoria.objects.get(nombre = catnombre)
+                # Verifica si el nombre de la categoria ya existe
+                if Categoria.objects.filter(pk=cat.pk).exists():
+                    print ("Ya existe")
+                # Si no existe, crea el objeto y lo guarda
+            except ObjectDoesNotExist:
+                
+                obj = Categoria(nombre = catnombre)
+                obj.save()
+                print("Categoria nueva")
+            categorias = Categoria.objects.order_by('nombre')
     else:
         form = categoriaForm()
-        print("Categoria nueva2")
-        categorias = Categoria.objects.all()
+    
+        categorias = Categoria.objects.order_by('nombre')
     return render(request,'categoria.html', {'form': form, 'categorias': categorias})
