@@ -69,16 +69,15 @@ def categoria(request):
                 cat = Categoria.objects.get(nombre = catnombre)
                 # Verifica si el nombre de la categoria ya existe
                 if Categoria.objects.filter(pk=cat.pk).exists():
-                    print ("Ya existe")
-                # Si no existe, crea el objeto y lo guarda
+                    mensaje = "Categoría '%s' ya existe" % (catnombre)
+            # Si no existe, crea el objeto y lo guarda
             except ObjectDoesNotExist:
-                
                 obj = Categoria(nombre = catnombre)
                 obj.save()
-                print("Categoria nueva")
+                mensaje = "Categoría '%s' creada existosamente" % (catnombre)
             categorias = Categoria.objects.order_by('nombre')
     else:
         form = categoriaForm()
-    
+        mensaje = None    
         categorias = Categoria.objects.order_by('nombre')
-    return render(request,'categoria.html', {'form': form, 'categorias': categorias})
+    return render(request,'categoria.html', {'form': form, 'categorias': categorias, 'mensaje': mensaje})
