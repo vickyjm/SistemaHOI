@@ -1,0 +1,41 @@
+{% extends "base-col22.html" %}
+
+{% block page_menu %}
+{% endblock page_menu%}
+
+{% block page_title %}Categorías{% endblock page_title %}
+{% block page_left %}
+<form action='./categoria' method="post">
+
+<h2>Crear categoría</h2>
+	<table style="width:100%" >
+		<thead>
+		</thead>
+		{% csrf_token %}
+		<tbody>
+			 {% for field in form %}
+
+			 <h3>{{field.label_tag}}</h3>
+
+			 {{field}}<br><br>
+
+			 {% endfor %}
+		 <tr>
+			<td align="right"><br><br>
+			<input type="submit" class="button" value="Crear categoría"></td>
+		</tr>
+		</tbody>
+	</table>
+</form>
+{% if form.errors %}
+	<p> Error </p>
+{% endif %}
+{% endblock page_left %}
+{% block page_content %}
+	{% if categorias %}
+	{% for cat in categorias %}
+		<h3>{{ cat.nombre }}</h3>
+	{% endfor %}
+	{% endif %}
+{% endblock page_content %}
+{% block page_right %}{% endblock page_right %}

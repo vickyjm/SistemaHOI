@@ -3,7 +3,7 @@ from django.db.models.fields import TextField
 from django.contrib.auth.models import User
     
 class Categoria(models.Model):
-    nombre = models.CharField(max_length = 100)
+    nombre = models.CharField(max_length = 100, unique=True)
     
 class Item(models.Model):
     # id = models.CharField(max_length = 50) Esto sería en caso que tengan algo tipo n° de bien

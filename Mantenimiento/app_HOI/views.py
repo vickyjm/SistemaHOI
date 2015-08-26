@@ -57,3 +57,18 @@ def crearItem(request):
     else:
         form = itemForm(initial={'cantidad': '0', 'minimo': '5'})
     return render(request,'crearItem.html', {'form': form})
+
+def categoria(request):
+    if request.method == "POST":
+        form = categoriaForm(request.POST)
+        print("Categoria nueva1")
+        if form.is_valid():
+            obj = Categoria(nombre =form.cleaned_data['nombre'])
+            obj.save()
+            categorias = Categoria.objects.all()
+            print("Categoria nueva")
+    else:
+        form = categoriaForm()
+        print("Categoria nueva2")
+        categorias = Categoria.objects.all()
+    return render(request,'categoria.html', {'form': form, 'categorias': categorias})
