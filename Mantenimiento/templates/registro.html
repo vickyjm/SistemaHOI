@@ -9,54 +9,19 @@
 {% block page_left %}{% endblock page_left %}
 {% block page_content %}
 <form action="./registrar" method="post">
-{{form.errors}}
 	<table style="width:100%" >
 		<thead>
 		</thead>
 		{% csrf_token %}
 		<tbody>
-			<tr>
-				<td align="left"><h3>{{ form.cedula.label_tag }}</h3></td>
-			</tr>
-			<tr>
-				<td><input id="id_cedula" maxlength="11" name="cedula" type="text" style="width:100%"></td>
-			</tr>
-			<tr>
-				<td align="left"><br><h3>{{ form.nombre.label_tag }}</h3></td>
-			</tr>
-				<td><input id="id_nombre" maxlength="30" name="nombre" type="text" style="width:100%"></td>
-			<tr>
-				<td align="left"><br><h3>{{ form.apellido.label_tag }}</h3></td>
-			</tr>
-				<td><input id="id_apellido" maxlength="30" name="apellido" type="text" style="width:100%"><td>
-			<tr>
-				<td align="left"><br><h3>{{ form.correo.label_tag }}</h3></td>
-			</tr>
-			<tr>
-				<td><input id="id_correo" name="correo" type="email" style="width:100%"></td>
-			</tr>
-			<tr>
-				<td align="left"><br><h3>{{ form.tipo.label_tag }}</h3></td>
-			</tr>
-			<tr>
-				<td><select id="id_cargo" name="cargo" style="width:100%; background-color:white">
-						<option value ="" select disable style="display:none;">Seleccione un cargo</option>
-						<option value="tecnico">Técnico</option>
-						<option value="almacenista">Almacenista</option>
-					</select></td>
-			</tr>
-			<tr>
-				<td align="left"><br><h3>{{ form.contraseña1.label_tag }}</h3></td>
-			</tr>
-			<tr>
-				<td><input id="id_contraseña1" maxlength="25" name="contraseña1" type="password" style="width:100%"></td>
-			</tr>
-			<tr>
-				<td align="left"><br><h3>{{ form.contraseña2.label_tag }}</h3></td>
-			</tr>
-			<tr>
-				<td><input id="id_contraseña2" maxlength="25" name="contraseña2" type="password" style="width:100%"></td>
-			</tr>
+			{% for field in form %}
+
+			 <h3>{{field.label_tag}}</h3>
+
+			 {{ field.errors}}
+			 	{{field}}<br><br>
+
+			 {% endfor %}
 			<tr>
 				<td align="right"><br><br>
 				<input type="submit" class="button" value="Registrar"></td>
