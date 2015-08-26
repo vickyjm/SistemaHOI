@@ -2,12 +2,13 @@
 
 {% block page_menu %}
 <a href="./categorias" >Categorías</a>
+<a href="./inventario" >Inventario</a>
 {% endblock page_menu%}
 
 {% block page_title %}Crear Item{% endblock page_title %}
 {% block page_left %}{% endblock page_left %}
 {% block page_content %}
-<form action="." method="post">
+<form action="./crearItem" method="post">
 
 	<table style="width:100%" >
 		<thead>
