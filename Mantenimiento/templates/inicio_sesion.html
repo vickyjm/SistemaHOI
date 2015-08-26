@@ -15,30 +15,20 @@
 		</thead>
 		{% csrf_token %}
 		<tbody>
-			<tr>
-				<td align="left"><h3>{{ form.cedula.label_tag }}</h3></td>
-			</tr>
-			<tr>
-				<td><input id="id_cedula" maxlength="11" name="cedula" type="text" style="width:100%"></td>
-			</tr>
-			<tr>
-				<td align="left"><br><h3>{{ form.contraseña.label_tag }}</h3></td>
-			</tr>
-			<tr>
-				<td><input id="id_contraseña" maxlength="25" name="contraseña" type="password" style="width:100%"></td>
-			</tr>
-			<tr>
-				<td align="right"><a href="#"><br>Recuperar contraseña</a></td>
-			<tr>
-				
-				<td align="right"><br><br>
-				<input type="submit" class="button"value="Iniciar sesión"></td>
-			</tr>
+			{% for field in form %}
+
+			 <h3>{{field.label_tag}}</h3>
+
+			 {{field}}<br><br>
+			 {{ field.errors}}
+
+			 {% endfor %}
+			<td align="right"><br><br>
+			<input type="submit" class="button" value="Iniciar sesión"></td>
 		</tbody>
 	</table>
+
 </form>
-{% if form.errors %}
-	<p> Error </p>
-{% endif %}
+
 {% endblock page_content %}
 {% block page_right %}{% endblock page_right %}

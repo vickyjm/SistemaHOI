@@ -10,6 +10,7 @@ class iniciarSesionForm(forms.Form):
                     max_length = 11,
                     required = True,
                     label = "Cédula de Identidad",
+                    widget=forms.TextInput(attrs={'style': 'width:100%'}),
                     validators = [
                         RegexValidator(
                             regex = '^([1-9][0-9]{0,2})([0-9]{3}){0,3}$',
@@ -19,7 +20,7 @@ class iniciarSesionForm(forms.Form):
             )
     contraseña = forms.CharField(max_length = 25,
                                  required = True,
-                                 label = "Contraseña", widget=forms.PasswordInput)
+                                 label = "Contraseña", widget=forms.PasswordInput(attrs={'style': 'width:100%'}))
     
 class registroForm(forms.Form):
     cedula = forms.CharField(
@@ -55,7 +56,7 @@ class itemForm(forms.Form):
     nombre = forms.CharField(max_length = 100, required = True, label = "Nombre", widget = forms.TextInput(attrs={'style': 'width:100%'}))
     cantidad = forms.IntegerField(max_value = 2147483647, min_value = 0, required = True, label = "Cantidad", widget=forms.NumberInput(attrs={'style': 'width:100%'}))
     # Categoria.objects.none() creo que porque no hay nada,  si no seria Categoria.objects.all()
-    categoria = forms.ModelChoiceField(widget=forms.Select(attrs={'style': 'width:100%; background-color:white'}), queryset=Categoria.objects.order_by('nombre'), to_field_name="nombre", label = "Categoría")
+    categoria = forms.ModelChoiceField(widget=forms.Select(attrs={'style': 'width:100%; background-color:white'}), queryset=Categoria.objects.order_by('nombre'), label = "Categoría")
     opciones_prioridad = (("baja", "Baja"),("media", "Media"), ("alta", "Alta"))
     prioridad = forms.ChoiceField(required = True, choices = opciones_prioridad, widget = forms.Select(attrs={'style': 'width:100%; background-color:white'}), label = "Prioridad")
     minimo = forms.IntegerField(max_value = 2147483647, min_value = 0, required = True, label = "Mínimo valor para alerta", widget=forms.NumberInput(attrs={'style': 'width:100%'}))

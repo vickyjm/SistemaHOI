@@ -9,9 +9,7 @@
 {% block page_left %}{% endblock page_left %}
 {% block page_content %}
 <form action="./registrar" method="post">
-{% if form.errors %}
-	<p> Error </p>
-{% endif %}
+{{form.errors}}
 	<table style="width:100%" >
 		<thead>
 		</thead>

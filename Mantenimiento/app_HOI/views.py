@@ -55,6 +55,37 @@ def registro(request):
 def crearItem(request):
     if request.method == "POST":
         form = itemForm(request.POST)
+        if form.is_valid():
+            inombre = form.cleaned_data['nombre']
+            icategoria = form.cleaned_data['categoria']
+            idcat = Categoria.objects.get(nombre = icategoria)
+            print (idcat.id)
+            print (icategoria)
+            try: 
+                item = Item.objects.get(nombre = inombre)
+                #item = Item.objects.get(id_categoria = idcat)
+                if item.filter(id_categoria = idcat.id).exists():
+                #if item.nombre.filter(nombre='inombre').exists():
+                    print ("Ya existe")
+                #except: 
+                else:
+                    obj = Item(nombre = inombre,
+                                cantidad = form.cleaned_data['cantidad'],
+                                id_categoria = idcat,
+                                prioridad = form.cleaned_data['prioridad'],
+                                minimo = form.cleaned_data['minimo']
+                                )
+                    obj.save()
+                    print("Crea item")
+            except:
+                print ("No hay items")
+                obj = Item(nombre = inombre,
+                                cantidad = form.cleaned_data['cantidad'],
+                                id_categoria = idcat,
+                                prioridad = 1,
+                                minimo = form.cleaned_data['minimo']
+                                )
+                obj.save()
     else:
         form = itemForm(initial={'cantidad': '0', 'minimo': '5'})
     return render(request,'crearItem.html', {'form': form})
@@ -81,3 +112,11 @@ def categoria(request):
         mensaje = None    
         categorias = Categoria.objects.order_by('nombre')
     return render(request,'categoria.html', {'form': form, 'categorias': categorias, 'mensaje': mensaje})
+
+def inventario(request):
+    items = Item.objects.order_by('nombre')
+    if request.method == "POST":
+        pass  
+    else:
+        pass
+    return render(request,'inventario.html', {'items': items})
