@@ -32,7 +32,8 @@ def inicio_sesion(request):
         form = iniciarSesionForm(request.POST)
         if form.is_valid():
             # Verifico si el usuario existe, esté activo o no
-            user = authenticate(username = form.cleaned_data['cedula'],password = form.cleaned_data['contraseña'])
+            user = authenticate(username = form.cleaned_data['cedula'],
+                                password = form.cleaned_data['contraseña'])
             if user is not None:
                 if user.is_active:
                     login(request, user)
@@ -60,7 +61,8 @@ def crearItem(request):
             icategoria = form.cleaned_data['categoria']
             idcat = Categoria.objects.get(nombre = icategoria)
             # Verifica si ya existe un item con el mismo nombre y categoria
-            itemexiste = Item.objects.filter(nombre = inombre, id_categoria = idcat.id).exists()
+            itemexiste = Item.objects.filter(nombre = inombre, 
+                                            id_categoria = idcat.id).exists()
             # Si el item ya existe
             if itemexiste:
                 mensaje = "Item %s ya existe" % (inombre)
@@ -100,7 +102,8 @@ def categoria(request):
         form = categoriaForm()
         mensaje = None    
         categorias = Categoria.objects.order_by('nombre')
-    return render(request,'categoria.html', {'form': form, 'categorias': categorias, 'mensaje': mensaje})
+    return render(request,'categoria.html', {'form': form, 
+                                'categorias': categorias, 'mensaje': mensaje})
 
 def inventario(request):
     items = Item.objects.order_by('nombre')
