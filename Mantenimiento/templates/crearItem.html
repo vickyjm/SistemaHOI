@@ -15,7 +15,10 @@
 		</thead>
 		{% csrf_token %}
 		<tbody>
-			 {% for field in form %}
+			{% if mensaje %}
+				<h3>{{mensaje}}</h3>
+			{% endif %}
+			{% for field in form %}
 
 			 <h3>{{field.label_tag}}</h3>
 

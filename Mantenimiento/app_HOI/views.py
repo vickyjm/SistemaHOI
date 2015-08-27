@@ -61,24 +61,27 @@ def crearItem(request):
             idcat = Categoria.objects.get(nombre = icategoria)
             print (idcat.id)
             print (icategoria)
+            print (inombre)
             try: 
-                item = Item.objects.get(nombre = inombre)
+                item = Item.objects.filter(nombre = inombre)
                 #item = Item.objects.get(id_categoria = idcat)
-                if item.filter(id_categoria = idcat.id).exists():
-                #if item.nombre.filter(nombre='inombre').exists():
-                    print ("Ya existe")
-                #except: 
+                #try:
+                exists = item.filter(id_categoria = idcat.id).exists()
+            #if item.nombre.filter(nombre='inombre').exists():
+                if exists:
+                    mensaje = "Item %s ya existe" % (inombre)
                 else:
+            #except: 
+            #except ObjectDoesNotExist:
                     obj = Item(nombre = inombre,
                                 cantidad = form.cleaned_data['cantidad'],
                                 id_categoria = idcat,
-                                prioridad = form.cleaned_data['prioridad'],
+                                prioridad = 1,
                                 minimo = form.cleaned_data['minimo']
                                 )
                     obj.save()
-                    print("Crea item")
-            except:
-                print ("No hay items")
+                    mensaje = "1Item %s creado exitosamente" % (inombre)
+            except ObjectDoesNotExist:
                 obj = Item(nombre = inombre,
                                 cantidad = form.cleaned_data['cantidad'],
                                 id_categoria = idcat,
@@ -86,9 +89,11 @@ def crearItem(request):
                                 minimo = form.cleaned_data['minimo']
                                 )
                 obj.save()
+                mensaje = "2Item %s creado exitosamente" % (inombre)
     else:
         form = itemForm(initial={'cantidad': '0', 'minimo': '5'})
-    return render(request,'crearItem.html', {'form': form})
+        mensaje = None
+    return render(request,'crearItem.html', {'form': form, 'mensaje': mensaje})
 
 def categoria(request):
     if request.method == "POST":
@@ -105,7 +110,7 @@ def categoria(request):
             except ObjectDoesNotExist:
                 obj = Categoria(nombre = catnombre)
                 obj.save()
-                mensaje = "Categoría '%s' creada existosamente" % (catnombre)
+                mensaje = "Categoría '%s' creada exitosamente" % (catnombre)
             categorias = Categoria.objects.order_by('nombre')
     else:
         form = categoriaForm()
