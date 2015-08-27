@@ -56,6 +56,7 @@ def registro(request):
 def crearItem(request):
     if request.method == "POST":
         form = itemForm(request.POST)
+        mensaje = None
         if form.is_valid():
             inombre = form.cleaned_data['nombre']
             icategoria = form.cleaned_data['categoria']
@@ -75,7 +76,7 @@ def crearItem(request):
                             minimo = form.cleaned_data['minimo']
                             )
                 obj.save()
-                mensaje = "1Item %s creado exitosamente" % (inombre)    
+                mensaje = "Item %s creado exitosamente" % (inombre)    
     else:
         form = itemForm(initial={'cantidad': '0', 'minimo': '5'})
         mensaje = None
@@ -84,7 +85,7 @@ def crearItem(request):
 def categoria(request):
     if request.method == "POST":
         form = categoriaForm(request.POST)
-    
+        mensaje = None    
         if form.is_valid():
             catnombre = form.cleaned_data['nombre']
             try: 
@@ -97,13 +98,22 @@ def categoria(request):
                 obj = Categoria(nombre = catnombre)
                 obj.save()
                 mensaje = "Categoría '%s' creada exitosamente" % (catnombre)
-            categorias = Categoria.objects.order_by('nombre')
+        categorias = Categoria.objects.order_by('nombre')
+
     else:
         form = categoriaForm()
         mensaje = None    
         categorias = Categoria.objects.order_by('nombre')
     return render(request,'categoria.html', {'form': form, 
                                 'categorias': categorias, 'mensaje': mensaje})
+def categoria_editar(request, _id):
+    #categoria = Categoria.objects.get(id = _id)
+    categoria = None
+    if request.method == "POST":
+        pass
+    else:
+        pass
+    return render(request,'categoria_editar.html', {'categoria': categoria})
 
 def inventario(request):
     items = Item.objects.order_by('nombre')
