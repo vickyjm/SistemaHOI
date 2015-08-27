@@ -9,7 +9,7 @@
 {% block page_left %}{% endblock page_left %}
 {% block page_content %}
 <table style="width:100%" >
-	<thead>
+	<thead align="center">
 		<td><h3><b>Nombre</b></h3></td>
 		<td><h3>Cantidad</h3></td>
 		<td><h3>Categoría</h3></td>
@@ -19,12 +19,12 @@
 {% if items %}
 	<tbody>
 		{% for i in items %}
-		<tr>
-			<td><h3>{{ i.nombre }}</h3></td>
-			<td><h3>{{ i.cantidad }}</h3></td>
-			<td><h3>{{ i.id_categoria }}</h3></td>
-			<td><h3>{{ i.prioridad }}</h3></td>
-			<td><h3>{{ i.minimo }}</h3></td>
+		<tr align="center">
+			<td><h4>{{ i.nombre }}</h4></td>
+			<td><h4>{{ i.cantidad }}</h4></td>
+			<td><h4>{{ i.id_categoria }}</h4></td>
+			<td><h4>{{ i.prioridad }}</h4></td>
+			<td><h4>{{ i.minimo }}</h4></td>
 		</tr>
 		{% endfor %}
 	</tbody>
