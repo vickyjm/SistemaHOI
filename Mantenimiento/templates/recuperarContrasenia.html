@@ -1,15 +1,14 @@
 {% extends "base-col3.html" %}
 
 {% block page_menu %}
-	<a href="." class="current-page-item">Iniciar sesión</a>
+	<a href="./">Iniciar sesión</a>
 	<a href="./registrar">Registro</a>
 {% endblock page_menu%}
 
-{% block page_title %}Iniciar sesión{% endblock page_title %}
+{% block page_title %}Recuperar contraseña{% endblock page_title %}
 {% block page_left %}{% endblock page_left %}
 {% block page_content %}
-<form action="." method="post">
-
+<form action="./recuperarContraseña" method="post">
 	<table style="width:100%" >
 		<thead>
 		</thead>
@@ -23,16 +22,19 @@
 			 <h3>{{field.label_tag}}</h3>
 
 			 {{ field.errors}}
-			 {{field}}<br><br>
-			 
+			 	{{field}}<br><br>
+
 			 {% endfor %}
-			<td align="right"><br><br>
-			<input type="submit" class="button" value="Iniciar sesión"></td>
-			<a href="./recuperarContraseña">¿Olvidó su contraseña?</a>
+
+			<tr>
+				<td align="right"><br><br>
+				<input type="submit" class="button" value="Enviar"></td>
+			</tr>
 		</tbody>
 	</table>
 
 </form>
 
+	
 {% endblock page_content %}
 {% block page_right %}{% endblock page_right %}

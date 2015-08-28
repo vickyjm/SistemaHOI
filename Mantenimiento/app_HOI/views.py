@@ -12,18 +12,6 @@ from django.http import HttpResponseRedirect
 from app_HOI.forms import * 
 from app_HOI.models import *
 
-def basecol1(request):
-	return render(request, 'base-col1.html')
-	
-def basecol21(request):
-	return render(request, 'base-col21.html')
-
-def basecol22(request):
-	return render(request, 'base-col22.html')
-
-def basecol3(request):
-	return render(request, 'base-col3.html')
-
 def verperfil(request):
 	return render(request, 'verperfil.html')
 
@@ -69,6 +57,27 @@ def registro(request):
     else:
         form = registroForm()
     return render(request,'registro.html', {'form': form})
+   
+def recuperarContraseña(request):
+    if request.method == "POST":
+        form = recuperarContraseñaForm(request.POST)
+        if form.is_valid():
+            ci = form.cleaned_data['cedula']
+            if User.objects.filter(username=ci).exists():
+                if (form.cleaned_data['contraseña1']!= form.cleaned_data['contraseña2']):
+                    msg = "Las contraseñas no coinciden. Intente de nuevo"
+                    return render(request,'recuperarContrasenia.html',{'form' : form, 'msg' : msg})
+                user = User.objects.get(username=ci)
+                user.set_password(form.cleaned_data['contraseña1'])
+                user.save()
+                msg = "Su contraseña fue cambiada"
+                return render(request,'recuperarContrasenia.html',{'form' : form, 'msg' : msg})  
+            else:
+                msg = "La cédula ingresada no se encuentra registrada"
+                return render(request,'recuperarContrasenia.html',{'form' : form, 'msg' : msg})
+    else:
+        form = recuperarContraseñaForm()
+    return render(request,'recuperarContrasenia.html',{'form': form})
 
 def crearItem(request):
     if request.method == "POST":

@@ -48,6 +48,27 @@ class registroForm(forms.Form):
     contraseña2 = forms.CharField(max_length = 25,
                                  required = True,
                                  label = "Confirmar contraseña", widget=forms.PasswordInput(attrs={'style': 'width:100%'}))
+    
+class recuperarContraseñaForm(forms.Form):
+    cedula = forms.CharField(
+                    max_length = 11,
+                    required = True,
+                    label = "Cédula de Identidad",
+                    widget=forms.TextInput(attrs={'style': 'width:100%'}),
+                    validators = [
+                        RegexValidator(
+                            regex = '^([1-9][0-9]{0,2})([0-9]{3}){0,3}$',
+                            message = 'Formato erróneo'
+                        )
+                    ]
+            )
+    contraseña1 = forms.CharField(max_length = 25,
+                                 required = True,
+                                 label = "Contraseña", widget=forms.PasswordInput(attrs={'style': 'width:100%'}))
+    contraseña2 = forms.CharField(max_length = 25,
+                                 required = True,
+                                 label = "Confirmar contraseña", widget=forms.PasswordInput(attrs={'style': 'width:100%'}))
+    
 
 class MyModelChoiceField(ModelChoiceField):
     def label_from_instance(self, obj):
