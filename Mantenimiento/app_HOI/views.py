@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.core import validators
 from django.core.exceptions import ValidationError
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponseRedirect
 from app_HOI.forms import * 
 from app_HOI.models import *
 
@@ -36,11 +37,13 @@ def inicio_sesion(request):
             if user is not None:
                 if user.is_active:
                     login(request, user)
-                    print("Te loggeaste") # Aqui iria al siguiente html?
+                    return HttpResponseRedirect('verperfil')
                 else:
-                    print("No estas activo") # Aqui envia un mensaje en el html de que no esta activo
+                    msg = "Su usuario se encuentra inactivo. Contacte al administrador"
+                    return render(request,'inicio_sesion.html',{'form': form, 'msg': msg})
             else:
-                print("Usuario o contraseña mala") # Aqui envia un mensaje en el html de que puso las cosas mal
+                msg = "Usuario o contraseña incorrecta"
+                return render(request,'inicio_sesion.html',{'form': form, 'msg': msg})
     else:
         form = iniciarSesionForm()
     return render(request, 'inicio_sesion.html', {'form': form})

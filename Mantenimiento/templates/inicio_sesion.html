@@ -15,13 +15,16 @@
 		</thead>
 		{% csrf_token %}
 		<tbody>
+			{% if msg %}
+			 	{{ msg }}<br><br>
+			{% endif %}
 			{% for field in form %}
 
 			 <h3>{{field.label_tag}}</h3>
 
 			 {{ field.errors}}
 			 {{field}}<br><br>
-
+			 
 			 {% endfor %}
 			<td align="right"><br><br>
 			<input type="submit" class="button" value="Iniciar sesión"></td>

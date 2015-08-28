@@ -4,6 +4,7 @@ from django import forms
 from django.core.validators import RegexValidator
 from app_HOI.models import Categoria
 from django.forms import ModelChoiceField
+from django.utils.translation import ugettext, ugettext_lazy as _
 
 class iniciarSesionForm(forms.Form):
     cedula = forms.CharField(
