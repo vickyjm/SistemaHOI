@@ -141,16 +141,36 @@ def categoria_editar(request, _id):
     if request.method == "POST":
         form = categoria_editarForm(request.POST)
         if form.is_valid():
-            categoria.nombre = form.cleaned_data['nombre']
-            categoria.estado = form.cleaned_data['estado']
-            categoria.save()
+            cnombre = form.cleaned_data['nombre']
+            cestado = form.cleaned_data['estado']
+            try:
+                cat = Categoria.objects.get(nombre = cnombre)
+                if int(cat.pk) == int(_id):
+                #if cnombre == categoria.nombre:
+                    #categoria.nombre = cnombre
+                    if int(cestado) != int(categoria.estado):
+                        categoria.estado = cestado
+                        categoria.save()
+                        mensaje = "Categoría editada exitosamente"
+                    else: 
+                        mensaje = None
+                else:
+                    mensaje = "La categoría '%s' ya existe" % cnombre
+            except:
+                categoria.nombre = cnombre
+                categoria.estado = cestado
+                categoria.save()
+                mensaje = "Categoría editada exitosamente"
+
     else:
         form = categoria_editarForm(initial={'nombre': categoria.nombre, 
                                              'estado': categoria.estado})
+        mensaje = None
     return render(request,'categoria_editar.html', {'categoria': categoria, 
                                                     'items' : items,
                                                     'cantidad': cantidad, 
-                                                    'form': form})
+                                                    'form': form,
+                                                    'mensaje': mensaje})
 def item_editar(request, _id):
     item = Item.objects.get(id = _id)
     if request.method == "POST":
