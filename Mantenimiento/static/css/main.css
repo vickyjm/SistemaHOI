@@ -1487,6 +1487,9 @@
 			}
 
 	}
+.error input, .error select {
+    color = #CC0000;
+}
 
 /* Mobile Only */
 
