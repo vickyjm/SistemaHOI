@@ -10,5 +10,6 @@ urlpatterns = patterns('',
     url(r'^crearItem',views.crearItem,name = 'crearItem'),
     url(r'^categoria',views.categoria,name = 'categoria'),
     url(r'^inventario',views.inventario,name = 'inventario'),
-    url(r'^verperfil$', views.verperfil, name = 'verperfil')
+    url(r'^verperfil$', views.verperfil, name = 'verperfil'),
+    url(r'^cerrarSesion$', views.cerrarSesion, name = 'cerrarSesion')
 )

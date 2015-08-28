@@ -3,7 +3,7 @@
 from django.shortcuts import render
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.core import validators
 from django.core.exceptions import ValidationError
@@ -53,7 +53,10 @@ def registro(request):
             user.last_name = form.cleaned_data['apellido']
             if (form.cleaned_data['correo']!=""):
                 user.email = form.cleaned_data['correo']
+            user.is_active = True
             user.save()
+            msg = "Su usuario fue registrado exitosamente"
+            return render(request,'registro.html',{'form': form, 'msg': msg})
     else:
         form = registroForm()
     return render(request,'registro.html', {'form': form})
@@ -78,6 +81,10 @@ def recuperarContraseña(request):
     else:
         form = recuperarContraseñaForm()
     return render(request,'recuperarContrasenia.html',{'form': form})
+   
+def cerrarSesion(request):
+    logout(request)
+    return HttpResponseRedirect('/')
 
 def crearItem(request):
     if request.method == "POST":
