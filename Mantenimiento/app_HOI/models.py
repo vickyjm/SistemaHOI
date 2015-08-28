@@ -43,7 +43,10 @@ def crearUsuario(sender, **kwargs):
     nuevo_usuario.save()
 
 class Categoria(models.Model):
-    nombre = models.CharField(max_length = 100)
+    nombre = models.CharField(max_length = 100, unique=True)
+
+    def __str__(self):
+        return self.nombre
     
 class Item(models.Model):
     # id = models.CharField(max_length = 50) Esto sería en caso que tengan algo tipo n° de bien
@@ -54,7 +57,7 @@ class Item(models.Model):
                           (1, "Media"),
                           (2, "Alta"))
     prioridad = models.PositiveIntegerField(choices=opciones_prioridad)
-    #foto = models.ImageField() # Falta arreglar el tamaño. Creo que pide usar librería Pillow
+    minimo = models.PositiveIntegerField() # Minimo cantidad de items para enviar alerta
     
 class Solicitud(models.Model):
     dpto = models.CharField(max_length = 100) # Preguntar si ponerlo como opciones
