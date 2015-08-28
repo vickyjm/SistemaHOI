@@ -80,11 +80,15 @@ def recuperarContraseña(request):
         form = recuperarContraseñaForm()
     return render(request,'recuperarContrasenia.html',{'form': form})
 
+# Vista utilizada para crear un item en el sistema
 def crearItem(request):
+
     if request.method == "POST":
         form = itemForm(request.POST)
         mensaje = None
+
         if form.is_valid():
+            #Obtiene nombre y categoria del formulario
             inombre = form.cleaned_data['nombre']
             icategoria = form.cleaned_data['categoria']
             idcat = Categoria.objects.get(nombre = icategoria)
@@ -105,16 +109,22 @@ def crearItem(request):
                 obj.save()
                 mensaje = "Item %s creado exitosamente" % (inombre)    
     else:
+        # Valores iniciales de cantidad y minimo para alerta
         form = itemForm(initial={'cantidad': '0', 'minimo': '5'})
         mensaje = None
+
     return render(request,'crearItem.html', {'form': form, 'mensaje': mensaje})
 
+# Vista utilizada para crear una categoria en el sistema
 def categoria(request):
+
     if request.method == "POST":
         form = categoriaForm(request.POST)
-        mensaje = None    
+        mensaje = None
+
         if form.is_valid():
             catnombre = form.cleaned_data['nombre']
+        
             try: 
                 cat = Categoria.objects.get(nombre = catnombre)
                 # Verifica si el nombre de la categoria ya existe
@@ -132,30 +142,44 @@ def categoria(request):
         form = categoriaForm()
         mensaje = None    
         categorias = Categoria.objects.order_by('nombre')
+
     return render(request,'categoria.html', {'form': form, 
                                 'categorias': categorias, 'mensaje': mensaje})
+
+# Vista creada para editar una categoria en el sistema
 def categoria_editar(request, _id):
+    
     categoria = Categoria.objects.get(id = _id)
+    # Lista de items dentro de la categoria
     items = Item.objects.filter(id_categoria = _id)
+    # Cantidad de items dentro de la categoria
     cantidad = items.count()
+
     if request.method == "POST":
+        
         form = categoria_editarForm(request.POST)
+        
         if form.is_valid():
+            #Obtiene datos del formulario
             cnombre = form.cleaned_data['nombre']
             cestado = form.cleaned_data['estado']
             try:
+                # Obtiene la categoria con el nombre del formulario
                 cat = Categoria.objects.get(nombre = cnombre)
+                # Si la categoria es la misma a editar
                 if int(cat.pk) == int(_id):
-                #if cnombre == categoria.nombre:
-                    #categoria.nombre = cnombre
+                    # Verifica si hay cambio en la categoria
                     if int(cestado) != int(categoria.estado):
                         categoria.estado = cestado
                         categoria.save()
                         mensaje = "Categoría editada exitosamente"
+                    # No hubo cambios en la categoria
                     else: 
                         mensaje = None
+                # Si la categoria no es la misma a editar
                 else:
                     mensaje = "La categoría '%s' ya existe" % cnombre
+            # Si no existe una categoria con el nombre introducido
             except:
                 categoria.nombre = cnombre
                 categoria.estado = cestado
@@ -163,6 +187,7 @@ def categoria_editar(request, _id):
                 mensaje = "Categoría editada exitosamente"
 
     else:
+        # Formulario con los datos a editar
         form = categoria_editarForm(initial={'nombre': categoria.nombre, 
                                              'estado': categoria.estado})
         mensaje = None
@@ -171,11 +196,17 @@ def categoria_editar(request, _id):
                                                     'cantidad': cantidad, 
                                                     'form': form,
                                                     'mensaje': mensaje})
+
+# Vista utilizada para editar un item en el sistema
 def item_editar(request, _id):
+    # Obtiene el objeto de item a editar
     item = Item.objects.get(id = _id)
+
     if request.method == "POST":
         form = itemForm(request.POST)
+
         if form.is_valid():
+            # Obtiene los datos del formulario
             item.nombre = form.cleaned_data['nombre']
             item.cantidad = form.cleaned_data['cantidad']
             icategoria = form.cleaned_data['categoria']
@@ -185,6 +216,7 @@ def item_editar(request, _id):
             item.minimo = form.cleaned_data['minimo']
             item.save()
     else: 
+        # Forumlario con los datos del item a editar
         form = itemForm(initial = {'nombre': item.nombre, 
                                         'cantidad': item.cantidad,
                                         'categoria': item.id_categoria,
@@ -193,7 +225,7 @@ def item_editar(request, _id):
     return render(request, 'item_editar.html', {'form' : form})
            
            
-
+# Vista utilizada para mostrar los items del inventario
 def inventario(request):
     items = Item.objects.order_by('nombre')
     if request.method == "POST":
