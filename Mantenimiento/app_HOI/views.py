@@ -48,4 +48,3 @@ def registro(request):
     else:
         form = registroForm()
     return render(request,'registro.html', {'form': form})
-
