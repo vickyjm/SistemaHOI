@@ -79,7 +79,7 @@ class itemForm(forms.Form):
     categoria = forms.ModelChoiceField(label = "Categoría",
         widget=forms.Select(attrs={'style':'width:100%; background-color:white'}), 
         queryset=Categoria.objects.order_by('nombre'))
-    opciones_prioridad = (("baja", "Baja"),("media", "Media"), ("alta", "Alta"))
+    opciones_prioridad = ((0, "Baja"),(1, "Media"), (2, "Alta"))
     prioridad = forms.ChoiceField(required = True, 
                     choices = opciones_prioridad, 
                     widget = forms.Select(attrs={'style': 'width:100%; background-color:white'}), 
@@ -95,3 +95,4 @@ class categoriaForm(forms.Form):
                     required = True, 
                     label = "Nombre", 
                     widget = forms.TextInput(attrs={'style': 'width:100%'}))
+    

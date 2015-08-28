@@ -4,6 +4,9 @@ from django.contrib.auth.models import User
     
 class Categoria(models.Model):
     nombre = models.CharField(max_length = 100, unique=True)
+    opciones_estado = ((0, "Inactiva"),
+                        (1, "Activa"))
+    estado = models.PositiveIntegerField(choices=opciones_estado, default = 1)
 
     def __str__(self):
         return self.nombre

@@ -4,10 +4,45 @@
 <a href="../../../crearItem" >Crear Item</a>
 {% endblock page_menu%}
 
-{% block page_title %}Editar categoría{% endblock page_title %}
+{% block page_title %}Editar categoría '{{ categoria }}'{% endblock page_title %}
 {% block page_left %}
 {% endblock page_left %}
 {% block page_content %}
-{{ categoria}}
+<div class="row main-row">
+	<div class="3u 12u(mobile)">
+		<setion></section>
+	</div>
+<div class="6u 12u(mobile) important(mobile)">
+<section class="middle-content">
+	<table style="width:100%">
+		<tbody>
+		<tr>
+			<td><h3>Nombre:</h3></td>
+			<td><h3 style = "color: gray; text-align:center">{{ categoria }}</h3></td>
+		</tr>
+		<tr>
+			<td><h3>Estado:</h3></td>
+			<td><h3 style = "color: gray; text-align:center">{{ categoria.estado }}</h3></td>
+		</tr>
+		<tr>
+			<td><h3>Cantidad de items:</h3></td>
+			<td><h3 style = "color: gray; text-align:center">{{ cantidad }}</h3></td>
+		</tr>
+		<tr>
+			<td><h3>Items:</h3></td>
+			<td align="center">
+			<table><tbody>
+			{% for i in items %}
+				<tr>
+					<td><h3 style = "color: gray;">{{ i.nombre }}</h3></td>
+				</tr>
+			{% endfor %}
+			</tbody></table></td>
+		</tr>
+		</tbody>
+	</table>
+</section>
+</div>
+</div>
 {% endblock page_content %}
 {% block page_right %}{% endblock page_right %}

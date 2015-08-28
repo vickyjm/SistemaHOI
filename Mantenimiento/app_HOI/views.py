@@ -95,7 +95,8 @@ def categoria(request):
                     mensaje = "Categoría '%s' ya existe" % (catnombre)
             # Si no existe, crea el objeto y lo guarda
             except ObjectDoesNotExist:
-                obj = Categoria(nombre = catnombre)
+                obj = Categoria(nombre = catnombre,
+                                estado = 1)
                 obj.save()
                 mensaje = "Categoría '%s' creada exitosamente" % (catnombre)
         categorias = Categoria.objects.order_by('nombre')
@@ -107,13 +108,16 @@ def categoria(request):
     return render(request,'categoria.html', {'form': form, 
                                 'categorias': categorias, 'mensaje': mensaje})
 def categoria_editar(request, _id):
-    #categoria = Categoria.objects.get(id = _id)
-    categoria = None
+    categoria = Categoria.objects.get(id = _id)
+    items = Item.objects.filter(id_categoria = _id)
+    cantidad = items.count()
     if request.method == "POST":
         pass
     else:
         pass
-    return render(request,'categoria_editar.html', {'categoria': categoria})
+    return render(request,'categoria_editar.html', {'categoria': categoria, 
+                                                    'items' : items,
+                                                    'cantidad': cantidad})
 
 def inventario(request):
     items = Item.objects.order_by('nombre')
