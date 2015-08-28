@@ -16,6 +16,7 @@
 		<td><h3>Categoría</h3></td>
 		<td><h3>Prioridad</h3></td>
 		<td><h3>Mínimo</h3></td>
+		<td><h3>Acciones</h3></td>
 		</tr>
 
 	</thead>
@@ -28,6 +29,9 @@
 			<td>{{ i.id_categoria }}</td>
 			<td>{{ i.prioridad }}</td>
 			<td>{{ i.minimo }}</td>
+			<td><a href="./inventario/{{i.id}}/editar"><i class="fa fa-search"></i></a></td>
+			<td><i class="fa fa-pencil-square-o"></td>
+			<td><i class="fa fa-times"></i></i></h3></td>
 		</tr>
 		{% endfor %}
 	</tbody>

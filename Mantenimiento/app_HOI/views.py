@@ -145,11 +145,34 @@ def categoria_editar(request, _id):
             categoria.estado = form.cleaned_data['estado']
             categoria.save()
     else:
-        form = categoria_editarForm(initial={'nombre': categoria.nombre, 'estado': categoria.estado})
+        form = categoria_editarForm(initial={'nombre': categoria.nombre, 
+                                             'estado': categoria.estado})
     return render(request,'categoria_editar.html', {'categoria': categoria, 
                                                     'items' : items,
                                                     'cantidad': cantidad, 
                                                     'form': form})
+def item_editar(request, _id):
+    item = Item.objects.get(id = _id)
+    if request.method == "POST":
+        form = itemForm(request.POST)
+        if form.is_valid():
+            item.nombre = form.cleaned_data['nombre']
+            item.cantidad = form.cleaned_data['cantidad']
+            icategoria = form.cleaned_data['categoria']
+            idcat = Categoria.objects.get(nombre = icategoria)
+            item.id_categoria = idcat
+            item.prioridad = 1
+            item.minimo = form.cleaned_data['minimo']
+            item.save()
+    else: 
+        form = itemForm(initial = {'nombre': item.nombre, 
+                                        'cantidad': item.cantidad,
+                                        'categoria': item.id_categoria,
+                                        'prioridad': item.prioridad,
+                                        'minimo': item.minimo})
+    return render(request, 'item_editar.html', {'form' : form})
+           
+           
 
 def inventario(request):
     items = Item.objects.order_by('nombre')
