@@ -39,7 +39,7 @@ class registroForm(forms.Form):
     nombre = forms.CharField(max_length = 30, required = True, label = "Nombre", widget=forms.TextInput(attrs={'style': 'width:100%'}))
     apellido = forms.CharField(max_length = 30, required = True, label = "Apellido", widget=forms.TextInput(attrs={'style': 'width:100%'}))
     correo = forms.EmailField(required = False, label = "Correo electrónico", widget=forms.EmailInput(attrs={'style': 'width:100%'}))
-    tipoEmpleado = (("tecnico","Técnico"), ("almacenista", "Almacenista"), ("admin", "Administrador"))
+    tipoEmpleado = (("tecnico","Técnico"), ("almacenista", "Almacenista"))
     tipo = forms.ChoiceField(required = True, choices = tipoEmpleado, 
                              widget = forms.Select(attrs={'style': 'width:100%; background-color:white'}), label = "Cargo")
     contraseña1 = forms.CharField(max_length = 25,

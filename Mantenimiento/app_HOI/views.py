@@ -51,6 +51,21 @@ def inicio_sesion(request):
 def registro(request):
     if request.method == "POST":
         form = registroForm(request.POST)
+        if form.is_valid():
+            ci = form.cleaned_data['cedula']
+            if User.objects.filter(username=ci).exists():
+                msg = "Esta cédula ya se encuentra registrada"
+                return render(request,'registro.html',{'form' : form, 'msg' : msg})
+            if (form.cleaned_data['contraseña1']!= form.cleaned_data['contraseña2']):
+                msg = "Las contraseñas no coinciden. Intente de nuevo"
+                return render(request,'registro.html',{'form' : form, 'msg' : msg})
+            user = User.objects.create_user(username=ci,
+                                 password=form.cleaned_data['contraseña1'])
+            user.first_name = form.cleaned_data['nombre']
+            user.last_name = form.cleaned_data['apellido']
+            if (form.cleaned_data['correo']!=""):
+                user.email = form.cleaned_data['correo']
+            user.save()
     else:
         form = registroForm()
     return render(request,'registro.html', {'form': form})
