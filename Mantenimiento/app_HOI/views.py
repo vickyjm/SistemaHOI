@@ -107,7 +107,8 @@ def crearItem(request):
                             minimo = form.cleaned_data['minimo']
                             )
                 obj.save()
-                mensaje = "Item %s creado exitosamente" % (inombre)    
+                mensaje = "Item %s creado exitosamente" % (inombre) 
+                form = itemForm(initial={'cantidad': '0', 'minimo': '5'})   
     else:
         # Valores iniciales de cantidad y minimo para alerta
         form = itemForm(initial={'cantidad': '0', 'minimo': '5'})
