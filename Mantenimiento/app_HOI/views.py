@@ -55,10 +55,10 @@ def registro(request):
                 user.email = form.cleaned_data['correo']
             if (form.cleaned_data['tipo'] == "Técnico"):
                 group = Group.objects.get(name='tecnicos') 
-                group.user_set.add(user)
+                user.groups.add(group)
             else:
                 group = Group.objects.get(name='almacenistas') 
-                group.user_set.add(user)
+                user.groups.add(group)
 
             user.save()
     else:
