@@ -207,22 +207,35 @@ def item_editar(request, _id):
 
         if form.is_valid():
             # Obtiene los datos del formulario
-            item.nombre = form.cleaned_data['nombre']
-            item.cantidad = form.cleaned_data['cantidad']
+            inombre = form.cleaned_data['nombre']
             icategoria = form.cleaned_data['categoria']
             idcat = Categoria.objects.get(nombre = icategoria)
-            item.id_categoria = idcat
-            item.prioridad = 1
-            item.minimo = form.cleaned_data['minimo']
-            item.save()
+            print (idcat)
+            itemexiste = Item.objects.filter(nombre = inombre, 
+                                            id_categoria = idcat.id).exists()
+
+            if itemexiste:
+                mensaje = "Nombre '%s' ya existe en la categoría '%s'" %(inombre, idcat)
+            else:
+                item.nombre = inombre
+                item.cantidad = form.cleaned_data['cantidad']
+                item.id_categoria = idcat
+                print (item.id_categoria)
+                print (idcat)
+                item.prioridad = 1
+                item.minimo = form.cleaned_data['minimo']
+                item.save()
+                mensaje = "Item '%s' editado exitosamente" %inombre
     else: 
-        # Forumlario con los datos del item a editar
+        # Formulario con los datos del item a editar
         form = itemForm(initial = {'nombre': item.nombre, 
                                         'cantidad': item.cantidad,
                                         'categoria': item.id_categoria,
                                         'prioridad': item.prioridad,
                                         'minimo': item.minimo})
-    return render(request, 'item_editar.html', {'form' : form})
+        mensaje = None
+    return render(request, 'item_editar.html', {'form' : form, 
+                                                'mensaje': mensaje})
            
            
 # Vista utilizada para mostrar los items del inventario
