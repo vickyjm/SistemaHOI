@@ -53,6 +53,13 @@ def registro(request):
             user.last_name = form.cleaned_data['apellido']
             if (form.cleaned_data['correo']!=""):
                 user.email = form.cleaned_data['correo']
+            if (form.cleaned_data['tipo'] == "Técnico"):
+                group = Group.objects.get(name='tecnicos') 
+                group.user_set.add(user)
+            else:
+                group = Group.objects.get(name='almacenistas') 
+                group.user_set.add(user)
+
             user.save()
     else:
         form = registroForm()
