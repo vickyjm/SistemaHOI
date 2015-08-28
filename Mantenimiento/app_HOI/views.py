@@ -112,12 +112,17 @@ def categoria_editar(request, _id):
     items = Item.objects.filter(id_categoria = _id)
     cantidad = items.count()
     if request.method == "POST":
-        pass
+        form = categoria_editarForm(request.POST)
+        if form.is_valid():
+            categoria.nombre = form.cleaned_data['nombre']
+            categoria.estado = form.cleaned_data['estado']
+            categoria.save()
     else:
-        pass
+        form = categoria_editarForm(initial={'nombre': categoria.nombre, 'estado': categoria.estado})
     return render(request,'categoria_editar.html', {'categoria': categoria, 
                                                     'items' : items,
-                                                    'cantidad': cantidad})
+                                                    'cantidad': cantidad, 
+                                                    'form': form})
 
 def inventario(request):
     items = Item.objects.order_by('nombre')

@@ -10,7 +10,28 @@
 {% block page_content %}
 <div class="row main-row">
 	<div class="3u 12u(mobile)">
-		<setion></section>
+		<form action="" method="post">
+<table style="width:100%" >
+		<thead>
+		</thead>
+		{% csrf_token %}
+		<tbody>
+			{% for field in form %}
+
+			 <h3>{{field.label_tag}}</h3>
+
+			 <h4 style = "color:#CC0000">{{ field.errors}}</h4>
+			<h3>{{field}}</h3>
+
+			 {% endfor %}
+			<tr>
+				<td align="right"><br><br>
+				<input type="submit" class="button" value="Guardar"></td>
+			</tr>
+		</tbody>
+	</table>
+
+		</form>
 	</div>
 <div class="6u 12u(mobile) important(mobile)">
 <section class="middle-content">
