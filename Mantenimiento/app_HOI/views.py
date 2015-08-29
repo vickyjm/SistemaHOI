@@ -152,9 +152,9 @@ def categoria_editar(request, _id):
     
     categoria = Categoria.objects.get(id = _id)
     # Lista de items dentro de la categoria
-    items = Item.objects.filter(id_categoria = _id)
+    #items = Item.objects.filter(id_categoria = _id)
     # Cantidad de items dentro de la categoria
-    cantidad = items.count()
+    #cantidad = items.count()
 
     if request.method == "POST":
         
@@ -193,8 +193,6 @@ def categoria_editar(request, _id):
                                              'estado': categoria.estado})
         mensaje = None
     return render(request,'categoria_editar.html', {'categoria': categoria, 
-                                                    'items' : items,
-                                                    'cantidad': cantidad, 
                                                     'form': form,
                                                     'mensaje': mensaje})
 

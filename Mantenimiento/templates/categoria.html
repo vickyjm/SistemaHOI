@@ -1,4 +1,4 @@
-{% extends "base-col3.html" %}
+{% extends "base-col22.html" %}
 
 {% block page_menu %}
 <a href="./crearItem" >Crear Item</a>
@@ -45,9 +45,9 @@
 		<tr>
 			<td><h3 style = "color: gray;">{{ cat.nombre }}</h3></td>
 			<td><h3 style = "color: gray;">{{ cat.get_estado_display }}</h3></td>
-			<td><a href="./categorias/{{cat.id}}/editar"><i class="fa fa-search"></i></a></td>
-			<td><i class="fa fa-pencil-square-o"></td>
-			<td><i class="fa fa-times"></i></i></h3></td>
+			<td><a href="./categorias/{{cat.id}}/editar"><i class="fa fa-pencil-square-o"></i></a></td>
+			<!--td><i class="fa fa-pencil-square-o"></td>
+			<td><i class="fa fa-times"></i></i></h3></td-->
 		</tr>
 	{% endfor %}
 	</tbody>
