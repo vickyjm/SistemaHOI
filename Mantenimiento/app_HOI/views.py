@@ -103,7 +103,7 @@ def crearItem(request):
                 obj = Item(nombre = inombre,
                             cantidad = form.cleaned_data['cantidad'],
                             id_categoria = idcat,
-                            prioridad = 1,
+                            prioridad = form.cleaned_data['prioridad'],
                             minimo = form.cleaned_data['minimo'],
                             estado = 1
                             )
@@ -218,7 +218,7 @@ def item_editar(request, _id):
                                               id_categoria = idcat.id)
                 if int(itemexiste.id) == int(_id): 
                     item.cantidad = form.cleaned_data['cantidad']
-                    item.prioridad = 1
+                    item.prioridad = form.cleaned_data['prioridad']
                     item.minimo = form.cleaned_data['minimo']
                     item.estado = form.cleaned_data['estado']
                     item.save()
@@ -231,7 +231,7 @@ def item_editar(request, _id):
                 item.nombre = inombre
                 item.cantidad = form.cleaned_data['cantidad']
                 item.id_categoria = idcat
-                item.prioridad = 1
+                item.prioridad = form.cleaned_data['prioridad']
                 item.minimo = form.cleaned_data['minimo']
                 item.estado = form.cleaned_data['estado']
                 item.save()
