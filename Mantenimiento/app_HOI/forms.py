@@ -113,17 +113,21 @@ class itemForm(forms.Form):
                     label = "Mínimo valor para alerta", 
                     widget=forms.NumberInput(attrs={'style': 'width:100%'}))
 
+class item_editarForm(itemForm):
+    opciones_estado = (('0', 'Inactivo',), ('1', 'Activo'))
+    estado = forms.ChoiceField(required = True,
+                    widget=forms.RadioSelect(attrs={'style': 'width:100%; background-color:white'}), 
+                    label = "Estado",
+                    choices=opciones_estado)
+ 
+
 class categoriaForm(forms.Form):
     nombre = forms.CharField(max_length = 100, 
                     required = True, 
                     label = "Nombre", 
                     widget = forms.TextInput(attrs={'style': 'width:100%'}))
 
-class categoria_editarForm(forms.Form):
-    nombre = forms.CharField(max_length = 100, 
-                    required = True, 
-                    label = "Nombre", 
-                    widget = forms.TextInput(attrs={'style': 'width:100%'}))
+class categoria_editarForm(categoriaForm):
     opciones_estado = (('0', 'Inactivo',), ('1', 'Activo'))
     estado = forms.ChoiceField(required = True,
                     widget=forms.RadioSelect(attrs={'style': 'width:100%; background-color:white'}), 

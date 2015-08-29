@@ -204,7 +204,7 @@ def item_editar(request, _id):
     item = Item.objects.get(id = _id)
     nombre = item.nombre
     if request.method == "POST":
-        form = itemForm(request.POST)
+        form = item_editarForm(request.POST)
 
         if form.is_valid():
             # Obtiene los datos del formulario
@@ -219,6 +219,7 @@ def item_editar(request, _id):
                     item.cantidad = form.cleaned_data['cantidad']
                     item.prioridad = 1
                     item.minimo = form.cleaned_data['minimo']
+                    item.estado = form.cleaned_data['estado']
                     item.save()
                     mensaje = "Item '%s' editado exitosamente" %nombre
                 else:
@@ -231,16 +232,18 @@ def item_editar(request, _id):
                 item.id_categoria = idcat
                 item.prioridad = 1
                 item.minimo = form.cleaned_data['minimo']
+                item.estado = form.cleaned_data['estado']
                 item.save()
                 mensaje = "Item '%s' editado exitosamente" %nombre
                 nombre = inombre
     else: 
         # Formulario con los datos del item a editar
-        form = itemForm(initial = {'nombre': item.nombre, 
+        form = item_editarForm(initial = {'nombre': item.nombre, 
                                         'cantidad': item.cantidad,
                                         'categoria': item.id_categoria,
                                         'prioridad': item.prioridad,
-                                        'minimo': item.minimo})
+                                        'minimo': item.minimo,
+                                        'estado': item.estado})
         mensaje = None
     return render(request, 'item_editar.html', {'form' : form, 
                                                 'nombre' : nombre,

@@ -1,7 +1,8 @@
 {% extends "base-col22.html" %}
 
 {% block page_menu %}
-<a href="./crearItem" >Crear Item</a>
+<a href="./inventario" >Inventario</a>
+<a href="" class="current-page-item">Categorías</a>
 {% endblock page_menu%}
 
 {% block page_title %}Categorías{% endblock page_title %}
@@ -38,14 +39,14 @@
 		<thead>
 			<td><h3>Nombre</h3></td>
 			<td><h3>Estado</h3></td>
-			<td><h3>Acciones</h3></td>
+			<td><h3>Editar</h3></td>
 		</thead>
 	<tbody>
 	{% for cat in categorias %}
 		<tr>
 			<td><h3 style = "color: gray;">{{ cat.nombre }}</h3></td>
 			<td><h3 style = "color: gray;">{{ cat.get_estado_display }}</h3></td>
-			<td><a href="./categorias/{{cat.id}}/editar"><i class="fa fa-pencil-square-o"></i></a></td>
+			<td ><a href="./categorias/{{cat.id}}/editar"><i class="fa fa-pencil-square-o"></i></a></td>
 			<!--td><i class="fa fa-pencil-square-o"></td>
 			<td><i class="fa fa-times"></i></i></h3></td-->
 		</tr>
