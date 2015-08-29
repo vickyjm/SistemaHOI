@@ -119,7 +119,7 @@ class categoriaForm(forms.Form):
                     label = "Nombre", 
                     widget = forms.TextInput(attrs={'style': 'width:100%'}))
 
-class categoria_editarForm(forms.Form):
+class categoria_editarForm(forms.ModelForm):
     nombre = forms.CharField(max_length = 100, 
                     required = True, 
                     label = "Nombre", 
@@ -129,3 +129,5 @@ class categoria_editarForm(forms.Form):
                     widget=forms.RadioSelect(attrs={'style': 'width:100%; background-color:white'}), 
                     label = "Estado",
                     choices=opciones_estado)
+    class Meta:
+        model = Categoria
