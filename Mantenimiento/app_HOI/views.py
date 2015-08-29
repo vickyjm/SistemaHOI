@@ -104,7 +104,8 @@ def crearItem(request):
                             cantidad = form.cleaned_data['cantidad'],
                             id_categoria = idcat,
                             prioridad = 1,
-                            minimo = form.cleaned_data['minimo']
+                            minimo = form.cleaned_data['minimo'],
+                            estado = 1
                             )
                 obj.save()
                 mensaje = "Item %s creado exitosamente" % (inombre) 

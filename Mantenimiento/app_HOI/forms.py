@@ -113,6 +113,7 @@ class itemForm(forms.Form):
                     label = "Mínimo valor para alerta", 
                     widget=forms.NumberInput(attrs={'style': 'width:100%'}))
 
+# Form para editar items, hereda de itemForm
 class item_editarForm(itemForm):
     opciones_estado = (('0', 'Inactivo',), ('1', 'Activo'))
     estado = forms.ChoiceField(required = True,
@@ -127,6 +128,7 @@ class categoriaForm(forms.Form):
                     label = "Nombre", 
                     widget = forms.TextInput(attrs={'style': 'width:100%'}))
 
+# Form para editar categorias, hereda de categoriaForm
 class categoria_editarForm(categoriaForm):
     opciones_estado = (('0', 'Inactivo',), ('1', 'Activo'))
     estado = forms.ChoiceField(required = True,
