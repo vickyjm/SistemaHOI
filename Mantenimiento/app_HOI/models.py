@@ -7,9 +7,24 @@ from django.db.models.signals import post_migrate
 
 @receiver(post_migrate)
 def init_groups(sender, **kwargs):
-    g_tecnicos, created = Group.objects.get_or_create(name='tecnicos')
-    g_almacenistas, created = Group.objects.get_or_create(name='almacenistas')
-    g_administrador, created = Group.objects.get_or_create(name='administrador')
+    aprobar_solicitud = Permission.objects.get_or_create(codename='aprobar_solicitud',
+                                                         name='Puede agregar items')
+    ingresar_item = Permission.objects.get_or_create(codename='ingresar_item',
+                                                     name='Puede agregar items')
+    crear_item = Permission.objects.get_or_create(codename='crear_item',
+                                                  name='Puede agregar items')
+
+    group = Group.objects.get_or_create(name='tecnicos')
+    group, created = Group.objects.get_or_create(name='almacenistas')
+    if created:
+        group.permissions.add(aprobar_solicitud)
+        group.permissions.add(ingresar_item)
+    group, created = Group.objects.get_or_create(name='administrador')
+    if created:
+        group.permissions.add(aprobar_solicitud)
+        group.permissions.add(ingresar_item)
+        group.permissions.add(crear_item)
+        
 
 class Categoria(models.Model):
     nombre = models.CharField(max_length = 100, unique=True)

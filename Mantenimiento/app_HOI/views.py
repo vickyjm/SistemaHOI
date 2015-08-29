@@ -11,6 +11,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect
 from app_HOI.forms import * 
 from app_HOI.models import *
+from django.contrib.auth.decorators import permission_required
 
 def verperfil(request):
 	return render(request, 'verperfil.html')
@@ -86,6 +87,7 @@ def recuperarContraseña(request):
         form = recuperarContraseñaForm()
     return render(request,'recuperarContrasenia.html',{'form': form})
 
+@permission_required('app_HOI.crear_item')
 def crearItem(request):
     if request.method == "POST":
         form = itemForm(request.POST)
