@@ -20,8 +20,9 @@ class iniciarSesionForm(forms.Form):
                     ]
             )
     contraseña = forms.CharField(max_length = 25,
-                                 required = True,
-                                 label = "Contraseña", widget=forms.PasswordInput(attrs={'style': 'width:100%'}))
+                    required = True,
+                    label = "Contraseña", 
+                    widget=forms.PasswordInput(attrs={'style': 'width:100%'}))
     
 class registroForm(forms.Form):
     cedula = forms.CharField(
@@ -36,19 +37,32 @@ class registroForm(forms.Form):
                         )
                     ]
             )
-    nombre = forms.CharField(max_length = 30, required = True, label = "Nombre", widget=forms.TextInput(attrs={'style': 'width:100%'}))
-    apellido = forms.CharField(max_length = 30, required = True, label = "Apellido", widget=forms.TextInput(attrs={'style': 'width:100%'}))
-    correo = forms.EmailField(required = False, label = "Correo electrónico", widget=forms.EmailInput(attrs={'style': 'width:100%'}))
+    nombre = forms.CharField(max_length = 30, 
+                    required = True, 
+                    label = "Nombre", 
+                    widget=forms.TextInput(attrs={'style': 'width:100%'}))
+    apellido = forms.CharField(max_length = 30, 
+                    required = True, 
+                    label = "Apellido", 
+                    widget=forms.TextInput(attrs={'style': 'width:100%'}))
+    correo = forms.EmailField(required = False, 
+                    label = "Correo electrónico", 
+                    widget=forms.EmailInput(attrs={'style': 'width:100%'}))
     tipoEmpleado = (("tecnico","Técnico"), ("almacenista", "Almacenista"))
-    tipo = forms.ChoiceField(required = True, choices = tipoEmpleado, 
-                             widget = forms.Select(attrs={'style': 'width:100%; background-color:white'}), label = "Cargo")
+    tipo = forms.ChoiceField(required = True, 
+                    choices = tipoEmpleado, 
+                    widget = forms.Select(attrs={'style': 'width:100%; background-color:white'}), 
+                    label = "Cargo")
+
     contraseña1 = forms.CharField(max_length = 25,
-                                 required = True,
-                                 label = "Contraseña", widget=forms.PasswordInput(attrs={'style': 'width:100%'}))
+                     required = True,
+                     label = "Contraseña", 
+                     widget=forms.PasswordInput(attrs={'style': 'width:100%'}))
     contraseña2 = forms.CharField(max_length = 25,
-                                 required = True,
-                                 label = "Confirmar contraseña", widget=forms.PasswordInput(attrs={'style': 'width:100%'}))
-    
+                     required = True,
+                     label = "Confirmar contraseña", 
+                     widget=forms.PasswordInput(attrs={'style': 'width:100%'}))
+
 class recuperarContraseñaForm(forms.Form):
     cedula = forms.CharField(
                     max_length = 11,
@@ -63,25 +77,55 @@ class recuperarContraseñaForm(forms.Form):
                     ]
             )
     contraseña1 = forms.CharField(max_length = 25,
-                                 required = True,
-                                 label = "Contraseña", widget=forms.PasswordInput(attrs={'style': 'width:100%'}))
+                     required = True,
+                     label = "Contraseña", 
+                     widget=forms.PasswordInput(attrs={'style': 'width:100%'}))
     contraseña2 = forms.CharField(max_length = 25,
-                                 required = True,
-                                 label = "Confirmar contraseña", widget=forms.PasswordInput(attrs={'style': 'width:100%'}))
-    
+                     required = True,
+                     label = "Confirmar contraseña", 
+                     widget=forms.PasswordInput(attrs={'style': 'width:100%'}))
 
 class MyModelChoiceField(ModelChoiceField):
     def label_from_instance(self, obj):
         return "My Object #%i" % obj.nombre
 
 class itemForm(forms.Form):
-    nombre = forms.CharField(max_length = 100, required = True, label = "Nombre", widget = forms.TextInput(attrs={'style': 'width:100%'}))
-    cantidad = forms.IntegerField(max_value = 2147483647, min_value = 0, required = True, label = "Cantidad", widget=forms.NumberInput(attrs={'style': 'width:100%'}))
-    # Categoria.objects.none() creo que porque no hay nada,  si no seria Categoria.objects.all()
-    categoria = forms.ModelChoiceField(widget=forms.Select(attrs={'style': 'width:100%; background-color:white'}), queryset=Categoria.objects.order_by('nombre'), label = "Categoría")
-    opciones_prioridad = (("baja", "Baja"),("media", "Media"), ("alta", "Alta"))
-    prioridad = forms.ChoiceField(required = True, choices = opciones_prioridad, widget = forms.Select(attrs={'style': 'width:100%; background-color:white'}), label = "Prioridad")
-    minimo = forms.IntegerField(max_value = 2147483647, min_value = 0, required = True, label = "Mínimo valor para alerta", widget=forms.NumberInput(attrs={'style': 'width:100%'}))
+    nombre = forms.CharField(max_length = 100, 
+                    required = True, 
+                    label = "Nombre", 
+                    widget = forms.TextInput(attrs={'style': 'width:100%'}))
+    cantidad = forms.IntegerField(max_value = 2147483647, 
+                    min_value = 0, 
+                    required = True, 
+                    label = "Cantidad", 
+                    widget=forms.NumberInput(attrs={'style': 'width:100%'}))
+    categoria = forms.ModelChoiceField(label = "Categoría",
+        widget=forms.Select(attrs={'style':'width:100%; background-color:white'}), 
+        queryset=Categoria.objects.order_by('nombre'))
+    opciones_prioridad = ((0, "Baja"),(1, "Media"), (2, "Alta"))
+    prioridad = forms.ChoiceField(required = True, 
+                    choices = opciones_prioridad, 
+                    widget = forms.Select(attrs={'style': 'width:100%; background-color:white'}), 
+                    label = "Prioridad")
+    minimo = forms.IntegerField(max_value = 2147483647, 
+                    min_value = 0, 
+                    required = True, 
+                    label = "Mínimo valor para alerta", 
+                    widget=forms.NumberInput(attrs={'style': 'width:100%'}))
 
 class categoriaForm(forms.Form):
-    nombre = forms.CharField(max_length = 100, required = True, label = "Nombre", widget = forms.TextInput(attrs={'style': 'width:100%'}))
+    nombre = forms.CharField(max_length = 100, 
+                    required = True, 
+                    label = "Nombre", 
+                    widget = forms.TextInput(attrs={'style': 'width:100%'}))
+
+class categoria_editarForm(forms.Form):
+    nombre = forms.CharField(max_length = 100, 
+                    required = True, 
+                    label = "Nombre", 
+                    widget = forms.TextInput(attrs={'style': 'width:100%'}))
+    opciones_estado = (('0', 'Inactivo',), ('1', 'Activo'))
+    estado = forms.ChoiceField(required = True,
+                    widget=forms.RadioSelect(attrs={'style': 'width:100%; background-color:white'}), 
+                    label = "Estado",
+                    choices=opciones_estado)

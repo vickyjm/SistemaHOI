@@ -8,17 +8,20 @@
 {% block page_title %}Crear Item{% endblock page_title %}
 {% block page_left %}{% endblock page_left %}
 {% block page_content %}
-<form action="./crearItem" method="post">
+<form action="" method="post">
 
 	<table style="width:100%" >
 		<thead>
 		</thead>
 		{% csrf_token %}
 		<tbody>
-			 {% for field in form %}
+			{% if mensaje %}
+				<h3>{{mensaje}}</h3>
+			{% endif %}
+			{% for field in form %}
 
 			 <h3>{{field.label_tag}}</h3>
-
+			 <h4 style = "color:#CC0000">{{ field.errors}}</h4>
 			 {{field}}<br><br>
 
 			 {% endfor %}
@@ -29,8 +32,5 @@
 		</tbody>
 	</table>
 </form>
-{% if form.errors %}
-	<p> Error </p>
-{% endif %}
 {% endblock page_content %}
 {% block page_right %}{% endblock page_right %}

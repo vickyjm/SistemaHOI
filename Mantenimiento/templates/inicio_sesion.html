@@ -2,7 +2,7 @@
 
 {% block page_menu %}
 	<a href="." class="current-page-item">Iniciar sesión</a>
-	<a href="./registrar">Registro</a>
+	<a href="./registro">Registro</a>
 {% endblock page_menu%}
 
 {% block page_title %}Iniciar sesión{% endblock page_title %}
@@ -22,7 +22,7 @@
 
 			 <h3>{{field.label_tag}}</h3>
 
-			 {{ field.errors}}
+			 <h4 style = "color:#CC0000">{{ field.errors}}</h4>
 			 {{field}}<br><br>
 			 
 			 {% endfor %}

@@ -9,22 +9,29 @@
 {% block page_left %}{% endblock page_left %}
 {% block page_content %}
 <table style="width:100%" >
-	<thead>
-		<td><h3>Nombre</h3></td>
+	<thead align="center">
+		<tr>
+		<td><h3><b>Nombre</b></h3></td>
 		<td><h3>Cantidad</h3></td>
 		<td><h3>Categoría</h3></td>
 		<td><h3>Prioridad</h3></td>
 		<td><h3>Mínimo</h3></td>
+		<td><h3>Acciones</h3></td>
+		</tr>
+
 	</thead>
 {% if items %}
 	<tbody>
 		{% for i in items %}
-		<tr>
-			<td><h3>{{ i.nombre }}</h3></td>
-			<td><h3>{{ i.cantidad }}</h3></td>
-			<td><h3>{{ i.id_categoria }}</h3></td>
-			<td><h3>{{ i.prioridad }}</h3></td>
-			<td><h3>{{ i.minimo }}</h3></td>
+		<tr align="center">
+			<td>{{ i.nombre }}</td>
+			<td>{{ i.cantidad }}</td>
+			<td>{{ i.id_categoria }}</td>
+			<td>{{ i.get_prioridad_display }}</td>
+			<td>{{ i.minimo }}</td>
+			<td><a href="./inventario/{{i.id}}/editar"><i class="fa fa-search"></i></a></td>
+			<td><i class="fa fa-pencil-square-o"></td>
+			<td><i class="fa fa-times"></i></i></h3></td>
 		</tr>
 		{% endfor %}
 	</tbody>

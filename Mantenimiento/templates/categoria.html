@@ -1,4 +1,4 @@
-{% extends "base-col22.html" %}
+{% extends "base-col3.html" %}
 
 {% block page_menu %}
 <a href="./crearItem" >Crear Item</a>
@@ -6,7 +6,7 @@
 
 {% block page_title %}Categorías{% endblock page_title %}
 {% block page_left %}
-<form action='./categoria' method="post">
+<form action='./categorias' method="post">
 
 <h2>Crear categoría</h2>
 	<table style="width:100%" >
@@ -20,7 +20,7 @@
 			 {% for field in form %}
 
 			 <h3>{{field.label_tag}}</h3>
-
+			 <h4 style = "color:#CC0000">{{ field.errors}}</h4>
 			 {{field}}<br><br>
 
 			 {% endfor %}
@@ -31,16 +31,27 @@
 		</tbody>
 	</table>
 </form>
-{% if form.errors %}
-	<p> Error </p>
-	
-{% endif %}
 {% endblock page_left %}
 {% block page_content %}
 	{% if categorias %}
+	<table style="width:100%" >
+		<thead>
+			<td><h3>Nombre</h3></td>
+			<td><h3>Estado</h3></td>
+			<td><h3>Acciones</h3></td>
+		</thead>
+	<tbody>
 	{% for cat in categorias %}
-		<h3>{{ cat.nombre }}</h3>
+		<tr>
+			<td><h3 style = "color: gray;">{{ cat.nombre }}</h3></td>
+			<td><h3 style = "color: gray;">{{ cat.get_estado_display }}</h3></td>
+			<td><a href="./categorias/{{cat.id}}/editar"><i class="fa fa-search"></i></a></td>
+			<td><i class="fa fa-pencil-square-o"></td>
+			<td><i class="fa fa-times"></i></i></h3></td>
+		</tr>
 	{% endfor %}
+	</tbody>
+	</table>
 	{% endif %}
 {% endblock page_content %}
 {% block page_right %}{% endblock page_right %}
