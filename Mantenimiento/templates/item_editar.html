@@ -1,11 +1,11 @@
 {% extends "base-col3.html" %}
 
 {% block page_menu %}
-<a href="../../../	categorias" >Categorías</a>
 <a href="../../../inventario" >Inventario</a>
+<a href="../../../categorias" >Categorías</a>
 {% endblock page_menu%}
 
-{% block page_title %}Editar Item{% endblock page_title %}
+{% block page_title %}Editar item '{{ nombre }}'{% endblock page_title %}
 {% block page_left %}{% endblock page_left %}
 {% block page_content %}
 <form action="" method="post">

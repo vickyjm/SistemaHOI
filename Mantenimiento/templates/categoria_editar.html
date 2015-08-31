@@ -1,30 +1,33 @@
-{% extends "base-col1.html" %}
+{% extends "base-col3.html" %}
 
 {% block page_menu %}
-<a href="../../../crearItem" >Crear Item</a>
+<a href="../../../inventario" >Inventario</a>
+<a href="../../../categorias" >Categorías</a>
 {% endblock page_menu%}
 
 {% block page_title %}Editar categoría '{{ categoria }}'{% endblock page_title %}
 {% block page_left %}
 {% endblock page_left %}
 {% block page_content %}
-<div class="row main-row">
-	<div class="3u 12u(mobile)">
-		<form action="" method="post">
+<form action="" method="post">
 <table style="width:100%" >
 		<thead>
 		</thead>
 		{% csrf_token %}
 		<tbody>
 			{% if mensaje %}
-				<h3>{{mensaje}}</h3>
+				<h3 style="color: {{ color }}">{{mensaje}}</h3>
 			{% endif %}
 			{% for field in form %}
-
-			 <h3>{{field.label_tag}}</h3>
+			<tr>
+			<td><h3>{{field.label_tag}}</h3></td>
 
 			 <h4 style = "color:#CC0000">{{ field.errors}}</h4>
-			<h3>{{field}}</h3>
+
+			</tr>
+			<tr>
+				<td><h3>{{field}}</h3></td>
+			</tr>
 
 			 {% endfor %}
 			<tr>
@@ -34,9 +37,8 @@
 		</tbody>
 	</table>
 
-		</form>
-	</div>
-<div class="6u 12u(mobile) important(mobile)">
+</form>
+<!--div class="6u 12u(mobile) important(mobile)">
 <section class="middle-content">
 	<table style="width:100%">
 		<tbody>
@@ -66,7 +68,6 @@
 		</tbody>
 	</table>
 </section>
-</div>
-</div>
+</div-->
 {% endblock page_content %}
 {% block page_right %}{% endblock page_right %}

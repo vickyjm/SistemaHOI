@@ -115,12 +115,15 @@ def crearItem(request):
             except:
                 print ("No hay items")
                 obj = Item(nombre = inombre,
-                                cantidad = form.cleaned_data['cantidad'],
-                                id_categoria = idcat,
-                                prioridad = 1,
-                                minimo = form.cleaned_data['minimo']
-                                )
+                            cantidad = form.cleaned_data['cantidad'],
+                            id_categoria = idcat,
+                            prioridad = form.cleaned_data['prioridad'],
+                            minimo = form.cleaned_data['minimo'],
+                            estado = 1
+                            )
                 obj.save()
+                mensaje = "Item %s creado exitosamente" % (inombre) 
+                form = itemForm(initial={'cantidad': '0', 'minimo': '5'})   
     else:
         form = itemForm(initial={'cantidad': '0', 'minimo': '5'})
     return render(request,'crearItem.html', {'form': form})
@@ -131,6 +134,7 @@ def categoria(request):
     
         if form.is_valid():
             catnombre = form.cleaned_data['nombre']
+
             try: 
                 cat = Categoria.objects.get(nombre = catnombre)
                 # Verifica si el nombre de la categoria ya existe
@@ -138,44 +142,124 @@ def categoria(request):
                     mensaje = "Categoría '%s' ya existe" % (catnombre)
             # Si no existe, crea el objeto y lo guarda
             except ObjectDoesNotExist:
-                obj = Categoria(nombre = catnombre)
+                obj = Categoria(nombre = catnombre,
+                                estado = 1)
                 obj.save()
                 mensaje = "Categoría '%s' creada exitosamente" % (catnombre)
-            categorias = Categoria.objects.order_by('nombre')
+                form = categoriaForm()
+        categorias = Categoria.objects.order_by('nombre')
+
     else:
         form = categoriaForm()
-        mensaje = None    
+        mensaje = None  
         categorias = Categoria.objects.order_by('nombre')
-    return render(request,'categoria.html', {'form': form, 'categorias': categorias, 'mensaje': mensaje})
 
+    return render(request,'categoria.html', {'form': form, 
+                                             'categorias': categorias, 
+                                             'mensaje': mensaje})
+
+# Vista creada para editar una categoria en el sistema
 def categoria_editar(request, _id):
-    mensaje = None
-    categoria = Categoria.objects.get(id = _id)
-    cantidad = Item.objects.filter(id_categoria = _id).count()
-    items = Item.objects.filter(id_categoria = _id).values('nombre')
 
-    if request.method == 'POST':
+    categoria = Categoria.objects.get(id = _id)
+    # Lista de items dentro de la categoria
+    #items = Item.objects.filter(id_categoria = _id)
+    # Cantidad de items dentro de la categoria
+    #cantidad = items.count()
+
+    if request.method == "POST":
+        
         form = categoria_editarForm(request.POST)
+        
+        if form.is_valid():
+            #Obtiene datos del formulario
+            cnombre = form.cleaned_data['nombre']
+            cestado = form.cleaned_data['estado']
+            try:
+                # Obtiene la categoria con el nombre del formulario
+                cat = Categoria.objects.get(nombre = cnombre)
+                # Si la categoria es la misma a editar
+                if int(cat.pk) == int(_id):
+                    # Verifica si hay cambio en la categoria
+                    if int(cestado) != int(categoria.estado):
+                        categoria.estado = cestado
+                        categoria.save()
+                        mensaje = "Categoría editada exitosamente"
+                    # No hubo cambios en la categoria
+                    else: 
+                        mensaje = None
+                # Si la categoria no es la misma a editar
+                else:
+                    mensaje = "La categoría '%s' ya existe" % cnombre
+            # Si no existe una categoria con el nombre introducido
+            except:
+                categoria.nombre = cnombre
+                categoria.estado = cestado
+                categoria.save()
+                mensaje = "Categoría editada exitosamente"
+
+    else:
+        # Formulario con los datos a editar
+        form = categoria_editarForm(initial={'nombre': categoria.nombre, 
+                                             'estado': categoria.estado})
+        mensaje = None
+    return render(request,'categoria_editar.html', {'categoria': categoria, 
+                                                    'form': form,
+                                                    'mensaje': mensaje})
+
+# Vista utilizada para editar un item en el sistema
+def item_editar(request, _id):
+    # Obtiene el objeto de item a editar
+    item = Item.objects.get(id = _id)
+    nombre = item.nombre
+    if request.method == "POST":
+        form = item_editarForm(request.POST)
 
         if form.is_valid():
-            cat = Categoria.objects.get(pk=_id)
-            form = categoria_editarForm(request.POST, instance = cat)
-            form.save()
+            # Obtiene los datos del formulario
+            inombre = form.cleaned_data['nombre']
+            icategoria = form.cleaned_data['categoria']
+            idcat = Categoria.objects.get(nombre = icategoria)
+            print (idcat)
+            try:
+                itemexiste = Item.objects.get(nombre = inombre, 
+                                              id_categoria = idcat.id)
+                if int(itemexiste.id) == int(_id): 
+                    item.cantidad = form.cleaned_data['cantidad']
+                    item.prioridad = form.cleaned_data['prioridad']
+                    item.minimo = form.cleaned_data['minimo']
+                    item.estado = form.cleaned_data['estado']
+                    item.save()
+                    mensaje = "Item '%s' editado exitosamente" %nombre
+                else:
+                    mensaje = "Nombre '%s' ya existe en la categoría '%s'" %(inombre, idcat)
+                    
+            except ObjectDoesNotExist:
 
-            return HttpResponseRedirect('./categorias')
-        else:
-            cat = Categoria.objects.get(pk = _id)       
-            form = categoria_editarForm(instance=cat)
-    else:
-        form = categoria_editarForm()
+                item.nombre = inombre
+                item.cantidad = form.cleaned_data['cantidad']
+                item.id_categoria = idcat
+                item.prioridad = form.cleaned_data['prioridad']
+                item.minimo = form.cleaned_data['minimo']
+                item.estado = form.cleaned_data['estado']
+                item.save()
+                mensaje = "Item '%s' editado exitosamente" %nombre
+                nombre = inombre
+    else: 
+        # Formulario con los datos del item a editar
+        form = item_editarForm(initial = {'nombre': item.nombre, 
+                                        'cantidad': item.cantidad,
+                                        'categoria': item.id_categoria,
+                                        'prioridad': item.prioridad,
+                                        'minimo': item.minimo,
+                                        'estado': item.estado})
         mensaje = None
-
-    return render(request,'categoria_editar.html',{'form': form,'mensaje': mensaje,'categoria': categoria,\
-                                                   'cantidad':cantidad, 'items':items})
-
-def item_editar(request, _id):
-    pass
-
+    return render(request, 'item_editar.html', {'form' : form, 
+                                                'nombre' : nombre,
+                                                'mensaje': mensaje})
+           
+           
+# Vista utilizada para mostrar los items del inventario
 def inventario(request):
     items = Item.objects.order_by('nombre')
     if request.method == "POST":

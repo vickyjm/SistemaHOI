@@ -37,6 +37,9 @@ class Item(models.Model):
                           (2, "Alta"))
     prioridad = models.PositiveIntegerField(choices=opciones_prioridad)
     minimo = models.PositiveIntegerField() # Minimo cantidad de items para enviar alerta
+    opciones_estado = ((0, "Inactivo"),
+                        (1, "Activo"))
+    estado = models.PositiveIntegerField(choices=opciones_estado, default = 1)
     
 class Solicitud(models.Model):
     dpto = models.CharField(max_length = 100) # Preguntar si ponerlo como opciones
