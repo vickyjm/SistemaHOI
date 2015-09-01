@@ -14,7 +14,8 @@ urlpatterns = patterns('',
     url(r'^categorias/(?P<_id>\d+)/editar',views.categoria_editar,name = 'categoria_editar'),
     url(r'^inventario$',views.inventario,name = 'inventario'),
     url(r'^inventario/(?P<_id>\d+)/editar',views.item_editar,name = 'item_editar'),
-    url(r'^verperfil$', views.verperfil, name = 'verperfil')
+    url(r'^verperfil$', views.verperfil, name = 'verperfil'),
+    url(r'^cerrarSesion$', views.cerrarSesion, name = 'cerrarSesion')
 )
 
 urlpatterns += patterns('', (
