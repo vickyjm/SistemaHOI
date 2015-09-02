@@ -110,7 +110,6 @@ def crearItem(request):
                 obj = Item(nombre = inombre,
                             cantidad = form.cleaned_data['cantidad'],
                             id_categoria = idcat,
-                            prioridad = 1,
                             minimo = form.cleaned_data['minimo']
                             )
                 obj.save()
@@ -229,7 +228,6 @@ def item_editar(request, _id):
                 item.id_categoria = idcat
                 print (item.id_categoria)
                 print (idcat)
-                item.prioridad = 1
                 item.minimo = form.cleaned_data['minimo']
                 item.save()
                 mensaje = "Item '%s' editado exitosamente" %inombre
@@ -238,7 +236,6 @@ def item_editar(request, _id):
         form = itemForm(initial = {'nombre': item.nombre, 
                                         'cantidad': item.cantidad,
                                         'categoria': item.id_categoria,
-                                        'prioridad': item.prioridad,
                                         'minimo': item.minimo})
         mensaje = None
     return render(request, 'item_editar.html', {'form' : form, 

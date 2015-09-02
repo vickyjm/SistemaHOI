@@ -12,14 +12,9 @@ class Categoria(models.Model):
         return self.nombre
     
 class Item(models.Model):
-    # id = models.CharField(max_length = 50) Esto sería en caso que tengan algo tipo n° de bien
     nombre = models.CharField(max_length = 100)
     cantidad = models.PositiveIntegerField()
     id_categoria = models.ForeignKey(Categoria)
-    opciones_prioridad = ((0, "Baja"),
-                          (1, "Media"),
-                          (2, "Alta"))
-    prioridad = models.PositiveIntegerField(choices=opciones_prioridad)
     minimo = models.PositiveIntegerField() # Minimo cantidad de items para enviar alerta
     
 class Solicitud(models.Model):
