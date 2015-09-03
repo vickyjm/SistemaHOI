@@ -116,6 +116,12 @@ class item_editarForm(itemForm):
                     label = "Estado",
                     choices=opciones_estado)
  
+class item_ingresar_retirarForm(forms.Form):
+    cantidad = forms.IntegerField(max_value = 2147483647, 
+                    min_value = 0, 
+                    required = True, 
+                    label = "Cantidad", 
+                    widget=forms.NumberInput(attrs={'style': 'width:100%'}))
 
 class categoriaForm(forms.Form):
     nombre = forms.CharField(max_length = 100, 
@@ -155,14 +161,5 @@ class solicitudForm(forms.Form):
                     max_value = 2147483647, 
                     min_value = 0, 
                     required = True, 
-                    label = "Cantidad", 
-
-class WaypointForm(forms.Form):
-    def __init__(self, rider, *args, **kwargs):
-      super(joinTripForm, self).__init__(*args, **kwargs)
-      qs = rider.Waypoint_set.all()
-      self.fields['waypoints'] = forms.ChoiceField(choices=[(o.id, str(o)) for o in qs])
-
-# In view:
-rider = request.user
-form = WaypointForm(rider) 
+                    label = "Cantidad",
+                    widget=forms.NumberInput(attrs={'style': 'width:100%'}))

@@ -1,0 +1,43 @@
+{% extends "base-col3.html" %}
+
+{% block page_menu %}
+	<a href="../../../verperfil">Perfil</a>
+	<a href="../../../solicitud">Solicitudes</a>
+	<a href="../../../inventario">Inventario</a>
+	<a href="../../../categorias">Categorías</a>
+{% endblock page_menu%}
+
+{% block page_title %}{{accion}} unidades del item '{{item}}'{% endblock page_title %}
+{% block page_left %}{% endblock page_left %}
+{% block page_content %}
+<form action="" method="post">
+<table style="width:100%" >
+		<thead>
+		</thead>
+		{% csrf_token %}
+		<tbody>
+			{% if mensaje %}
+				<h3 style="color:green">{{mensaje}}</h3>
+			{% endif %}
+			{% for field in form %}
+			<tr>
+			<td><h3>{{field.label_tag}}</h3></td>
+
+			 <h4 style = "color:#CC0000">{{ field.errors}}</h4>
+
+			</tr>
+			<tr>
+				<td><h3>{{field}}</h3></td>
+			</tr>
+
+			 {% endfor %}
+			<tr>
+				<td align="right"><br><br>
+				<input type="submit" class="button" value="Guardar"></td>
+			</tr>
+		</tbody>
+	</table>
+
+</form>
+{% endblock page_content %}
+{% block page_right %}{% endblock page_right %}

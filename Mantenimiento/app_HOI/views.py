@@ -16,15 +16,7 @@ import datetime
 
 @login_required
 def verperfil(request):
-
-    grupo = request.user.groups.values('name')
-    if not grupo: nombre_grupo = "-"
-    else: nombre_grupo = grupo[0].get('name')
-
-#    items = Item.objects.filter(id_usuario_accion = request.user)
-
-    return render(request, 'verperfil.html',{'user': request.user,
-                                             'grupo':nombre_grupo})
+    return render(request, 'verperfil.html',{'user': request.user})
 
 
 # Vista usada al iniciar el sistema
@@ -65,12 +57,17 @@ def registro(request):
             user.last_name = form.cleaned_data['apellido']
             if (form.cleaned_data['correo']!=""):
                 user.email = form.cleaned_data['correo']
-            if (form.cleaned_data['tipo'] == "Técnico"):
-                group = Group.objects.get(name='tecnicos') 
-                user.groups.add(group)
+
+            groupTec = Group.objects.get(name='Técnicos') 
+            groupAlm = Group.objects.get(name='Almacenistas')
+
+            if (form.cleaned_data['tipo'] == "tecnico"):
+                print("tec")
+                user.groups.add(groupTec)
             else:
-                group = Group.objects.get(name='almacenistas') 
-                user.groups.add(group)
+                print(form.cleaned_data['tipo'])
+                print("alm")
+                user.groups.add(groupTec,groupAlm)
 
             user.is_active = True
             user.save()
@@ -281,14 +278,22 @@ def inventario(request):
         pass
     return render(request,'inventario.html', {'items': items})
 
-def solicitud(request):
-    solicitudes = Crea.objects.order_by('fecha')
 
+def solicitud(request):
+    solic_creadas = Crea.objects.order_by('fecha')
+
+    # Si es un técnico, solo puede ver sus solicitudes
+    if not request.user.groups.filter(name = "Almacenistas").exists():
+        solicitudes = solic_creadas.filter(id_usuario = request.user)
+    # Si es almacenista o administrador, solo ve las solicitudes de los técnicos
+    else:
+        solicitudes = solic_creadas.exclude(id_usuario = request.user)
     if request.method == "POST":
         pass  
     else:
         pass
-    return render(request,'solicitud.html', {'solicitudes': solicitudes})
+    return render(request,'solicitud.html', {'user' : request.user,
+                                             'solicitudes': solicitudes})
 
 @login_required
 def crearSolicitud(request):
@@ -297,14 +302,14 @@ def crearSolicitud(request):
         form = solicitudForm(request.POST)
 
         if form.is_valid():
+            fecha = datetime.datetime.now()
             sdpto = form.cleaned_data['dpto']
             scategoria = form.cleaned_data['categoria']
             sitem = form.cleaned_data['item']
-            
             scantidad = form.cleaned_data['cantidad']
             iditem = Item.objects.get(nombre = sitem)
 
-            nueva_solicitud = Solicitud(fecha = datetime.datetime.now(),
+            nueva_solicitud = Solicitud(fecha = fecha,
                                         dpto = sdpto,
                                         cantidad = scantidad)
             nueva_solicitud.save()
@@ -312,7 +317,7 @@ def crearSolicitud(request):
             obj = Crea(id_usuario = request.user,
                        id_item = iditem,
                        id_solicitud = nueva_solicitud,
-                       fecha = datetime.datetime.now())
+                       fecha = fecha)
             obj.save()
 
             mensaje = "Solicitud creada exitosamente" 
@@ -356,7 +361,15 @@ def solicitud_eliminar(request, _id):
 #                                                 'mensaje': mensaje})
 
 def solicitud_estado(request, _id, _nuevo_estado):
-    solicitudes = Crea.objects.order_by('fecha')
+    solic_creadas = Crea.objects.order_by('fecha')
+
+    # Si es un técnico, solo puede ver sus solicitudes
+    if not request.user.groups.filter(name = "Almacenistas").exists():
+        solicitudes = solic_creadas.filter(id_usuario = request.user)
+    # Si es almacenista o administrador, solo ve las solicitudes de los técnicos
+    else:
+        solicitudes = solic_creadas.exclude(id_usuario = request.user)
+
     if request.method == "GET":
         obj = Crea.objects.get(pk=_id)
         solicitud = Solicitud.objects.get(pk = obj.id_solicitud.pk)        
@@ -371,3 +384,53 @@ def solicitud_estado(request, _id, _nuevo_estado):
     else:
         pass
     return render(request,'solicitud_estado.html', {'solicitudes':solicitudes})
+
+def item_ingresar_retirar(request, _id, _accion):
+    item = Item.objects.get(pk = _id)
+    if _accion == "I":
+        accion = 'Ingresar'
+    else:
+        accion = 'Retirar'
+
+    if request.method == "POST":
+        mensaje = None
+        form = item_ingresar_retirarForm(request.POST)
+        
+        if form.is_valid():
+            fecha = datetime.datetime.now()
+            icantidad = form.cleaned_data['cantidad']
+            if _accion == "I":
+                item.cantidad = item.cantidad + icantidad
+                solicitud
+                obj = Ingresa(id_usuario = request.user,
+                              id_item = item,
+                              fecha = fecha,
+                              cantidad = icantidad)
+                obj.save()
+
+            else:
+                item.cantidad = item.cantidad - icantidad
+                
+                # Necesario para el reporte?
+                nueva_solicitud = Solicitud(fecha = fecha,
+                                            dpto = "?",
+                                            cantidad = icantidad,
+                                            estado = "A")
+                nueva_solicitud.save()
+
+                obj = Crea(id_usuario = request.user,
+                           id_item = item,
+                           id_solicitud = nueva_solicitud,
+                           fecha = fecha)
+                obj.save()
+
+            item.save()
+            mensaje = "Cantidad modificada exitosamente"
+    else:
+        mensaje = None
+        form = item_ingresar_retirarForm(initial={'cantidad': '1'})
+
+    return render(request,'item_ingresar_retirar.html', {'form' : form, 
+                                                         'accion':accion,
+                                                         'item':item,
+                                                         'mensaje':mensaje})
