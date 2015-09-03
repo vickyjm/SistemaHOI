@@ -239,7 +239,6 @@ def item_editar(request, _id):
                                               id_categoria = idcat.id)
                 if int(itemexiste.id) == int(_id): 
                     item.cantidad = form.cleaned_data['cantidad']
-                    item.prioridad = form.cleaned_data['prioridad']
                     item.minimo = form.cleaned_data['minimo']
                     item.estado = form.cleaned_data['estado']
                     item.save()
