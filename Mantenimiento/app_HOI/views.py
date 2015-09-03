@@ -5,12 +5,18 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
+from django.core import serializers
 from django.core import validators
 from django.core.exceptions import ValidationError
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect
+from django.http import HttpResponse
+from django.http import JsonResponse
+import json
 from app_HOI.forms import * 
 from app_HOI.models import *
+from django.views.generic import TemplateView, ListView
+from django_ajax.mixin import AJAXMixin
 
 def verperfil(request):
 	return render(request, 'verperfil.html')
@@ -252,10 +258,33 @@ def item_editar(request, _id):
            
            
 # Vista utilizada para mostrar los items del inventario
-def inventario(request):
-    items = Item.objects.order_by('nombre')
-    if request.method == "POST":
-        pass  
-    else:
-        pass
-    return render(request,'inventario.html', {'items': items})
+#def inventario(request):
+#    items = Item.objects.order_by('nombre')
+#    categorias = Categoria.objects.order_by('nombre')
+#
+#    if request.method == "POST":
+#        pass  
+#    else:
+#        pass
+#    return render(request,'inventario.html', {'items': items, 'categorias': categorias})
+
+class inventario(ListView):
+    model = Categoria
+    template_name = 'inventario.html'
+    context_object_name = 'categorias'
+
+class busqueda_ajax(TemplateView):      
+
+    def get(self, request, *args, **kwargs):
+        id_categoria = request.GET['id']
+        print(id_categoria)
+        items = Item.objects.filter(id_categoria = id_categoria)
+        print (items)
+        data = serializers.serialize('json', items)
+        response_data = {}
+        response_data['data'] = data
+        print(data)
+        response_data['message'] = 'Some error message'
+        #return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+        return JsonResponse(data, safe=False)

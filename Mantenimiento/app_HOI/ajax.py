@@ -1,6 +1,7 @@
-from django.utils import json
-from dajaxice.decorators import dajaxice_register
+from django.utils import simplejson
+from .dajaxice.decorators import dajaxice_register
+from .dajaxice.core import dajaxice_functions
 
 @dajaxice_register
-def sayhello(request):
-    return json.dumps({'message':'Hello World'})
+def dajaxice_example(request):
+    return simplejson.dumps({'message':'Hello from Python!'})

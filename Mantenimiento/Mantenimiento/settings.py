@@ -36,6 +36,9 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.admindocs',
+    'django.contrib.sites',
+    'dajaxice',
     'django_ajax',
     'app_HOI',
 )
@@ -48,6 +51,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_ajax.middleware.AJAXMiddleware'
 )
 
 ROOT_URLCONF = 'Mantenimiento.urls'
@@ -80,6 +84,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.i18n',
     'django.core.context_processors.request',
     'django.core.context_processors.static',
+    'django.core.context_processors.media',
     'django.contrib.messages.context_processors.messages',
     'django.core.context_processors.csrf',
 )
@@ -101,3 +106,15 @@ STATIC_URL = 'static/'
 # Directorio de templates y de statics.
 TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
 STATICFILES_DIRS= [os.path.join(BASE_DIR,'static')]
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'dajaxice.finders.DajaxiceFinder',
+)
+
+TEMPLATE_LOADERS = (
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+    'django.template.loaders.eggs.Loader',
+)

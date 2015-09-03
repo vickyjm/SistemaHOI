@@ -1,4 +1,4 @@
-{% extends "base-col1.html" %}
+{% extends "base-col22.html" %}
 
 {% block page_menu %}
 <a href="" class="current-page-item">Inventario</a>
@@ -7,13 +7,28 @@
 
 {% block page_title %}
 {% endblock page_title %}
-{% block page_left %}{% endblock page_left %}
+{% block page_left %}
+<h2>Categorías</h2>
+<p>
+	<select>
+{% for c in categorias %}
+	<!--input type="checkbox" name="{{c.nombre}}" value="{{c.id}}"> {{c.nombre}}<br-->
+	<option name="{{c.nombre}}" value="{{c.id}}">{{c.nombre}}</option>
+
+{% endfor %}
+	</select>
+</p>
+	
+{% endblock page_left %}
 {% block page_content %}
 <table style="width:100%">
 <tr align="right">
 	<td><a href="./crearItem" class="button" align = "right">(+) Crear item</a></td>
 </tr>
 </table>
+<div id= "datos">
+
+</div>
 <h2>Items</h2>
 <table style="width:100%" >
 	<thead >
@@ -49,3 +64,31 @@
 </table>
 {% endblock page_content %}
 {% block page_right %}{% endblock page_right %}
+{% block js %}
+
+<script> 
+	$('select').on('change', inicio);
+	
+	function inicio(){
+		var id = $(this).val();
+		$.ajax({
+			data : {'id': id},
+			url: 'busqueda_ajax/',
+			type: 'get',
+			dataType: 'json',
+			success: function (data) {
+				console.log(data)
+				var my = "a";
+				console.log(my);
+				for (var i = 0; i< data.size; i++){
+					my += '<ul><li>'+ data[i].fields.nombre +'</li></ul>';
+					console.log(my);
+				}
+				$('#datos').html(my);
+			}
+
+		});
+	}
+</script>
+
+{% endblock js %}
