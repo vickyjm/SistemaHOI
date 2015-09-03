@@ -18,6 +18,8 @@ urlpatterns = patterns('',
     url(r'^solicitud$', views.solicitud, name = 'solicitud'),
     url(r'^crearSolicitud',views.crearSolicitud,name = 'crearSolicitud'),
     url(r'^solicitud/(?P<_id>\d+)/eliminar', views.solicitud_eliminar,name = 'solicitud_eliminar')
+    url(r'^cerrarSesion$', views.cerrarSesion, name = 'cerrarSesion')
+
 )
 
 urlpatterns += patterns('', (

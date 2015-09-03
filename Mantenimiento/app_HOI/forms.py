@@ -102,11 +102,6 @@ class itemForm(forms.Form):
     categoria = forms.ModelChoiceField(label = "Categoría",
         widget=forms.Select(attrs={'style':'width:100%; background-color:white'}), 
         queryset=Categoria.objects.order_by('nombre'))
-    opciones_prioridad = ((0, "Baja"),(1, "Media"), (2, "Alta"))
-    prioridad = forms.ChoiceField(required = True, 
-                    choices = opciones_prioridad, 
-                    widget = forms.Select(attrs={'style': 'width:100%; background-color:white'}), 
-                    label = "Prioridad")
     minimo = forms.IntegerField(max_value = 2147483647, 
                     min_value = 0, 
                     required = True, 
