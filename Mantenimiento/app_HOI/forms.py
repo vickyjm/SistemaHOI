@@ -132,20 +132,37 @@ class categoria_editarForm(categoriaForm):
                     choices=opciones_estado)
 
 class solicitudForm(forms.Form):
-    opciones_dpto = (('0', 'Dpto 1'),
+    opciones_dpto = (('0', 'Dpto 1'),       # No estoy segura de qué va aqui
                      ('1', 'Dpto 2'),
                      ('2', 'Dpto 3'))
-    dpto = forms.ChoiceField(required = True,
-                             widget=forms.Select(attrs={'style':'width:100%; background-color:white'}),
-                             label= "Departamento",
-                             choices = opciones_dpto)
+    dpto = forms.ChoiceField(
+                    required = True,
+                    widget=forms.Select(attrs={'style':'width:100%; background-color:white'}),
+                    label= "Departamento",
+                    choices = opciones_dpto)
+    
+    categoria = forms.ModelChoiceField(
+                    label = "Categoría",
+                    widget = forms.Select(attrs={'style':'width:100%; background-color:white'}), 
+                    queryset = Categoria.objects.order_by('nombre'))
 
-    item = forms.ModelChoiceField(label = "Item",
-                                  widget=forms.Select(attrs={'style':'width:100%; background-color:white'}), 
-                                  queryset = Item.objects.order_by('nombre'))
+    item = forms.ModelChoiceField(
+                    label = "Item",
+                    widget = forms.Select(attrs={'style':'width:100%; background-color:white'}), 
+                    queryset = Item.objects.order_by('nombre'))
 
-    cantidad = forms.IntegerField(max_value = 2147483647, 
-                                  min_value = 0, 
-                                  required = True, 
-                                  label = "Cantidad", 
-                                  widget=forms.NumberInput(attrs={'style': 'width:100%'}))
+    cantidad = forms.IntegerField(
+                    max_value = 2147483647, 
+                    min_value = 0, 
+                    required = True, 
+                    label = "Cantidad", 
+
+class WaypointForm(forms.Form):
+    def __init__(self, rider, *args, **kwargs):
+      super(joinTripForm, self).__init__(*args, **kwargs)
+      qs = rider.Waypoint_set.all()
+      self.fields['waypoints'] = forms.ChoiceField(choices=[(o.id, str(o)) for o in qs])
+
+# In view:
+rider = request.user
+form = WaypointForm(rider) 

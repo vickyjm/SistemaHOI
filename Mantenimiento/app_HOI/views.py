@@ -147,7 +147,7 @@ def crearItem(request):
 def categoria(request):
     if request.method == "POST":
         form = categoriaForm(request.POST)
-    
+        mensaje = None
         if form.is_valid():
             catnombre = form.cleaned_data['nombre']
 
@@ -281,7 +281,6 @@ def inventario(request):
         pass
     return render(request,'inventario.html', {'items': items})
 
-
 def solicitud(request):
     solicitudes = Crea.objects.order_by('fecha')
 
@@ -291,6 +290,7 @@ def solicitud(request):
         pass
     return render(request,'solicitud.html', {'solicitudes': solicitudes})
 
+@login_required
 def crearSolicitud(request):
     if request.method == "POST":
         mensaje = None
@@ -298,7 +298,9 @@ def crearSolicitud(request):
 
         if form.is_valid():
             sdpto = form.cleaned_data['dpto']
+            scategoria = form.cleaned_data['categoria']
             sitem = form.cleaned_data['item']
+            
             scantidad = form.cleaned_data['cantidad']
             iditem = Item.objects.get(nombre = sitem)
 
@@ -320,6 +322,7 @@ def crearSolicitud(request):
         form = solicitudForm(initial={'cantidad': '1'})
     return render(request,'crearSolicitud.html', {'form': form, 'mensaje':mensaje})
 
+@login_required
 def solicitud_eliminar(request, _id):
     if request.method == "GET":
         return render(request,'solicitud_eliminar.html')
@@ -331,3 +334,40 @@ def solicitud_eliminar(request, _id):
     
         obj.delete()
     return HttpResponseRedirect('/solicitud')
+
+# def solicitud_editar(request, _id):
+#     obj = Crea.objects.get(pk = _id)
+#     solicitud = Solicitud.objects.get(pk = obj.id_solicitud.pk)
+#     if request.method == "POST":
+#         form = solicitudForm(request.POST)
+
+#         if form.is_valid():
+#             #sdpto = form.cleaned_data['dpto']
+#             #sitem = form.cleaned_data['item']
+#             #scantidad = form.cleaned_data['cantidad']
+            
+#             mensaje = "Solicitud editada exitosamente"
+#     else:
+#         mensaje = None
+#         form = solicitudForm(initial = {'dpto': item.nombre, 
+#                                           #'item': ,
+#                                           'cantidad': item.cantidad})
+#     return render(request, 'solicitud_seditar.html', {'form' : form,
+#                                                 'mensaje': mensaje})
+
+def solicitud_estado(request, _id, _nuevo_estado):
+    solicitudes = Crea.objects.order_by('fecha')
+    if request.method == "GET":
+        obj = Crea.objects.get(pk=_id)
+        solicitud = Solicitud.objects.get(pk = obj.id_solicitud.pk)        
+        solicitud.estado = _nuevo_estado
+        solicitud.save()
+
+        if _nuevo_estado == "A":
+            aprobado = Aprueba(id_usuario = request.user,
+                               id_solicitud = solicitud,
+                               fecha = datetime.datetime.now())
+            aprobado.save()
+    else:
+        pass
+    return render(request,'solicitud_estado.html', {'solicitudes':solicitudes})

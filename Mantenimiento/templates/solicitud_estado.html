@@ -1,10 +1,10 @@
 {% extends "base-col1.html" %}
 
 {% block page_menu %}
-	<a href="./verperfil">Perfil</a>
-	<a href="." class="current-page-item">Solicitudes</a>	
-	<a href="./inventario">Inventario</a>
-	<a href="./categorias" >Categorías</a>
+	<a href="../../../verperfil">Perfil</a>
+	<a href="../../../solicitud">Solicitudes</a>	
+	<a href="../../../inventario">Inventario</a>
+	<a href="../../../categorias">Categorías</a>
 {% endblock page_menu%}
 
 {% block page_title %}{% endblock page_title %}
@@ -13,7 +13,7 @@
 {% block page_content %}
 	<table style="width:100%">
 		<tr align="right">
-			<td><a href="./crearSolicitud" class="button" align = "right">(+) Crear solicitud</a></td>
+			<td><a href="../../../crearSolicitud" class="button" align = "right">(+) Crear solicitud</a></td>
 		</tr>
 	</table>
 	<h2>Solicitudes de retiro de Items</h2>
@@ -38,11 +38,11 @@
 			<td><h3 style = "color: gray;">{{ s.id_solicitud.get_estado_display }}</h3></td>
 
 			<td><a href="./categorias/{{cat.id}}/editar"><i class="fa fa-pencil-square-o"></i></a></td>
-			<td><a href="./solicitud/{{s.id}}/eliminar"> <i class="fa fa-trash-o"></i></a></td>
+			<td><a href="../../../solicitud/{{s.id}}/eliminar"> <i class="fa fa-trash-o"></i></a></td>
 
 			{% if s.id_solicitud.get_estado_display == "Esperando respuesta" %}
-			<td><a href="./solicitud_estado/{{s.id}}/A"><i class="fa fa-check" style="color:green"></i></a></td>
-			<td><a href="./solicitud_estado/{{s.id}}/R"><i class="fa fa-times" style="color:red"></i></a></td>
+			<td><a href="../../../solicitud_estado/{{s.id}}/A"><i class="fa fa-check" style="color:green"></i></a></td>
+			<td><a href="../../../solicitud_estado/{{s.id}}/R"><i class="fa fa-times" style="color:red"></i></a></td>
 			{% else %}
 			<td><h3 style = "color: gray;">-</h3></td>
 			<td><h3 style = "color: gray;">-</h3></td>

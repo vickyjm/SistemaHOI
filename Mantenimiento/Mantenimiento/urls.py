@@ -17,7 +17,8 @@ urlpatterns = patterns('',
     url(r'^verperfil$', views.verperfil, name = 'verperfil'),
     url(r'^solicitud$', views.solicitud, name = 'solicitud'),
     url(r'^crearSolicitud',views.crearSolicitud,name = 'crearSolicitud'),
-    url(r'^solicitud/(?P<_id>\d+)/eliminar', views.solicitud_eliminar,name = 'solicitud_eliminar')
+    url(r'^solicitud/(?P<_id>\d+)/eliminar', views.solicitud_eliminar,name = 'solicitud_eliminar'),
+    url(r'^solicitud_estado/(?P<_id>\d+)/(?P<_nuevo_estado>[A|R]+)', views.solicitud_estado,name = 'solicitud_estado'),
     url(r'^cerrarSesion$', views.cerrarSesion, name = 'cerrarSesion')
 
 )
