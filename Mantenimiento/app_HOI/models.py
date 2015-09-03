@@ -24,6 +24,10 @@ class Item(models.Model):
     opciones_estado = ((0, "Inactivo"),
                         (1, "Activo"))
     estado = models.PositiveIntegerField(choices=opciones_estado, default = 1)
+
+    def __str__(self):
+        return self.nombre
+    
     
 class Solicitud(models.Model):
     dpto = models.CharField(max_length = 100) # Preguntar si ponerlo como opciones

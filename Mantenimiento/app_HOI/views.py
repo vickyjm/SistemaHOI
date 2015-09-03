@@ -276,15 +276,32 @@ class inventario(ListView):
 class busqueda_ajax(TemplateView):      
 
     def get(self, request, *args, **kwargs):
-        id_categoria = request.GET['id']
-        print(id_categoria)
-        items = Item.objects.filter(id_categoria = id_categoria)
-        print (items)
-        data = serializers.serialize('json', items)
-        response_data = {}
-        response_data['data'] = data
-        print(data)
-        response_data['message'] = 'Some error message'
+        ids = request.GET['id']
+        #print (ids)
+        id_categoria = ids.split(',')
+        #print(id_categoria)
+        myitems = []
+        for i in id_categoria:
+            items = Item.objects.filter(id_categoria = i)
+            myitems += items
+        myitems.sort(key=lambda item: item.nombre)
+        #print ('sorted'+ str(myitems))
+        
+        #id_categoria = request.GET['id']
+        #print(id_categoria)
+        #items = Item.objects.filter(id_categoria = id_categoria)
+        #print (items)
+        data = serializers.serialize('json', myitems, fields= ('nombre'))
+        #print(data)
+        #response_data = {}
+        #response_data['data'] = data
+        #print(data)
+        #response_data['message'] = 'Some error message'
         #return HttpResponse(json.dumps(response_data), content_type="application/json")
 
         return JsonResponse(data, safe=False)
+
+def hello(request):
+    data = serializers.serialize('json', 'hola')
+    response = json.dumps(data)
+    return HttpResponse(response, content_type='application/json')

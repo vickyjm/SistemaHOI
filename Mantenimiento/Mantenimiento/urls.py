@@ -20,6 +20,7 @@ urlpatterns = patterns('',
     url(r'^inventario/(?P<_id>\d+)/editar',views.item_editar,name = 'item_editar'),
     url(r'^verperfil/$', views.verperfil, name = 'verperfil'),
     url(r'^busqueda_ajax/$', busqueda_ajax.as_view(), name = 'busqueda_ajax'),
+    url(r'^hello/', views.hello, name = 'hello'),
 
 )
 

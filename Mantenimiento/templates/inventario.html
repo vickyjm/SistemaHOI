@@ -10,13 +10,17 @@
 {% block page_left %}
 <h2>Categorías</h2>
 <p>
-	<select>
+<div id= "cat">
 {% for c in categorias %}
-	<!--input type="checkbox" name="{{c.nombre}}" value="{{c.id}}"> {{c.nombre}}<br-->
-	<option name="{{c.nombre}}" value="{{c.id}}">{{c.nombre}}</option>
-
+	<input type="checkbox" name="c1" id="{{c.id}}" value="{{c.id}}" onclick="showMe(this)"> {{c.nombre}}<br>
 {% endfor %}
-	</select>
+</div>
+<select>
+{% for c in categorias %}
+	<option name="{{c.nombre}}" value="{{c.id}}">{{c.nombre}}</option>
+{% endfor %}
+</select>
+
 </p>
 	
 {% endblock page_left %}
@@ -89,6 +93,76 @@
 
 		});
 	}
+</script>
+<script> 
+$.ajax({
+    url: '/hello',
+    type: 'get', //this is the default though, you don't actually need to always mention it
+    dataType: 'json',
+    success: function(data) {
+        console.log(data);
+        //alert(data.toString());
+    },
+    failure: function(data) { 
+        alert('Got an error dude');
+    }
+}); 
+</script>
+<!--script>
+
+	document.getElementById('cat').onclick = function() {
+    // call toggleSub when checkbox clicked
+    // toggleSub args: checkbox clicked on (this), id of element to show/hide
+    console.log('Div');
+};
+</script-->
+<!--script>
+
+function showMe (box) {
+  var vis = (box.checked) ? "Hola" : "Chao";
+  console.log(vis)
+}
+</script-->
+
+<script>
+function showMe (box) {
+
+    var chboxs = document.getElementsByName("c1");
+    var vis = "none";
+    console.log(chboxs)
+    var id = [];
+    for(var i = 0; i < chboxs.length ; i++) { 
+        if(chboxs[i].checked){
+         console.log(chboxs[i].id)
+         id.push(chboxs[i].id);
+        }
+       console.log(id)
+       var new_id = id.join(',')
+       console.log(new_id)
+     $.ajax({
+		data : {'id': new_id} ,
+		url: 'busqueda_ajax/',
+		type: 'get',
+		dataType: 'json',
+		success: function (data) {
+			console.log(data)
+
+			//var my = "a";
+			//console.log(my);
+			//for (var i = 0; i< data.size; i++){
+			//	my += '<ul><li>'+ data[i].fields.nombre +'</li></ul>';
+			//	console.log(my);
+			//}
+			//$('#datos').html(my);
+		}
+
+	});
+
+    }
+    //document.getElementById(box).style.display = vis;
+
+
+}
 </script>
 
 {% endblock js %}
