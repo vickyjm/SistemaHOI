@@ -2,7 +2,7 @@
 
 from django import forms
 from django.core.validators import RegexValidator
-from app_HOI.models import Categoria
+from app_HOI.models import Categoria,Item
 from django.forms import ModelChoiceField
 from django.utils.translation import ugettext, ugettext_lazy as _
 
@@ -135,3 +135,22 @@ class categoria_editarForm(categoriaForm):
                     widget=forms.RadioSelect(attrs={'style': 'width:100%; background-color:white'}), 
                     label = "Estado",
                     choices=opciones_estado)
+
+class solicitudForm(forms.Form):
+    opciones_dpto = (('0', 'Dpto 1'),
+                     ('1', 'Dpto 2'),
+                     ('2', 'Dpto 3'))
+    dpto = forms.ChoiceField(required = True,
+                             widget=forms.Select(attrs={'style':'width:100%; background-color:white'}),
+                             label= "Departamento",
+                             choices = opciones_dpto)
+
+    item = forms.ModelChoiceField(label = "Item",
+                                  widget=forms.Select(attrs={'style':'width:100%; background-color:white'}), 
+                                  queryset = Item.objects.order_by('nombre'))
+
+    cantidad = forms.IntegerField(max_value = 2147483647, 
+                                  min_value = 0, 
+                                  required = True, 
+                                  label = "Cantidad", 
+                                  widget=forms.NumberInput(attrs={'style': 'width:100%'}))

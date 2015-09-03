@@ -1,0 +1,30 @@
+{% extends "base-col3.html" %}
+
+{% block page_menu %}
+	<a href="../../../verperfil">Perfil</a>
+	<a href="../../../solicitud">Solicitudes</a>
+	<a href="../../../inventario">Inventario</a>
+	<a href="../../../categorias">Categorías</a>
+{% endblock page_menu%}
+
+{% block page_title %}¿Está seguro de que desea eliminar esta solicitud?{% endblock page_title %}
+{% block page_left %}{% endblock page_left %}
+{% block page_content %}
+<form action="" method="post">
+
+	<table style="width:92%" >
+		<thead>
+		</thead>
+		{% csrf_token %}
+		<tbody>
+		 <tr>
+			<td align="right">
+				<input type="submit" class="button" value="Aceptar">
+			</td>
+		</tr>
+		</tbody>
+	</table>
+
+</form>
+{% endblock page_content %}
+{% block page_right %}{% endblock page_right %}

@@ -7,14 +7,17 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$',views.inicio_sesion,name = 'inicio_sesion'),
-    url(r'^registro',views.registro,name = 'registro'),
+    url(r'^registrar',views.registro,name = 'registrar'),
     url(r'^recuperarContraseña$', views.recuperarContraseña, name = 'recuperarContraseña'),
     url(r'^crearItem',views.crearItem,name = 'crearItem'),
     url(r'^categorias$',views.categoria,name = 'categoria'),
     url(r'^categorias/(?P<_id>\d+)/editar',views.categoria_editar,name = 'categoria_editar'),
     url(r'^inventario$',views.inventario,name = 'inventario'),
     url(r'^inventario/(?P<_id>\d+)/editar',views.item_editar,name = 'item_editar'),
-    url(r'^verperfil$', views.verperfil, name = 'verperfil')
+    url(r'^verperfil$', views.verperfil, name = 'verperfil'),
+    url(r'^solicitud$', views.solicitud, name = 'solicitud'),
+    url(r'^crearSolicitud',views.crearSolicitud,name = 'crearSolicitud'),
+    url(r'^solicitud/(?P<_id>\d+)/eliminar', views.solicitud_eliminar,name = 'solicitud_eliminar')
 )
 
 urlpatterns += patterns('', (

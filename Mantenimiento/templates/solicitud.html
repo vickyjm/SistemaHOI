@@ -1,0 +1,45 @@
+{% extends "base-col1.html" %}
+
+{% block page_menu %}
+	<a href="./verperfil">Perfil</a>
+	<a href="." class="current-page-item">Solicitudes</a>	
+	<a href="./inventario">Inventario</a>
+	<a href="./categorias" >Categorías</a>
+{% endblock page_menu%}
+
+{% block page_title %}{% endblock page_title %}
+{% block page_left %}{% endblock page_left %}
+
+{% block page_content %}
+	<table style="width:100%">
+		<tr align="right">
+			<td><a href="./crearSolicitud" class="button" align = "right">(+) Crear solicitud</a></td>
+		</tr>
+	</table>
+	<h2>Solicitudes de retiro de Items</h2>
+	<table style="width:100%" >
+ 		<thead>
+			<td><h3>Fecha</h3></td>
+			<td><h3>Item</h3></td>
+			<td><h3>Cantidad</h3></td>
+			<td><h3>Estado</h3></td>
+			<td><h3>Editar</h3></td>
+			<td><h3>Eliminar</h3></td>
+		</thead>
+	<tbody>
+	{% for s in solicitudes %}
+		<tr>
+			<td><h3 style = "color: gray;">{{ s.fecha|date:"d-m-Y, H:i" }}</h3></td>
+			<td><h3 style = "color: gray;">{{ s.id_item.nombre }}</h3></td>
+			<td><h3 style = "color: gray;">{{ s.id_solicitud.cantidad }}</h3></td>
+			<td><h3 style = "color: gray;">{{ s.id_solicitud.get_estado_display }}</h3></td>
+			<td><a href="./categorias/{{cat.id}}/editar"><i class="fa fa-pencil-square-o"></i></a></td>
+			<td><a href="./solicitud/{{s.id}}/eliminar"> <i class="fa fa-times"></i></a></td>
+		</tr>
+	{% endfor %}
+
+	</tbody>
+	</table>
+{% endblock page_content %}
+
+{% block page_right %}{% endblock page_right %}

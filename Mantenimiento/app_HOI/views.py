@@ -12,9 +12,38 @@ from django.http import HttpResponseRedirect
 from app_HOI.forms import * 
 from app_HOI.models import *
 from django.contrib.auth.decorators import login_required 
+import datetime
 
+#    opciones_tipo_mov = ((0, "Solicitud aprobada"),
+#                         (1, "Solicitud rechazada"),
+#                         (2, "Cantidad de item modificada"),
+#                         (3, "Item creado"),
+#                         (4, "Item modificado"),
+#                         (5, "Categoría creada"),
+#                         (6, "Categoría modificada"),
+#                         (7, "Usuario eliminado"))
+
+@login_required
 def verperfil(request):
+
+    grupo = request.user.groups.values('name')
+    if not grupo: nombre_grupo = "-"
+    else: nombre_grupo = grupo[0].get('name')
+
+#    items = Item.objects.filter(id_usuario_accion = request.user)
+ #   categorias = Categoria.objects.filter(id_usuario_accion = request.user)
+  #  solicitudes = '1'
+   # movimientos = []
+    #movimientos.append(items)
+    #movimientos.append(categorias)
+    #print(movimientos)
     return render(request, 'verperfil.html',{'user': request.user})
+#    return render(request, 'verperfil.html',{'user': request.user,
+ #                                            'grupo': nombre_grupo,
+  #                                           'solicitudes' : solicitudes,
+   #                                          'items': items,
+#                                             'categorias': categorias})
+
 
 # Vista usada al iniciar el sistema
 def inicio_sesion(request):
@@ -267,3 +296,54 @@ def inventario(request):
     else:
         pass
     return render(request,'inventario.html', {'items': items})
+
+
+def solicitud(request):
+    solicitudes = Crea.objects.order_by('fecha')
+
+    if request.method == "POST":
+        pass  
+    else:
+        pass
+    return render(request,'solicitud.html', {'solicitudes': solicitudes})
+
+def crearSolicitud(request):
+    if request.method == "POST":
+        mensaje = None
+        form = solicitudForm(request.POST)
+
+        if form.is_valid():
+            sdpto = form.cleaned_data['dpto']
+            sitem = form.cleaned_data['item']
+            scantidad = form.cleaned_data['cantidad']
+            iditem = Item.objects.get(nombre = sitem)
+
+            nueva_solicitud = Solicitud(fecha = datetime.datetime.now(),
+                                        dpto = sdpto,
+                                        cantidad = scantidad)
+            nueva_solicitud.save()
+
+            obj = Crea(id_usuario = request.user,
+                       id_item = iditem,
+                       id_solicitud = nueva_solicitud,
+                       fecha = datetime.datetime.now())
+            obj.save()
+
+            mensaje = "Solicitud creada exitosamente" 
+            form = solicitudForm(initial={'cantidad': '1'})
+    else:
+        mensaje = None
+        form = solicitudForm(initial={'cantidad': '1'})
+    return render(request,'crearSolicitud.html', {'form': form, 'mensaje':mensaje})
+
+def solicitud_eliminar(request, _id):
+    if request.method == "GET":
+        return render(request,'solicitud_eliminar.html')
+    else:
+        obj = Crea.objects.get(pk=_id)
+
+        solicitud = Solicitud.objects.get(pk = obj.id_solicitud.pk)
+        solicitud.delete()
+    
+        obj.delete()
+    return HttpResponseRedirect('/solicitud')
