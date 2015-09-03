@@ -14,15 +14,6 @@ from app_HOI.models import *
 from django.contrib.auth.decorators import login_required 
 import datetime
 
-#    opciones_tipo_mov = ((0, "Solicitud aprobada"),
-#                         (1, "Solicitud rechazada"),
-#                         (2, "Cantidad de item modificada"),
-#                         (3, "Item creado"),
-#                         (4, "Item modificado"),
-#                         (5, "Categoría creada"),
-#                         (6, "Categoría modificada"),
-#                         (7, "Usuario eliminado"))
-
 @login_required
 def verperfil(request):
 
@@ -31,18 +22,9 @@ def verperfil(request):
     else: nombre_grupo = grupo[0].get('name')
 
 #    items = Item.objects.filter(id_usuario_accion = request.user)
- #   categorias = Categoria.objects.filter(id_usuario_accion = request.user)
-  #  solicitudes = '1'
-   # movimientos = []
-    #movimientos.append(items)
-    #movimientos.append(categorias)
-    #print(movimientos)
-    return render(request, 'verperfil.html',{'user': request.user})
-#    return render(request, 'verperfil.html',{'user': request.user,
- #                                            'grupo': nombre_grupo,
-  #                                           'solicitudes' : solicitudes,
-   #                                          'items': items,
-#                                             'categorias': categorias})
+
+    return render(request, 'verperfil.html',{'user': request.user,
+                                             'grupo':nombre_grupo})
 
 
 # Vista usada al iniciar el sistema
@@ -83,7 +65,6 @@ def registro(request):
             user.last_name = form.cleaned_data['apellido']
             if (form.cleaned_data['correo']!=""):
                 user.email = form.cleaned_data['correo']
-<<<<<<< HEAD
             if (form.cleaned_data['tipo'] == "Técnico"):
                 group = Group.objects.get(name='tecnicos') 
                 user.groups.add(group)
@@ -91,9 +72,7 @@ def registro(request):
                 group = Group.objects.get(name='almacenistas') 
                 user.groups.add(group)
 
-=======
             user.is_active = True
->>>>>>> 171216bf08e8cb859a3dde7855a0c479f5d7ddc3
             user.save()
             msg = "Su usuario fue registrado exitosamente"
             return render(request,'registro.html',{'form': form, 'msg': msg})
@@ -156,13 +135,7 @@ def crearItem(request):
                 obj = Item(nombre = inombre,
                             cantidad = form.cleaned_data['cantidad'],
                             id_categoria = idcat,
-<<<<<<< HEAD
-                            prioridad = form.cleaned_data['prioridad'],
-                            minimo = form.cleaned_data['minimo'],
-                            estado = 1
-=======
                             minimo = form.cleaned_data['minimo']
->>>>>>> 171216bf08e8cb859a3dde7855a0c479f5d7ddc3
                             )
                 obj.save()
                 mensaje = "Item %s creado exitosamente" % (inombre) 
@@ -282,12 +255,6 @@ def item_editar(request, _id):
                 item.nombre = inombre
                 item.cantidad = form.cleaned_data['cantidad']
                 item.id_categoria = idcat
-<<<<<<< HEAD
-                item.prioridad = form.cleaned_data['prioridad']
-=======
-                print (item.id_categoria)
-                print (idcat)
->>>>>>> 171216bf08e8cb859a3dde7855a0c479f5d7ddc3
                 item.minimo = form.cleaned_data['minimo']
                 item.estado = form.cleaned_data['estado']
                 item.save()
@@ -296,15 +263,9 @@ def item_editar(request, _id):
     else: 
         # Formulario con los datos del item a editar
         form = item_editarForm(initial = {'nombre': item.nombre, 
-                                        'cantidad': item.cantidad,
-                                        'categoria': item.id_categoria,
-<<<<<<< HEAD
-                                        'prioridad': item.prioridad,
-                                        'minimo': item.minimo,
-                                        'estado': item.estado})
-=======
-                                        'minimo': item.minimo})
->>>>>>> 171216bf08e8cb859a3dde7855a0c479f5d7ddc3
+                                          'cantidad': item.cantidad,
+                                          'categoria': item.id_categoria,
+                                          'minimo': item.minimo})
         mensaje = None
     return render(request, 'item_editar.html', {'form' : form, 
                                                 'nombre' : nombre,
@@ -319,7 +280,6 @@ def inventario(request):
     else:
         pass
     return render(request,'inventario.html', {'items': items})
-<<<<<<< HEAD
 
 
 def solicitud(request):
@@ -371,5 +331,3 @@ def solicitud_eliminar(request, _id):
     
         obj.delete()
     return HttpResponseRedirect('/solicitud')
-=======
->>>>>>> 171216bf08e8cb859a3dde7855a0c479f5d7ddc3
