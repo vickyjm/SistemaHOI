@@ -146,9 +146,10 @@ function showMe (box) {
 		dataType: 'json',
 		success: function (data) {
 			console.log(data)
-
+			my = JSON.parse(data.content);
+			//alert(data)
 			//var my = "a";
-			//console.log(my);
+			console.log(my.model)
 			//for (var i = 0; i< data.size; i++){
 			//	my += '<ul><li>'+ data[i].fields.nombre +'</li></ul>';
 			//	console.log(my);

@@ -291,15 +291,16 @@ class busqueda_ajax(TemplateView):
         #print(id_categoria)
         #items = Item.objects.filter(id_categoria = id_categoria)
         #print (items)
-        data = serializers.serialize('json', myitems, fields= ('nombre'))
+        data = serializers.serialize('json', myitems)
+        print (data)
         #print(data)
-        #response_data = {}
-        #response_data['data'] = data
+        response_data = {}
+        response_data['data'] = data
         #print(data)
-        #response_data['message'] = 'Some error message'
-        #return HttpResponse(json.dumps(response_data), content_type="application/json")
-
-        return JsonResponse(data, safe=False)
+        response_data['message'] = 'Some error message'
+        #return HttpResponse(data, content_type="application/json")
+        #data =  json.loads(data)
+        return JsonResponse(data, safe= False)
 
 def hello(request):
     data = serializers.serialize('json', 'hola')

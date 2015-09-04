@@ -25,8 +25,8 @@ class Item(models.Model):
                         (1, "Activo"))
     estado = models.PositiveIntegerField(choices=opciones_estado, default = 1)
 
-    def __str__(self):
-        return self.nombre
+    #def __str__(self):
+    #    return self.nombre
     
     
 class Solicitud(models.Model):
