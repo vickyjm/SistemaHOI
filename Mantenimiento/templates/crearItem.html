@@ -20,8 +20,14 @@
 			{% endif %}
 			{% for field in form %}
 
-			 <h3>{{field.label_tag}}</h3>
+			 {% if field.name == "categoria" %}
+			 	<h3>{{field.label_tag}}      <a href="./categorias" target="_blank"><i class="fa fa-plus-square"></i></a></h3>
+			 {% else %}
+			 	<h3>{{field.label_tag}}</h3>
+			 {% endif %}
+
 			 <h4 style = "color:#CC0000">{{ field.errors}}</h4>
+
 			 {{field}}<br><br>
 
 			 {% endfor %}
