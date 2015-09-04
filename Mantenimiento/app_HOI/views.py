@@ -92,13 +92,14 @@ def crearItem(request):
             inombre = form.cleaned_data['nombre']
             inombre = inombre.lower()
             icategoria = form.cleaned_data['categoria']
+            icategoria = icategoria.nombre.lower()
             idcat = Categoria.objects.get(nombre = icategoria)
             # Verifica si ya existe un item con el mismo nombre y categoria
             itemexiste = Item.objects.filter(nombre = inombre, 
                                             id_categoria = idcat.id).exists()
             # Si el item ya existe
             if itemexiste:
-                mensaje = "Item %s ya existe" % (inombre.capitalize())
+                mensaje = "Item '%s' ya existe" % (inombre.capitalize())
             # Si el item no existe, lo crea
             else:
                 obj = Item(nombre = inombre,
@@ -109,7 +110,7 @@ def crearItem(request):
                             estado = 1
                             )
                 obj.save()
-                mensaje = "Item '%s' creado exitosamente" % (inombre) 
+                mensaje = "Item '%s' creado exitosamente" % (inombre.capitalize()) 
                 form = itemForm(initial={'cantidad': '0', 'minimo': '5'})   
     else:
         # Valores iniciales de cantidad y minimo para alerta
@@ -229,7 +230,7 @@ def item_editar(request, _id):
                     item.save()
                     mensaje = "Item '%s' editado exitosamente" %nombre.capitalize()
                 else:
-                    mensaje = "Nombre '%s' ya existe en la categoría '%s'" %(inombre, idcat)
+                    mensaje = "Nombre '%s' ya existe en la categoría '%s'" %(inombre.capitalize(), idcat)
                     
             except ObjectDoesNotExist:
 
