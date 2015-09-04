@@ -27,7 +27,7 @@ class Item(models.Model):
     
     def __str__(self):
         return self.nombre.capitalize()
-    
+
 class Solicitud(models.Model):
     dpto = models.CharField(max_length = 100) # Preguntar si ponerlo como opciones
     fecha = models.DateTimeField()
