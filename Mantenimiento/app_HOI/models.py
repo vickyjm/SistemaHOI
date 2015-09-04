@@ -9,7 +9,7 @@ class Categoria(models.Model):
     estado = models.PositiveIntegerField(choices=opciones_estado, default = 1)
 
     def __str__(self):
-        return self.nombre
+        return self.nombre.capitalize()
     
 class Item(models.Model):
     # id = models.CharField(max_length = 50) Esto sería en caso que tengan algo tipo n° de bien
@@ -24,6 +24,9 @@ class Item(models.Model):
     opciones_estado = ((0, "Inactivo"),
                         (1, "Activo"))
     estado = models.PositiveIntegerField(choices=opciones_estado, default = 1)
+    
+    def __str__(self):
+        return self.nombre.capitalize()
     
 class Solicitud(models.Model):
     dpto = models.CharField(max_length = 100) # Preguntar si ponerlo como opciones
