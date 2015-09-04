@@ -83,9 +83,11 @@ def recuperarContraseña(request):
 # Vista utilizada para crear un item en el sistema
 def crearItem(request):
 
+    color = "color:#FFFFFF"
+    mensaje = None
+    
     if request.method == "POST":
         form = itemForm(request.POST)
-        mensaje = None
 
         if form.is_valid():
             #Obtiene nombre y categoria del formulario
@@ -100,6 +102,7 @@ def crearItem(request):
             # Si el item ya existe
             if itemexiste:
                 mensaje = "Item '%s' ya existe" % (inombre.capitalize())
+                color = "color:#CC0000"
             # Si el item no existe, lo crea
             else:
                 obj = Item(nombre = inombre,
@@ -110,21 +113,25 @@ def crearItem(request):
                             estado = 1
                             )
                 obj.save()
-                mensaje = "Item '%s' creado exitosamente" % (inombre.capitalize()) 
+                mensaje = "Item '%s' creado exitosamente" % (inombre.capitalize())
+                color = "color:#00CC00" 
                 form = itemForm(initial={'cantidad': '0', 'minimo': '5'})   
     else:
         # Valores iniciales de cantidad y minimo para alerta
         form = itemForm(initial={'cantidad': '0', 'minimo': '5'})
-        mensaje = None
 
-    return render(request,'crearItem.html', {'form': form, 'mensaje': mensaje})
+    return render(request,'crearItem.html', {'form': form, 
+                                             'mensaje': mensaje,
+                                             'color' : color})
 
 # Vista utilizada para crear una categoria en el sistema
 def categoria(request):
 
+    color = "color:#FFFFFF"
+    mensaje = None
+
     if request.method == "POST":
         form = categoriaForm(request.POST)
-        mensaje = None
 
         if form.is_valid():
             catnombre = form.cleaned_data['nombre']
@@ -135,27 +142,30 @@ def categoria(request):
                 # Verifica si el nombre de la categoria ya existe
                 if Categoria.objects.filter(pk=cat.pk).exists():
                     mensaje = "Categoría '%s' ya existe" % (catnombre.capitalize())
+                    color = "color:#CC0000"
             # Si no existe, crea el objeto y lo guarda
             except ObjectDoesNotExist:
                 obj = Categoria(nombre = catnombre,
                                 estado = 1)
                 obj.save()
                 mensaje = "Categoría '%s' creada exitosamente" % (catnombre.capitalize())
+                color = "color:#00CC00"
                 form = categoriaForm()
         categorias = Categoria.objects.order_by('nombre')
 
     else:
         form = categoriaForm()
-        mensaje = None  
         categorias = Categoria.objects.order_by('nombre')
 
     return render(request,'categoria.html', {'form': form, 
                                              'categorias': categorias, 
-                                             'mensaje': mensaje})
+                                             'mensaje': mensaje,
+                                             'color': color})
 
 # Vista creada para editar una categoria en el sistema
 def categoria_editar(request, _id):
     
+    color = "color:#FFFFFF"
     categoria = Categoria.objects.get(id = _id)
     # Lista de items dentro de la categoria
     #items = Item.objects.filter(id_categoria = _id)
@@ -181,18 +191,21 @@ def categoria_editar(request, _id):
                         categoria.estado = cestado
                         categoria.save()
                         mensaje = "Categoría editada exitosamente"
+                        color = "color:#00CC00"
                     # No hubo cambios en la categoria
                     else: 
                         mensaje = None
                 # Si la categoria no es la misma a editar
                 else:
                     mensaje = "La categoría '%s' ya existe" % cnombre.capitalize()
+                    color = "color:#CC0000"
             # Si no existe una categoria con el nombre introducido
             except:
                 categoria.nombre = cnombre
                 categoria.estado = cestado
                 categoria.save()
                 mensaje = "Categoría editada exitosamente"
+                color = "color:#00CC00"
 
     else:
         # Formulario con los datos a editar
@@ -201,11 +214,13 @@ def categoria_editar(request, _id):
         mensaje = None
     return render(request,'categoria_editar.html', {'categoria': categoria, 
                                                     'form': form,
-                                                    'mensaje': mensaje})
+                                                    'mensaje': mensaje,
+                                                    'color':color})
 
 # Vista utilizada para editar un item en el sistema
 def item_editar(request, _id):
     # Obtiene el objeto de item a editar
+    color = "color:#FFFFFF"
     item = Item.objects.get(id = _id)
     nombre = item.nombre
     if request.method == "POST":
@@ -229,8 +244,10 @@ def item_editar(request, _id):
                     item.estado = form.cleaned_data['estado']
                     item.save()
                     mensaje = "Item '%s' editado exitosamente" %nombre.capitalize()
+                    color = "color:#00CC00"
                 else:
                     mensaje = "Nombre '%s' ya existe en la categoría '%s'" %(inombre.capitalize(), idcat)
+                    color = "color:#CC0000"
                     
             except ObjectDoesNotExist:
 
@@ -242,6 +259,7 @@ def item_editar(request, _id):
                 item.estado = form.cleaned_data['estado']
                 item.save()
                 mensaje = "Item '%s' editado exitosamente" %nombre.capitalize()
+                color = "color:#00CC00"
                 nombre = inombre.capitalize()
     else: 
         # Formulario con los datos del item a editar
@@ -254,7 +272,8 @@ def item_editar(request, _id):
         mensaje = None
     return render(request, 'item_editar.html', {'form' : form, 
                                                 'nombre' : nombre.capitalize(),
-                                                'mensaje': mensaje})
+                                                'mensaje': mensaje,
+                                                'color': color})
            
            
 # Vista utilizada para mostrar los items del inventario
