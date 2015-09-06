@@ -36,7 +36,6 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_extensions',
     'app_HOI',
 )
 
@@ -91,6 +90,12 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'sistemahoi@gmail.com'
+EMAIL_HOST_PASSWORD = 'mantenimientohoi'
 
 
 # Static files (CSS, JavaScript, Images)

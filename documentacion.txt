@@ -1,3 +1,11 @@
+==========================================================
+		ENVÍO DE ALERTAS DE INVENTARIO
+==========================================================
+ Hice un comando que está en app_HOI/management/commands que envía correos a todos los administradores.
+ Para correrlo pensé en utilizar lo mismo que hacemos para correr el sistema de Patrick y ponerlo semanal.
+Así sería independiente de la ejecución del sistema normal y no afectaría al usuario (porque tarda unos segundos
+en enviar el email dependiendo de la conexión a internet).
+
 -> Aqui explica todo lo de los usuarios de Django, manejar permisos, cambios de contraseña, etc
 	https://docs.djangoproject.com/en/1.8/topics/auth/default/
 
