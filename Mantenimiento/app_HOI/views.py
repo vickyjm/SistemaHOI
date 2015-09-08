@@ -384,35 +384,61 @@ def solicitud_estado(request, _id, _nuevo_estado):
         pass
     return render(request,'solicitud_estado.html', {'solicitudes':solicitudes})
 
-def item_ingresar_retirar(request, _id, _accion):
+def item_ingresar(request, _id):
     item = Item.objects.get(pk = _id)
-    if _accion == "I":
-        accion = 'Ingresar'
+    
+    if request.method == "POST":
+        form = item_ingresarForm(request.POST)
+        
+        if form.is_valid():
+            fecha = datetime.datetime.now()
+            icantidad = form.cleaned_data['cantidad']            
+            item.cantidad = item.cantidad + icantidad
+            item.save()
+            
+            obj = Ingresa(id_usuario = request.user,
+                          id_item = item,
+                          fecha = fecha,
+                          cantidad = icantidad)
+            obj.save()
+            
+            mensaje = "Cantidad ingresada exitosamente"
+            color = "#009900"
     else:
-        accion = 'Retirar'
+        mensaje = None
+        color = "#000000"
+        form = item_ingresarForm(initial={'cantidad': '1'})
+
+    accion = "Ingresar"
+    return render(request,'item_ingresar_retirar.html', {'form': form, 
+                                                         'accion': accion,
+                                                         'item': item,
+                                                         'mensaje': mensaje,
+                                                         'color': color})
+
+def item_retirar(request, _id):
+    item = Item.objects.get(pk = _id)
 
     if request.method == "POST":
-        mensaje = None
-        form = item_ingresar_retirarForm(request.POST)
+        form = item_retirarForm(request.POST)
         
         if form.is_valid():
             fecha = datetime.datetime.now()
             icantidad = form.cleaned_data['cantidad']
-            if _accion == "I":
-                item.cantidad = item.cantidad + icantidad
-                solicitud
-                obj = Ingresa(id_usuario = request.user,
-                              id_item = item,
-                              fecha = fecha,
-                              cantidad = icantidad)
-                obj.save()
+            idpto = form.cleaned_data['dpto']
 
+            if icantidad > item.cantidad:
+                if item.cantidad == 0:
+                    mensaje = "No quedan unidades de este item."
+                else:
+                    mensaje = "Solo quedan '%d' unidades de este item" % (item.cantidad)
+                color = "#CC0000"
             else:
                 item.cantidad = item.cantidad - icantidad
-                
-                # Necesario para el reporte?
+                item.save()            
+
                 nueva_solicitud = Solicitud(fecha = fecha,
-                                            dpto = "?",
+                                            dpto = idpto,
                                             cantidad = icantidad,
                                             estado = "A")
                 nueva_solicitud.save()
@@ -423,13 +449,21 @@ def item_ingresar_retirar(request, _id, _accion):
                            fecha = fecha)
                 obj.save()
 
-            item.save()
-            mensaje = "Cantidad modificada exitosamente"
+                aprobar = Aprueba(id_usuario = request.user,
+                                  id_solicitud = nueva_solicitud,
+                                  fecha = fecha)
+                aprobar.save()
+
+                mensaje = "Cantidad retirada exitosamente"
+                color = "#009900"
     else:
         mensaje = None
-        form = item_ingresar_retirarForm(initial={'cantidad': '1'})
+        color = "#000000"
+        form = item_retirarForm(initial={'cantidad': '1'})
 
-    return render(request,'item_ingresar_retirar.html', {'form' : form, 
-                                                         'accion':accion,
-                                                         'item':item,
-                                                         'mensaje':mensaje})
+    accion = "Retirar"
+    return render(request,'item_ingresar_retirar.html', {'form': form, 
+                                                         'accion': accion,
+                                                         'item': item,
+                                                         'mensaje': mensaje,
+                                                         'color': color})
