@@ -62,7 +62,7 @@
 			<td style="width: 60%"><h4 style = "color: gray;"> {{ user.email }}</h4></td></tr>
 
 		<tr><td style="width: 40%"><h4 style = "color: black;">Cargo: </h4></td>
-		{% if user|has_group:"Administrador" %}
+		{% if user|has_group:"Administradores" %}
 			<td style="width: 60%"><h4 style = "color: gray;"> Administrador </h4></td></tr>
 		{% elif user|has_group:"Almacenistas" %}
 			<td style="width: 60%"><h4 style = "color: gray;"> Almacenista </h4></td></tr>
@@ -74,11 +74,12 @@
 			<td style="width: 60%"><h4 style = "color: gray;"> {{ user.date_joined|date:"d-m-Y" }}</h4></td></tr>	
 	</table>
 
+<!--div>
 	<br>
 	<table style="width:100%" >
 		<thead>
 			<td><h2>Contraseña</h2></td>
 			<td><a href="./perfil/{{user.id}}/editar"><i class="fa fa-pencil-square-o"></i></a></td>
 		</thead>
-	</table>
+	</table> </div-->
 {% endblock page_right %}

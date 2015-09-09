@@ -16,13 +16,20 @@ import datetime
 
 @login_required
 def verperfil(request):
+    grupo = request.user.groups.values('name')
+    if (not grupo) and request.user.is_superuser:
+        request.user.groups.add(Group.objects.get(name='Administradores'))  # Temporal
     return render(request, 'verperfil.html',{'user': request.user})
 
 def perfil_editar(request, _id):
     if request.method == "POST":
         form = perfilForm(request.POST)
         if form.is_valid():
-            pass
+            request.user.first_name = form.cleaned_data['nombre']
+            request.user.last_name = form.cleaned_data['apellido']
+            request.user.email = form.cleaned_data['correo']
+            request.user.save()
+            return HttpResponseRedirect('/verperfil')
     else:
 
         form = perfilForm(initial = {'nombre':request.user.first_name,
