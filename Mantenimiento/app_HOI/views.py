@@ -18,6 +18,19 @@ import datetime
 def verperfil(request):
     return render(request, 'verperfil.html',{'user': request.user})
 
+def perfil_editar(request, _id):
+    if request.method == "POST":
+        form = perfilForm(request.POST)
+        if form.is_valid():
+            pass
+    else:
+
+        form = perfilForm(initial = {'nombre':request.user.first_name,
+                                     'apellido':request.user.last_name,
+                                     'correo':request.user.email})
+
+    return render(request, 'perfil_editar.html', {'form':form,
+                                                  'user':request.user})
 
 # Vista usada al iniciar el sistema
 def inicio_sesion(request):
@@ -58,17 +71,13 @@ def registro(request):
             if (form.cleaned_data['correo']!=""):
                 user.email = form.cleaned_data['correo']
 
-            groupTec = Group.objects.get(name='Técnicos') 
-            groupAlm = Group.objects.get(name='Almacenistas')
-
             if (form.cleaned_data['tipo'] == "tecnico"):
-                print("tec")
-                user.groups.add(groupTec)
+                user.groups.add(Group.objects.get(name='Técnicos'))
             else:
-                print(form.cleaned_data['tipo'])
-                print("alm")
-                user.groups.add(groupTec,groupAlm)
-
+                user.groups.add(Group.objects.get(name='Almacenistas'))
+            
+            print(user.groups.values('name'))
+            print(user.groups.values_list('name',flat=True))
             user.is_active = True
             user.save()
             msg = "Su usuario fue registrado exitosamente"
