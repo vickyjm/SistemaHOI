@@ -19,6 +19,9 @@ def verperfil(request):
     grupo = request.user.groups.values('name')
     if (not grupo) and request.user.is_superuser:
         request.user.groups.add(Group.objects.get(name='Administradores'))  # Temporal
+        request.user.groups.add(Group.objects.get(name='Almacenistas'))  # Temporal
+        request.user.groups.add(Group.objects.get(name='Técnicos'))  # Temporal
+
     return render(request, 'verperfil.html',{'user': request.user})
 
 def perfil_editar(request, _id):
@@ -82,7 +85,8 @@ def registro(request):
                 user.groups.add(Group.objects.get(name='Técnicos'))
             else:
                 user.groups.add(Group.objects.get(name='Almacenistas'))
-            
+                user.groups.add(Group.objects.get(name='Técnicos'))
+                            
             print(user.groups.values('name'))
             print(user.groups.values_list('name',flat=True))
             user.is_active = True
