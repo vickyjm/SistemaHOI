@@ -5,8 +5,10 @@
 	<a href="" class="current-page-item">Perfil</a>
 	<a href="./solicitud">Solicitudes</a>
 	<a href="./inventario">Inventario</a>
-	<a href="./categorias" >Categorías</a>
-
+	<a href="./categorias">Categorías</a>
+	{% if user|has_group:"Administradores" %}
+		<a href="#">Administración</a>
+	{% endif %}
 {% endblock page_menu%}
 {% block page_title %}Últimos movimientos{% endblock page_title %}
 {% block page_left %}
@@ -21,6 +23,19 @@
 			<td><h3>Nombre referencia</h3></td>
 		</thead>
 	<tbody>
+
+
+	{% for a in aprobar %}
+		<tr>
+			<td style = "width:33%"><h3 style = "color: gray;">{{ a.fecha|date:"d-m-Y, H:i" }}</h3></td>
+			<td style = "width:33%"><h3 style = "color: gray;">Retiro de item {{ a.id_solicitud.get_estado_display }}</h3></td>
+			{% for c in crear %}
+				{% if c.id_solicitud == a.id_solicitud %}
+					<td style = "width:34%"><h3 style = "color: gray;">{{ c.id_item.nombre }}</h3></td>
+				{% endif %}
+			{% endfor %}
+		</tr>
+	{% endfor %}
 
 <!--div>
 	{% for i in items %}

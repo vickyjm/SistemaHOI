@@ -18,11 +18,14 @@ import datetime
 def verperfil(request):
     grupo = request.user.groups.values('name')
     if (not grupo) and request.user.is_superuser:
-        request.user.groups.add(Group.objects.get(name='Administradores'))  # Temporal
-        request.user.groups.add(Group.objects.get(name='Almacenistas'))  # Temporal
-        request.user.groups.add(Group.objects.get(name='Técnicos'))  # Temporal
+        request.user.groups.add(Group.objects.get(name='Administradores'))
+        request.user.groups.add(Group.objects.get(name='Almacenistas'))
+        request.user.groups.add(Group.objects.get(name='Técnicos'))
 
-    return render(request, 'verperfil.html',{'user': request.user})
+    aprobar = Aprueba.objects.filter(id_usuario = request.user)
+    crear = Crea.objects.all()
+
+    return render(request, 'verperfil.html',{'user': request.user, 'aprobar': aprobar, 'crear':crear})
 
 def perfil_editar(request, _id):
     if request.method == "POST":
@@ -326,7 +329,7 @@ def crearSolicitud(request):
             scategoria = form.cleaned_data['categoria']
             sitem = form.cleaned_data['item']
             scantidad = form.cleaned_data['cantidad']
-            iditem = Item.objects.get(nombre = sitem)
+            iditem = Item.objects.filter(id_categoria = scategoria).get(nombre = sitem)
 
             nueva_solicitud = Solicitud(fecha = fecha,
                                         dpto = sdpto,
@@ -379,6 +382,7 @@ def solicitud_eliminar(request, _id):
 #     return render(request, 'solicitud_seditar.html', {'form' : form,
 #                                                 'mensaje': mensaje})
 
+# Actualiza el estado de las solicitudes de un técnico
 def solicitud_estado(request, _id, _nuevo_estado):
     solic_creadas = Crea.objects.order_by('fecha')
 
@@ -400,6 +404,13 @@ def solicitud_estado(request, _id, _nuevo_estado):
                                id_solicitud = solicitud,
                                fecha = datetime.datetime.now())
             aprobado.save()
+
+            # Si la solicitud se aprobó, se reduce la cantidad de ese item del inventario
+            for s in solic_creadas: 
+                if s.id_solicitud == solicitud:
+                    item = Item.objects.get(pk = s.id_item.pk)
+                    item.cantidad = item.cantidad - solicitud.cantidad
+                    item.save()
     else:
         pass
     return render(request,'solicitud_estado.html', {'solicitudes':solicitudes})
