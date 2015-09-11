@@ -22,8 +22,8 @@ urlpatterns = patterns('',
     url(r'^solicitud_estado/(?P<_id>\d+)/(?P<_nuevo_estado>[A|R]+)', views.solicitud_estado,name = 'solicitud_estado'),
     url(r'^inventario/(?P<_id>\d+)/ingresar', views.item_ingresar, name = 'item_ingresar'),
     url(r'^inventario/(?P<_id>\d+)/retirar', views.item_retirar, name = 'item_retirar'),    
-    url(r'^cerrarSesion$', views.cerrarSesion, name = 'cerrarSesion')
-
+    url(r'^cerrarSesion$', views.cerrarSesion, name = 'cerrarSesion'),
+    url(r'^categoria/(?P<_cat>[-\w]+)/all_json_items/$', views.all_json_items, name = 'all_json_items'),
 )
 
 urlpatterns += patterns('', (

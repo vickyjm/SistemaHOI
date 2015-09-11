@@ -1,4 +1,5 @@
 {% extends "base-col3.html" %}
+{% load templatetags %}
 
 {% block page_menu %}
 	<a href="./verperfil">Perfil</a>
@@ -10,6 +11,60 @@
 {% block page_title %}Crear Solicitud{% endblock page_title %}
 {% block page_left %}{% endblock page_left %}
 {% block page_content %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+<form action="" method="get" accept-charset="utf-8">
+	
+	 <select name="categoria" id="categoria">
+        <option value="Z">*CATEGORIAS*</option>
+		{% lista_categorias %}
+    </select>
+
+
+    <select name="item" id="item">
+        <option>--------</option>
+    </select>
+</form>
+
+
+<script>
+
+    $(document).ready(
+                    function() {
+                     	
+                        $("select#categoria").change(function() {
+                            if ($(this).val() == 'Z') {
+                                $("select#item").html("<option>--------</option>");
+                                $("select#item").attr('disabled', false);
+                            }
+                            else {
+                                var url = "categoria/" + $(this).val() + "/all_json_items";
+                                var categoria = $(this).val();
+                                $.getJSON(url, function(items) {
+                                    var options = '<option value="Z">--------</option>';
+                                    for (var i = 0; i < items.length; i++) {
+                                       options += '<option value="' + items[i].pk + '">' + items[i].fields['name'] + '</option>';
+                                    }
+                                    document.write(options)
+                                    $("select#item").html(options);
+                                    $("select#item option:first").attr('selected', 'selected');
+                                    $("select#item").attr('disabled', false);
+                                });
+                            }
+                        });
+
+
+                        $("select#item").change(function(vent) {
+                            if ($(this).val() == -1) {
+                                return;
+                            }
+                        });
+                    });
+</script>
+
+
+
 <form action="" method="post">
 
 	<table style="width:100%" >

@@ -13,6 +13,7 @@ from app_HOI.forms import *
 from app_HOI.models import *
 from django.contrib.auth.decorators import login_required 
 import datetime
+import json
 
 @login_required
 def verperfil(request):
@@ -498,3 +499,13 @@ def item_retirar(request, _id):
                                                          'item': item,
                                                          'mensaje': mensaje,
                                                          'color': color})
+
+
+
+
+def all_json_items(request, _cat):
+    current_categoria = Categoria.objects.get(nombre = _cat)
+    items = Item.objects.all().filter(id_categoria=current_categoria)
+    print(items)
+    json_items = serializers.serialize("json", items)
+    return HttpResponse(json_items, mimetype="application/javascript")
