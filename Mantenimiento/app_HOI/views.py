@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.core import validators
 from django.core.exceptions import ValidationError
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from app_HOI.forms import * 
 from app_HOI.models import *
 from django.contrib.auth.decorators import login_required 

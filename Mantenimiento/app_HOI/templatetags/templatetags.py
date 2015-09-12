@@ -1,6 +1,6 @@
 from django import template
 from django.contrib.auth.models import Group
-from app_HOI.models import Categoria, Item
+from app_HOI.models import Categoria
 
 register = template.Library()
 
