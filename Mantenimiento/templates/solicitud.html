@@ -32,7 +32,7 @@
 				<td><h3>Eliminar</h3></td>
 			{% else %}
 				<td><h3>Usuario</h3></td>
-				<td><h3>Aceptar</h3></td>
+				<td><h3>Aprobar</h3></td>
 				<td><h3>Rechazar</h3></td>
 			{% endif %}
 		</thead>
@@ -46,8 +46,12 @@
 
 			{% if not user|has_group:"Almacenistas" %}
 				<td><a href="#"><i class="fa fa-pencil-square-o"></i></a></td>
-				<td><a href="./solicitud/{{s.id}}/eliminar"> <i class="fa fa-trash-o"></i></a></td>
 
+				{% if s.id_solicitud.estado == "E" %}
+					<td><a href="./solicitud/{{s.id}}/eliminar"> <i class="fa fa-trash-o"></i></a></td>
+				{% else %}
+					<td>-</td>
+				{% endif%}
 			{% else %}
 				<td><h3 style = "color: gray;">{{ s.id_usuario.first_name}} {{ s.id_usuario.last_name}}</h3></td>
 				{% if s.id_solicitud.get_estado_display == "Esperando respuesta" %}

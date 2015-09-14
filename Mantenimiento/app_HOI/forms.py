@@ -85,6 +85,19 @@ class recuperarContraseñaForm(forms.Form):
                      label = "Confirmar contraseña", 
                      widget=forms.PasswordInput(attrs={'style': 'width:100%'}))
 
+class perfilForm(forms.Form):
+    nombre = forms.CharField(max_length = 30, 
+                    required = True, 
+                    label = "Nombre", 
+                    widget=forms.TextInput(attrs={'style': 'width:100%'}))
+    apellido = forms.CharField(max_length = 30, 
+                    required = True, 
+                    label = "Apellido", 
+                    widget=forms.TextInput(attrs={'style': 'width:100%'}))
+    correo = forms.EmailField(required = False, 
+                    label = "Correo electrónico", 
+                    widget=forms.EmailInput(attrs={'style': 'width:100%'}))
+
 class MyModelChoiceField(ModelChoiceField):
     def label_from_instance(self, obj):
         return "My Object #%i" % obj.nombre
@@ -116,13 +129,28 @@ class item_editarForm(itemForm):
                     label = "Estado",
                     choices=opciones_estado)
  
-class item_ingresar_retirarForm(forms.Form):
+class item_ingresarForm(forms.Form):
     cantidad = forms.IntegerField(max_value = 2147483647, 
                     min_value = 0, 
                     required = True, 
                     label = "Cantidad", 
                     widget=forms.NumberInput(attrs={'style': 'width:100%'}))
 
+class item_retirarForm(forms.Form):
+    cantidad = forms.IntegerField(max_value = 2147483647, 
+                    min_value = 0, 
+                    required = True, 
+                    label = "Cantidad", 
+                    widget=forms.NumberInput(attrs={'style': 'width:100%'}))
+    opciones_dpto = (('0', 'Dpto 1'),       # No estoy segura de qué va aqui
+                     ('1', 'Dpto 2'),
+                     ('2', 'Dpto 3'))
+    dpto = forms.ChoiceField(
+                    required = True,
+                    widget=forms.Select(attrs={'style':'width:100%; background-color:white'}),
+                    label= "Departamento que lo solicita",
+                    choices = opciones_dpto)
+    
 class categoriaForm(forms.Form):
     nombre = forms.CharField(max_length = 100, 
                     required = True, 

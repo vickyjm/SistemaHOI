@@ -19,8 +19,34 @@ from django.http.response import HttpResponse
 
 @login_required
 def verperfil(request):
-    return render(request, 'verperfil.html',{'user': request.user})
+    grupo = request.user.groups.values('name')
+    if (not grupo) and request.user.is_superuser:
+        request.user.groups.add(Group.objects.get(name='Administradores'))
+        request.user.groups.add(Group.objects.get(name='Almacenistas'))
+        request.user.groups.add(Group.objects.get(name='Técnicos'))
 
+    aprobar = Aprueba.objects.filter(id_usuario = request.user)
+    crear = Crea.objects.all()
+
+    return render(request, 'verperfil.html',{'user': request.user, 'aprobar': aprobar, 'crear':crear})
+
+def perfil_editar(request, _id):
+    if request.method == "POST":
+        form = perfilForm(request.POST)
+        if form.is_valid():
+            request.user.first_name = form.cleaned_data['nombre']
+            request.user.last_name = form.cleaned_data['apellido']
+            request.user.email = form.cleaned_data['correo']
+            request.user.save()
+            return HttpResponseRedirect('/verperfil')
+    else:
+
+        form = perfilForm(initial = {'nombre':request.user.first_name,
+                                     'apellido':request.user.last_name,
+                                     'correo':request.user.email})
+
+    return render(request, 'perfil_editar.html', {'form':form,
+                                                  'user':request.user})
 
 # Vista usada al iniciar el sistema
 def inicio_sesion(request):
@@ -61,17 +87,14 @@ def registro(request):
             if (form.cleaned_data['correo']!=""):
                 user.email = form.cleaned_data['correo']
 
-            groupTec = Group.objects.get(name='Técnicos') 
-            groupAlm = Group.objects.get(name='Almacenistas')
-
             if (form.cleaned_data['tipo'] == "tecnico"):
-                print("tec")
-                user.groups.add(groupTec)
+                user.groups.add(Group.objects.get(name='Técnicos'))
             else:
-                print(form.cleaned_data['tipo'])
-                print("alm")
-                user.groups.add(groupTec,groupAlm)
-
+                user.groups.add(Group.objects.get(name='Almacenistas'))
+                user.groups.add(Group.objects.get(name='Técnicos'))
+                            
+            print(user.groups.values('name'))
+            print(user.groups.values_list('name',flat=True))
             user.is_active = True
             user.save()
             msg = "Su usuario fue registrado exitosamente"
@@ -309,7 +332,7 @@ def crearSolicitud(request):
             scategoria = form.cleaned_data['categoria']
             sitem = form.cleaned_data['item']
             scantidad = form.cleaned_data['cantidad']
-            iditem = Item.objects.get(nombre = sitem)
+            iditem = Item.objects.filter(id_categoria = scategoria).get(nombre = sitem)
 
             nueva_solicitud = Solicitud(fecha = fecha,
                                         dpto = sdpto,
@@ -362,6 +385,7 @@ def solicitud_eliminar(request, _id):
 #     return render(request, 'solicitud_seditar.html', {'form' : form,
 #                                                 'mensaje': mensaje})
 
+# Actualiza el estado de las solicitudes de un técnico
 def solicitud_estado(request, _id, _nuevo_estado):
     solic_creadas = Crea.objects.order_by('fecha')
 
@@ -383,39 +407,72 @@ def solicitud_estado(request, _id, _nuevo_estado):
                                id_solicitud = solicitud,
                                fecha = datetime.datetime.now())
             aprobado.save()
+
+            # Si la solicitud se aprobó, se reduce la cantidad de ese item del inventario
+            for s in solic_creadas: 
+                if s.id_solicitud == solicitud:
+                    item = Item.objects.get(pk = s.id_item.pk)
+                    item.cantidad = item.cantidad - solicitud.cantidad
+                    item.save()
     else:
         pass
     return render(request,'solicitud_estado.html', {'solicitudes':solicitudes})
 
-def item_ingresar_retirar(request, _id, _accion):
+def item_ingresar(request, _id):
     item = Item.objects.get(pk = _id)
-    if _accion == "I":
-        accion = 'Ingresar'
+    
+    if request.method == "POST":
+        form = item_ingresarForm(request.POST)
+        
+        if form.is_valid():
+            fecha = datetime.datetime.now()
+            icantidad = form.cleaned_data['cantidad']            
+            item.cantidad = item.cantidad + icantidad
+            item.save()
+            
+            obj = Ingresa(id_usuario = request.user,
+                          id_item = item,
+                          fecha = fecha,
+                          cantidad = icantidad)
+            obj.save()
+            
+            mensaje = "Cantidad ingresada exitosamente"
+            color = "#009900"
     else:
-        accion = 'Retirar'
+        mensaje = None
+        color = "#000000"
+        form = item_ingresarForm(initial={'cantidad': '1'})
+
+    accion = "Ingresar"
+    return render(request,'item_ingresar_retirar.html', {'form': form, 
+                                                         'accion': accion,
+                                                         'item': item,
+                                                         'mensaje': mensaje,
+                                                         'color': color})
+
+def item_retirar(request, _id):
+    item = Item.objects.get(pk = _id)
 
     if request.method == "POST":
-        mensaje = None
-        form = item_ingresar_retirarForm(request.POST)
+        form = item_retirarForm(request.POST)
         
         if form.is_valid():
             fecha = datetime.datetime.now()
             icantidad = form.cleaned_data['cantidad']
-            if _accion == "I":
-                item.cantidad = item.cantidad + icantidad
-                solicitud
-                obj = Ingresa(id_usuario = request.user,
-                              id_item = item,
-                              fecha = fecha,
-                              cantidad = icantidad)
-                obj.save()
+            idpto = form.cleaned_data['dpto']
 
+            if icantidad > item.cantidad:
+                if item.cantidad == 0:
+                    mensaje = "No quedan unidades de este item."
+                else:
+                    mensaje = "Solo quedan '%d' unidades de este item" % (item.cantidad)
+                color = "#CC0000"
             else:
                 item.cantidad = item.cantidad - icantidad
-                
-                # Necesario para el reporte?
+                item.save()            
+
                 nueva_solicitud = Solicitud(fecha = fecha,
-                                            dpto = "?",
+                                            dpto = idpto,
                                             cantidad = icantidad,
                                             estado = "A")
                 nueva_solicitud.save()
@@ -426,18 +483,26 @@ def item_ingresar_retirar(request, _id, _accion):
                            fecha = fecha)
                 obj.save()
 
-            item.save()
-            mensaje = "Cantidad modificada exitosamente"
+                aprobar = Aprueba(id_usuario = request.user,
+                                  id_solicitud = nueva_solicitud,
+                                  fecha = fecha)
+                aprobar.save()
+
+                mensaje = "Cantidad retirada exitosamente"
+                color = "#009900"
     else:
         mensaje = None
-        form = item_ingresar_retirarForm(initial={'cantidad': '1'})
+        color = "#000000"
+        form = item_retirarForm(initial={'cantidad': '1'})
 
-    return render(request,'item_ingresar_retirar.html', {'form' : form, 
-                                                         'accion':accion,
-                                                         'item':item,
-                                                         'mensaje':mensaje})
-    
-def print_users(request):
+    accion = "Retirar"
+    return render(request,'item_ingresar_retirar.html', {'form': form, 
+                                                         'accion': accion,
+                                                         'item': item,
+                                                         'mensaje': mensaje,
+                                                         'color': color})
+
+def imprimirReporte(request):
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="Prueba.pdf"'
     buffer = BytesIO()
