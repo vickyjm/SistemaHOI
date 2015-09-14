@@ -20,7 +20,8 @@ urlpatterns = patterns('',
     url(r'^solicitud/(?P<_id>\d+)/eliminar', views.solicitud_eliminar,name = 'solicitud_eliminar'),
     url(r'^solicitud_estado/(?P<_id>\d+)/(?P<_nuevo_estado>[A|R]+)', views.solicitud_estado,name = 'solicitud_estado'),
     url(r'^inventario/(?P<_id>\d+)/(?P<_accion>[I|R]+)', views.item_ingresar_retirar, name = 'item_ingresar_retirar'),
-    url(r'^cerrarSesion$', views.cerrarSesion, name = 'cerrarSesion')
+    url(r'^cerrarSesion$', views.cerrarSesion, name = 'cerrarSesion'),
+    url(r'^generarPdf$',views.print_users, name='generarPdf')
 
 )
 
