@@ -23,7 +23,7 @@ urlpatterns = patterns('',
     url(r'^inventario/(?P<_id>\d+)/ingresar', views.item_ingresar, name = 'item_ingresar'),
     url(r'^inventario/(?P<_id>\d+)/retirar', views.item_retirar, name = 'item_retirar'),    
     url(r'^cerrarSesion$', views.cerrarSesion, name = 'cerrarSesion'),
-    url(r'^generarPdf$',views.imprimirReporte, name='generarPdf')
+    url(r'^reporte$',views.imprimirReporte, name='reporte')
 
 )
 

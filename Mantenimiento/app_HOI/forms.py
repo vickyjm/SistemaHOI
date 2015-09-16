@@ -5,6 +5,8 @@ from django.core.validators import RegexValidator
 from app_HOI.models import Categoria,Item
 from django.forms import ModelChoiceField
 from django.utils.translation import ugettext, ugettext_lazy as _
+from django.forms.extras.widgets import SelectDateWidget
+from django.forms.widgets import SplitDateTimeWidget
 
 class iniciarSesionForm(forms.Form):
     cedula = forms.CharField(
@@ -191,3 +193,15 @@ class solicitudForm(forms.Form):
                     required = True, 
                     label = "Cantidad",
                     widget=forms.NumberInput(attrs={'style': 'width:100%'}))
+    
+class reportesForm(forms.Form):
+    fechaInicio = forms.DateField(
+                        label = "Fecha inicial",
+                        required = True,
+                        widget = SelectDateWidget(years=range(2015,2050)))
+    
+    fechaFin = forms.DateField(
+                        label = "Fecha final",
+                        required = True,
+                        widget = SelectDateWidget(years=range(2015,2050)))
+    

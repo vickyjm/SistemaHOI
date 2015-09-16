@@ -12,7 +12,7 @@ from django.http import HttpResponseRedirect
 from app_HOI.forms import * 
 from app_HOI.models import *
 from django.contrib.auth.decorators import login_required 
-from app_HOI.pdfPrueba import *
+from app_HOI.generarPdf import *
 from io import BytesIO
 import datetime
 from django.http.response import HttpResponse
@@ -503,10 +503,17 @@ def item_retirar(request, _id):
                                                          'color': color})
 
 def imprimirReporte(request):
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="Prueba.pdf"'
-    buffer = BytesIO()
-    report = MiPDF(buffer,'Letter')
-    pdf = report.print_reporte()
-    response.write(pdf)
-    return response
+    msg = None
+    if request.method == 'POST':
+        form = reportesForm(request.POST)
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="Prueba.pdf"'
+        buffer = BytesIO()
+        report = MiPDF(buffer,'Letter')
+        usuario = request.user
+        pdf = report.imprimir_reporte(usuario,1,1)
+        response.write(pdf)
+        return response
+    else:
+        form = reportesForm()
+    return render(request,'reporte.html',{'form':form,'msg':msg})
