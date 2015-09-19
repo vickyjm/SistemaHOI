@@ -6,7 +6,8 @@ from app_HOI.models import Categoria,Item
 from django.forms import ModelChoiceField
 from django.utils.translation import ugettext, ugettext_lazy as _
 from django.forms.extras.widgets import SelectDateWidget
-from django.forms.widgets import SplitDateTimeWidget
+import datetime
+
 
 class iniciarSesionForm(forms.Form):
     cedula = forms.CharField(
@@ -198,10 +199,10 @@ class reportesForm(forms.Form):
     fechaInicio = forms.DateField(
                         label = "Fecha inicial",
                         required = True,
-                        widget = SelectDateWidget(years=range(2015,2050)))
+                        widget = SelectDateWidget(years=range(2015,datetime.datetime.now().year+1)))
     
     fechaFin = forms.DateField(
                         label = "Fecha final",
                         required = True,
-                        widget = SelectDateWidget(years=range(2015,2050)))
+                        widget = SelectDateWidget(years=range(2015,datetime.datetime.now().year+1)))
     

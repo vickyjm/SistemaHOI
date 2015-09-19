@@ -1,16 +1,14 @@
 from reportlab.lib.pagesizes import letter, A4
 from reportlab.platypus import SimpleDocTemplate, Paragraph
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.enums import TA_CENTER, TA_LEFT
+from reportlab.lib.enums import  TA_LEFT
 from reportlab.pdfgen import canvas
-from django.contrib.auth.models import User
 from reportlab.lib.units import inch,mm
 from reportlab.lib import colors
 from reportlab.platypus.flowables import Image, ImageAndFlowables
 from Mantenimiento.settings import MEDIA_ROOT
 from reportlab.platypus.tables import Table, TableStyle
 from app_HOI.models import Ingresa, Aprueba, Crea
-from datetime import datetime
 
 class MiPDF:
     def __init__(self, buffer, pagesize):
@@ -41,7 +39,7 @@ class MiPDF:
                                           imageSide = 'left'))
         
         tablaHeader = [["Nombre: "+usuario.first_name, "Apellido: "+usuario.last_name], 
-                  ["Fecha inicio: 2015-08-10", "Fecha fin: 2015-08-11"]]
+                  ["Fecha inicial: "+str(fechaIni), "Fecha final: "+str(fechaFin)]]
         
         header = Table(tablaHeader, colWidths=[doc.width/2.0]*2)
         header.setStyle(TableStyle([('INNERGRID', (0, 0), (-1, -1), 0.25, colors.white),
@@ -53,31 +51,41 @@ class MiPDF:
         auxIngresos = [["Nombre", "Categoría", "Cantidad", "Ingresado por","Fecha"]]
         ingresos = Ingresa.objects.all()
         for item in ingresos:
-            auxIngresos.append([item.id_item.nombre,item.id_item.id_categoria,item.cantidad,
+            if (fechaIni <= item.fecha.date() <= fechaFin):
+                auxIngresos.append([item.id_item.nombre,item.id_item.id_categoria,item.cantidad,
                           item.id_usuario.get_full_name(),item.fecha.date()])
         
-        tablaIngresos = Table(auxIngresos, colWidths=[doc.width/5.0]*5)
-        tablaIngresos.setStyle(TableStyle([('BACKGROUND',(0,0),(-1,0),colors.HexColor(0xD8D8D8)),
-                                        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
-                                        ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
-                                        ('FONTSIZE',(0,0),(-1,-1),9.5)]))
-        elements.append(tablaIngresos)
+        if (len(auxIngresos)==1):
+            elements.append(Paragraph('No hay nuevos ingresos de material en este período de tiempo.',styles['df']))
+        else:
+            tablaIngresos = Table(auxIngresos, colWidths=[doc.width/5.0]*5)
+            tablaIngresos.setStyle(TableStyle([('BACKGROUND',(0,0),(-1,0),colors.HexColor(0xD8D8D8)),
+                                            ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+                                            ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+                                            ('FONTSIZE',(0,0),(-1,-1),9.5)]))
+            elements.append(tablaIngresos)
         
         elements.append(Paragraph('Solicitudes',styles['Heading2']))
         
-        auxSolicitud = [["CI Solicitante", "Departamento","Ítem","Cantidad","Aprobado por", "Fecha solicitud","Fecha aprobado"]]
+        auxSolicitud = [["CI Solicitante", "Departamento","Ítem","Cantidad","Aprobado por", 
+                         "Fecha solicitud","Fecha aprobado"]]
         solicitudes = Aprueba.objects.all()
         for elem in solicitudes:
-            autor = Crea.objects.get(pk=elem.id_solicitud.id)
-            auxSolicitud.append([autor.id_usuario.username,elem.id_solicitud.dpto,autor.id_item.nombre,
-                          elem.id_solicitud.cantidad, elem.id_usuario.username,autor.fecha.date(),elem.fecha.date()])
-        
-        tablaSolicitud = Table(auxSolicitud, colWidths=[doc.width/7.0]*7)
-        tablaSolicitud.setStyle(TableStyle([('BACKGROUND',(0,0),(-1,0),colors.HexColor(0xD8D8D8)),
-                                        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
-                                        ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
-                                        ('FONTSIZE',(0,0),(-1,-1),9.5)]))
-        elements.append(tablaSolicitud)
+            if (fechaIni <= elem.fecha.date() <= fechaFin):
+                autor = Crea.objects.get(pk=elem.id_solicitud.id)
+                auxSolicitud.append([autor.id_usuario.username,elem.id_solicitud.dpto,autor.id_item.nombre,
+                              elem.id_solicitud.cantidad, elem.id_usuario.username,autor.fecha.date(),
+                              elem.fecha.date()])
+        if (len(auxSolicitud)==1):
+            elements.append(Paragraph('No se realizaron ni aprobaron solicitudes en este período de tiempo.',
+                                      styles['df']))
+        else:
+            tablaSolicitud = Table(auxSolicitud, colWidths=[doc.width/7.0]*7)
+            tablaSolicitud.setStyle(TableStyle([('BACKGROUND',(0,0),(-1,0),colors.HexColor(0xD8D8D8)),
+                                            ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+                                            ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+                                            ('FONTSIZE',(0,0),(-1,-1),9.5)]))
+            elements.append(tablaSolicitud)
         
         doc.build(elements, canvasmaker=CanvasNumerado)
         pdf = buffer.getvalue()

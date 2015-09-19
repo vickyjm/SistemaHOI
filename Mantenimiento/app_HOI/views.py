@@ -506,14 +506,23 @@ def imprimirReporte(request):
     msg = None
     if request.method == 'POST':
         form = reportesForm(request.POST)
-        response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename="Prueba.pdf"'
-        buffer = BytesIO()
-        report = MiPDF(buffer,'Letter')
-        usuario = request.user
-        pdf = report.imprimir_reporte(usuario,1,1)
-        response.write(pdf)
-        return response
+        
+        if form.is_valid():
+            fechaIni = form.cleaned_data['fechaInicio']
+            fechaFin = form.cleaned_data['fechaFin']
+            
+            if (fechaFin < fechaIni):
+                msg = "Fechas inválidas. Intente de nuevo"
+                
+            else:
+                response = HttpResponse(content_type='application/pdf')
+                response['Content-Disposition'] = 'attachment; filename="Inventario_'+str(fechaIni)+'_'+str(fechaFin)+'.pdf"'
+                buffer = BytesIO()
+                report = MiPDF(buffer,'Letter')
+                usuario = request.user
+                pdf = report.imprimir_reporte(usuario,fechaIni,fechaFin)
+                response.write(pdf)
+                return response
     else:
         form = reportesForm()
     return render(request,'reporte.html',{'form':form,'msg':msg})
