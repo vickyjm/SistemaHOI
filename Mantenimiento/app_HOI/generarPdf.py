@@ -92,6 +92,35 @@ class MiPDF:
         buffer.close()
         return pdf    
     
+    def imprimir_alertas(self,items):
+        buffer = self.buffer
+        doc = SimpleDocTemplate(buffer,
+                                rightMargin = 15*mm,
+                                leftMargin = 15*mm,
+                                topMargin = 15*mm,
+                                bottomMargin = 15*mm,
+                                pagesize = self.pagesize)
+        elements = []
+        styles = getSampleStyleSheet()
+        styles.add(ParagraphStyle(name='logo',alignment=TA_LEFT,leftIndent=8*mm,
+                                  fontSize=14))
+        
+        logo = MEDIA_ROOT + "/logo.jpg"
+        elements.append(ImageAndFlowables(Image(logo,width=75*mm,height=25*mm),
+                                          [Paragraph("<b>Departamento de Mantenimiento</b>",styles['logo']),
+                                           Paragraph("Alertas de falta de material en inventario",styles['Heading2'])],
+                                          imageSide = 'left'))
+        
+        tablaItems = Table(items, colWidths=[doc.width/4.0]*4)
+        tablaItems.setStyle(TableStyle([('BACKGROUND',(0,0),(-1,0),colors.HexColor(0xD8D8D8)),
+                                        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+                                        ('BOX', (0, 0), (-1, -1), 0.25, colors.black)]))
+        elements.append(tablaItems)
+        
+        doc.build(elements, canvasmaker=CanvasNumerado)
+        pdf = buffer.getvalue()
+        buffer.close()
+        return pdf    
               
 class CanvasNumerado(canvas.Canvas):
     def __init__(self,*args,**kwargs):
