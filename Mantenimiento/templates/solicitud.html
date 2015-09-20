@@ -2,10 +2,12 @@
 {% load templatetags %}
 
 {% block page_menu %}
-	<a href="./verperfil">Perfil</a>
-	<a href="." class="current-page-item">Solicitudes</a>	
-	<a href="./inventario">Inventario</a>
-	<a href="./categorias" >Categorías</a>
+
+	<a href="{% url 'verperfil' %}">Perfil</a>
+	<a href="." class="current-page-item">Solicitudes</a>
+	<a href="{% url 'inventario' %}">Inventario</a>
+	<a href="{% url 'categorias' %}">Categorías</a>
+	
 {% endblock page_menu%}
 
 {% block page_title %}{% endblock page_title %}
@@ -15,7 +17,7 @@
 	{% if not user|has_group:"Almacenistas" %}
 	<table style="width:100%">
 		<tr align="right">
-			<td><a href="./crearSolicitud" class="button" align = "right">(+) Crear solicitud</a></td>
+			<td><a href="{% url 'crearSolicitud' %}" class="button" align = "right">(+) Crear solicitud</a></td>
 		</tr>
 	</table>
 	{% endif %}

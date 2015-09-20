@@ -2,13 +2,15 @@
 {% load templatetags %}
 
 {% block page_menu %}
+
 	<a href="" class="current-page-item">Perfil</a>
-	<a href="./solicitud">Solicitudes</a>
-	<a href="./inventario">Inventario</a>
-	<a href="./categorias">Categorías</a>
+	<a href="{% url 'solicitud' %}">Solicitudes</a>
+	<a href="{% url 'inventario' %}">Inventario</a>
+	<a href="{% url 'categorias' %}">Categorías</a>
+
 	{% if user|has_group:"Administradores" %}
 		<a href="#">Administración</a>
-		<a href="./reporte">Reportes</a>
+		<a href="{% url 'reporte' %}">Reportes</a>
 	{% endif %}
 {% endblock page_menu%}
 {% block page_title %}Últimos movimientos{% endblock page_title %}
@@ -16,7 +18,7 @@
 {% endblock page_left %}
 
 {% block page_content %}
-	<a href="./cerrarSesion">Cerrar sesión</a>
+	<a href="{% url 'cerrarSesion' %}">Cerrar sesión</a>
 	<table style="width:100%" >
 		<thead>
 			<td><h3>Fecha</h3></td>
@@ -64,7 +66,9 @@
 	<table style="width:100%" >
 		<thead>
 			<td><h2>Información de usuario</h2></td>
-			<td><a href="./perfil/{{user.id}}/editar"><i class="fa fa-pencil-square-o"></i></a></td>
+
+			
+			<td><a href="{% url 'perfil_editar' user.id %}"><i class="fa fa-pencil-square-o"></i></a></td>
 		</thead>
 	</table>
 	<table>
