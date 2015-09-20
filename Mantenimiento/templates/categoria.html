@@ -1,15 +1,15 @@
 {% extends "base-col22.html" %}
 
 {% block page_menu %}
-<a href="./verperfil">Perfil</a>
-<a href="./solicitud">Solicitudes</a>
-<a href="./inventario" >Inventario</a>
+<a href="{% url 'verperfil' %"}>Perfil</a>
+<a href="{% url 'solicitud' %}">Solicitudes</a>
+<a href="{% url 'inventario' %}" >Inventario</a>
 <a href="" class="current-page-item">Categorías</a>
 {% endblock page_menu%}
 
 {% block page_title %}Categorías{% endblock page_title %}
 {% block page_left %}
-<form action='./categorias' method="post">
+<form action="{% url 'categorias' %}" method="post">
 
 <h2>Crear categoría</h2>
 	<table style="width:100%" >
@@ -48,7 +48,7 @@
 		<tr>
 			<td><h3 style = "color: gray;">{{ cat }}</h3></td>
 			<td><h3 style = "color: gray;">{{ cat.get_estado_display }}</h3></td>
-			<td ><a href="./categorias/{{cat.id}}/editar"><i class="fa fa-pencil-square-o"></i></a></td>
+			<td ><a href="{% url 'categoria_editar' cat.id %}"><i class="fa fa-pencil-square-o"></i></a></td>
 			<!--td><i class="fa fa-pencil-square-o"></td>
 			<td><i class="fa fa-times"></i></i></h3></td-->
 		</tr>
