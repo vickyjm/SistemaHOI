@@ -1,3 +1,9 @@
+=========================================================
+		REPORTES
+=========================================================
+Para los reportes utilicé ReportLab. Tienen que instalarlo con pipX install reportlab, con X la versión de
+pip que han estado usando. En caso que ya lo tengan te dice que ya ese requerimiento está listo.
+
 ==========================================================
 		ENVÍO DE ALERTAS DE INVENTARIO
 ==========================================================
