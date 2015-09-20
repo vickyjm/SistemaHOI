@@ -1,7 +1,33 @@
+# -*- coding: utf-8 -*-
 from django.db import models
 from django.db.models.fields import TextField
-from django.contrib.auth.models import User
-    
+from django.contrib.auth.models import User, Group, Permission
+from django.dispatch.dispatcher import receiver
+from django.db.models.signals import post_migrate
+import datetime
+
+@receiver(post_migrate)
+def init_groups(sender, **kwargs):
+    group, created = Group.objects.get_or_create(name='Técnicos')
+    if created:
+        pass
+    else:
+        group.save()
+    group, created = Group.objects.get_or_create(name='Almacenistas')
+    if created:
+        pass
+    #    group.permissions.add(aprobar_solicitud)
+    #    group.permissions.add(ingresar_item)
+    else: group.save()
+    group, created = Group.objects.get_or_create(name='Administradores')
+    if created:
+        pass
+#        group.permissions.add(aprobar_solicitud)
+#        group.permissions.add(ingresar_item)
+#        group.permissions.add(crear_item)
+    else:
+        group.save()
+
 class Categoria(models.Model):
     nombre = models.CharField(max_length = 100, unique=True)
     opciones_estado = ((0, "Inactivo"),
@@ -12,14 +38,9 @@ class Categoria(models.Model):
         return self.nombre.capitalize()
     
 class Item(models.Model):
-    # id = models.CharField(max_length = 50) Esto sería en caso que tengan algo tipo n° de bien
     nombre = models.CharField(max_length = 100)
     cantidad = models.PositiveIntegerField()
     id_categoria = models.ForeignKey(Categoria)
-    opciones_prioridad = ((0, "Baja"),
-                          (1, "Media"),
-                          (2, "Alta"))
-    prioridad = models.PositiveIntegerField(choices=opciones_prioridad)
     minimo = models.PositiveIntegerField() # Minimo cantidad de items para enviar alerta
     opciones_estado = ((0, "Inactivo"),
                         (1, "Activo"))
@@ -29,14 +50,14 @@ class Item(models.Model):
         return self.nombre.capitalize()
 
 class Solicitud(models.Model):
-    dpto = models.CharField(max_length = 100) # Preguntar si ponerlo como opciones
     fecha = models.DateTimeField()
+    dpto = models.CharField(max_length = 100) # Preguntar si ponerlo como opciones
     cantidad = models.PositiveIntegerField()
     opciones_estado = (("A", "Aprobado"),
                        ("R", "Rechazado"),
                        ("E", "Esperando respuesta"))
-    estado = models.CharField(max_length = 1,choices = opciones_estado)
-    
+    estado = models.CharField(max_length = 1,choices = opciones_estado, default = "E")
+
 class Crea(models.Model):
     id_usuario = models.ForeignKey(User)
     id_item = models.ForeignKey(Item)

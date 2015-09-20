@@ -2,9 +2,12 @@
 
 from django import forms
 from django.core.validators import RegexValidator
-from app_HOI.models import Categoria
+from app_HOI.models import Categoria,Item
 from django.forms import ModelChoiceField
 from django.utils.translation import ugettext, ugettext_lazy as _
+from django.forms.extras.widgets import SelectDateWidget
+import datetime
+
 
 class iniciarSesionForm(forms.Form):
     cedula = forms.CharField(
@@ -85,6 +88,19 @@ class recuperarContraseñaForm(forms.Form):
                      label = "Confirmar contraseña", 
                      widget=forms.PasswordInput(attrs={'style': 'width:100%'}))
 
+class perfilForm(forms.Form):
+    nombre = forms.CharField(max_length = 30, 
+                    required = True, 
+                    label = "Nombre", 
+                    widget=forms.TextInput(attrs={'style': 'width:100%'}))
+    apellido = forms.CharField(max_length = 30, 
+                    required = True, 
+                    label = "Apellido", 
+                    widget=forms.TextInput(attrs={'style': 'width:100%'}))
+    correo = forms.EmailField(required = False, 
+                    label = "Correo electrónico", 
+                    widget=forms.EmailInput(attrs={'style': 'width:100%'}))
+
 class MyModelChoiceField(ModelChoiceField):
     def label_from_instance(self, obj):
         return "My Object #%i" % obj.nombre
@@ -102,11 +118,6 @@ class itemForm(forms.Form):
     categoria = forms.ModelChoiceField(label = "Categoría",
         widget=forms.Select(attrs={'style':'width:100%; background-color:white'}), 
         queryset=Categoria.objects.order_by('nombre'))
-    opciones_prioridad = ((0, "Baja"),(1, "Media"), (2, "Alta"))
-    prioridad = forms.ChoiceField(required = True, 
-                    choices = opciones_prioridad, 
-                    widget = forms.Select(attrs={'style': 'width:100%; background-color:white'}), 
-                    label = "Prioridad")
     minimo = forms.IntegerField(max_value = 2147483647, 
                     min_value = 0, 
                     required = True, 
@@ -121,7 +132,28 @@ class item_editarForm(itemForm):
                     label = "Estado",
                     choices=opciones_estado)
  
+class item_ingresarForm(forms.Form):
+    cantidad = forms.IntegerField(max_value = 2147483647, 
+                    min_value = 0, 
+                    required = True, 
+                    label = "Cantidad", 
+                    widget=forms.NumberInput(attrs={'style': 'width:100%'}))
 
+class item_retirarForm(forms.Form):
+    cantidad = forms.IntegerField(max_value = 2147483647, 
+                    min_value = 0, 
+                    required = True, 
+                    label = "Cantidad", 
+                    widget=forms.NumberInput(attrs={'style': 'width:100%'}))
+    opciones_dpto = (('0', 'Dpto 1'),       # No estoy segura de qué va aqui
+                     ('1', 'Dpto 2'),
+                     ('2', 'Dpto 3'))
+    dpto = forms.ChoiceField(
+                    required = True,
+                    widget=forms.Select(attrs={'style':'width:100%; background-color:white'}),
+                    label= "Departamento que lo solicita",
+                    choices = opciones_dpto)
+    
 class categoriaForm(forms.Form):
     nombre = forms.CharField(max_length = 100, 
                     required = True, 
@@ -135,3 +167,42 @@ class categoria_editarForm(categoriaForm):
                     widget=forms.RadioSelect(attrs={'style': 'width:100%; background-color:white'}), 
                     label = "Estado",
                     choices=opciones_estado)
+
+class solicitudForm(forms.Form):
+    opciones_dpto = (('0', 'Dpto 1'),       # No estoy segura de qué va aqui
+                     ('1', 'Dpto 2'),
+                     ('2', 'Dpto 3'))
+    dpto = forms.ChoiceField(
+                    required = True,
+                    widget=forms.Select(attrs={'style':'width:100%; background-color:white'}),
+                    label= "Departamento",
+                    choices = opciones_dpto)
+    
+    categoria = forms.ModelChoiceField(
+                    label = "Categoría",
+                    widget = forms.Select(attrs={'style':'width:100%; background-color:white'}), 
+                    queryset = Categoria.objects.order_by('nombre'))
+
+    item = forms.ModelChoiceField(
+                    label = "Item",
+                    widget = forms.Select(attrs={'style':'width:100%; background-color:white'}), 
+                    queryset = Item.objects.order_by('nombre'))
+
+    cantidad = forms.IntegerField(
+                    max_value = 2147483647, 
+                    min_value = 0, 
+                    required = True, 
+                    label = "Cantidad",
+                    widget=forms.NumberInput(attrs={'style': 'width:100%'}))
+    
+class reportesForm(forms.Form):
+    fechaInicio = forms.DateField(
+                        label = "Fecha inicial",
+                        required = True,
+                        widget = SelectDateWidget(years=range(2015,datetime.datetime.now().year+1)))
+    
+    fechaFin = forms.DateField(
+                        label = "Fecha final",
+                        required = True,
+                        widget = SelectDateWidget(years=range(2015,datetime.datetime.now().year+1)))
+    
