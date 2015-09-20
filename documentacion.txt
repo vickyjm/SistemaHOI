@@ -12,7 +12,11 @@ pip que han estado usando. En caso que ya lo tengan te dice que ya ese requerimi
 Así sería independiente de la ejecución del sistema normal y no afectaría al usuario (porque tarda unos segundos
 en enviar el email dependiendo de la conexión a internet).
 
-Tuve que crear un correo para el sistema desde donde se manda todo. Info en settings
+Tuve que crear un correo para el sistema desde donde se manda todo. Info en settings.
+
+Para probarlo: python3 manage.py alertasInventario
+OJO: Asegurénse que alguno de los usuarios Administradores que tengan registrados tengan su correo para que puedan
+revisarlo, porque se mandan las alertas a TODOS los correos de los administradores.
 
 ===========================================================
 		USUARIOS
