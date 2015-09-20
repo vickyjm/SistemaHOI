@@ -1,16 +1,16 @@
 {% extends "base-col3.html" %}
 
 {% block page_menu %}
-<a href="./verperfil">Perfil</a>
-<a href="./solicitud">Solicitudes</a>
-<a href="./inventario" >Inventario</a>
-<a href="./categorias" >Categorías</a>
+<a href="{% url 'verperfil' %}">Perfil</a>
+<a href="{% url 'solicitud' %}">Solicitudes</a>
+<a href="{% url 'inventario' %}" >Inventario</a>
+<a href="{% url 'categorias' %}" >Categorías</a>
 {% endblock page_menu%}
 
 {% block page_title %}Crear Item{% endblock page_title %}
 {% block page_left %}
 
-	<ul align= "center"> <td><a href="./inventario" class="button"><i class="fa fa-arrow-left"></i></a></td>
+	<ul align= "center"> <td><a href="{% url 'inventario' %}" class="button"><i class="fa fa-arrow-left"></i></a></td>
 	</ul>
 {% endblock page_left %}
 {% block page_content %}
@@ -27,7 +27,7 @@
 			{% for field in form %}
 
 			 {% if field.name == "categoria" %}
-			 	<h3>{{field.label_tag}}      <a href="./categorias" target="_blank"><i class="fa fa-plus-square"></i></a></h3>
+			 	<h3>{{field.label_tag}}      <a href="{% url 'categorias' %}" target="_blank"><i class="fa fa-plus-square"></i></a></h3>
 			 {% else %}
 			 	<h3>{{field.label_tag}}</h3>
 			 {% endif %}
@@ -40,7 +40,7 @@
 		 <tr>
 			<td align="right"><br><br>
 			<input type="submit" class="button" value="Crear item">
-			<a href="./inventario" class="button">Cancelar</a>
+			<a href="{% url 'inventario' %}" class="button">Cancelar</a>
 			</td>
 
 		</tr>

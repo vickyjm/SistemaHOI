@@ -1,10 +1,10 @@
 {% extends "base-col3.html" %}
 
 {% block page_menu %}
-	<a href="./verperfil">Perfil</a>
-	<a href="./solicitud">Solicitudes</a>
-	<a href="./inventario">Inventario</a>
-	<a href="./categorias" >Categorías</a>
+	<a href="{% url 'verperfil' %}">Perfil</a>
+	<a href="{% url 'solicitud' %}">Solicitudes</a>
+	<a href="{% url 'inventario' %}">Inventario</a>
+	<a href="{% url 'categorias' %}">Categorías</a>
 {% endblock page_menu%}
 
 {% block page_title %}Crear Solicitud{% endblock page_title %}
