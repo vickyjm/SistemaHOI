@@ -175,18 +175,18 @@ class solicitudForm(forms.Form):
     dpto = forms.ChoiceField(
                     required = True,
                     widget=forms.Select(attrs={'style':'width:100%; background-color:white'}),
-                    label= "Departamento",
+                    label= "Departamento que lo solicita",
                     choices = opciones_dpto)
     
-    categoria = forms.ModelChoiceField(
-                    label = "Categoría",
-                    widget = forms.Select(attrs={'style':'width:100%; background-color:white'}), 
-                    queryset = Categoria.objects.order_by('nombre'))
+    # categoria = forms.ModelChoiceField(
+    #                 label = "Categoría",
+    #                 widget = forms.Select(attrs={'style':'width:100%; background-color:white'}), 
+    #                 queryset = Categoria.objects.order_by('nombre'))
 
-    item = forms.ModelChoiceField(
-                    label = "Item",
-                    widget = forms.Select(attrs={'style':'width:100%; background-color:white'}), 
-                    queryset = Item.objects.order_by('nombre'))
+    # item = forms.ModelChoiceField(
+    #                 label = "Item",
+    #                 widget = forms.Select(attrs={'style':'width:100%; background-color:white'}), 
+    #                 queryset = Item.objects.order_by('nombre'))
 
     cantidad = forms.IntegerField(
                     max_value = 2147483647, 

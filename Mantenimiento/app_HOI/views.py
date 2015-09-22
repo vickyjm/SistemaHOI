@@ -322,28 +322,44 @@ def solicitud(request):
 
 @login_required
 def crearSolicitud(request):
+    categorias = Categoria.objects.order_by('nombre')
+    items = Item.objects.order_by('nombre') 
+
     if request.method == "POST":
         mensaje = None
         form = solicitudForm(request.POST)
 
         if form.is_valid():
+
+            cat = request.POST.get("role")
+            item = request.POST.get("item")
+            
+            if cat == "":
+                form = solicitudForm(initial={'dpto': form.cleaned_data['dpto'],
+                                              'cantidad': form.cleaned_data['cantidad']})
+                mensaje = "Debe seleccionar una categoría."
+                return render(request,'crearSolicitud.html', {'form': form,
+                                                      'mensaje': mensaje,
+                                                      'categorias': categorias,
+                                                      'items': items})
+
             fecha = datetime.datetime.now()
             sdpto = form.cleaned_data['dpto']
-            scategoria = form.cleaned_data['categoria']
-            sitem = form.cleaned_data['item']
+            #scategoria = form.cleaned_data['categoria']
+            #sitem = form.cleaned_data['item']
             scantidad = form.cleaned_data['cantidad']
-            iditem = Item.objects.filter(id_categoria = scategoria).get(nombre = sitem)
+            # iditem = Item.objects.filter(id_categoria = scategoria).get(nombre = sitem)
 
-            nueva_solicitud = Solicitud(fecha = fecha,
-                                        dpto = sdpto,
-                                        cantidad = scantidad)
-            nueva_solicitud.save()
+            # nueva_solicitud = Solicitud(fecha = fecha,
+            #                             dpto = sdpto,
+            #                             cantidad = scantidad)
+            # nueva_solicitud.save()
 
-            obj = Crea(id_usuario = request.user,
-                       id_item = iditem,
-                       id_solicitud = nueva_solicitud,
-                       fecha = fecha)
-            obj.save()
+            # obj = Crea(id_usuario = request.user,
+            #            id_item = iditem,
+            #            id_solicitud = nueva_solicitud,
+            #            fecha = fecha)
+            # obj.save()
 
             mensaje = "Solicitud creada exitosamente" 
             form = solicitudForm(initial={'cantidad': '1'})
@@ -351,8 +367,6 @@ def crearSolicitud(request):
         mensaje = None
         form = solicitudForm(initial={'cantidad': '1'})
 
-    categorias = Categoria.objects.order_by('nombre')
-    items = Item.objects.order_by('nombre') 
     return render(request,'crearSolicitud.html', {'form': form,
                                                   'mensaje':mensaje,
                                                   'categorias': categorias,

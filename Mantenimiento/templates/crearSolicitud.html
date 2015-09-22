@@ -76,11 +76,7 @@
 			{% if mensaje %}
 				<h3 style="color:green">{{mensaje}}</h3>
 			{% endif %}
-			{% for field in form %}
-                <h3>{{field.label_tag}}</h3>
-                <h4 style = "color:#CC0000">{{ field.errors}}</h4>
-
-                {% if field.label == "Categoría" %}
+                <h3>Categoría:</h3>
 
                     <style type="text/css">
                         .hidden{
@@ -92,6 +88,7 @@
                      <div class="field">
                         <div class="f-wrapper">
                            <select id="roleSel" class="cbx" tabindex="50" name="role" style="width: 100%;background-color:white">
+                                <option value="" selected>---------</option>
                                 {% for cat in categorias%}
                                     <option value="{{cat.nombre}}">{{cat.nombre}}</option>
                                 {% endfor %}
@@ -99,14 +96,15 @@
                         </div>
                      </div>
                 
-                {% elif field.label == "Item" %}
+                <br><br>
+                <h3>Item:</h3>
                 
                     {% for cat in categorias %}
                         <div id="{{cat.nombre}}" class="hidden">
-                            <select id="roleSel" class="cbx" tabindex="50" name="role">
+                            <select id="roleSel" class="cbx" tabindex="50" name="item">
                                 {% for i in items %}
                                         {% if i.id_categoria.nombre == cat.nombre %}
-                                            <option value="{{cat}}">{{i.nombre}}</option>
+                                            <option value="{{i.nombre}}">{{i.nombre}}</option>
                                         {% endif %}
                                 {% endfor %}
                              </select>
@@ -125,11 +123,14 @@
                             document.getElementById(this.value).style.display = "block";
                         }
                     </script>
-                {% else %}
-                    {{field}}
-                {% endif %}
                 <br><br>
-			 {% endfor %}
+
+                {% for field in form %}
+                    <h3>{{field.label_tag}}</h3>
+                    <h4 style = "color:#CC0000">{{ field.errors}}</h4>
+                    {{field}}
+                     <br><br>
+    			{% endfor %}
 		 <tr>
 			<td align="right"><br><br>
 			<input type="submit" class="button" value="Crear solicitud"></td>
