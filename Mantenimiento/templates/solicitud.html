@@ -23,6 +23,7 @@
 	<table style="width:100%" >
  		<thead>
 			<td><h3>Fecha</h3></td>
+			<td><h3>Categoria</h3></td>
 			<td><h3>Item</h3></td>
 			<td><h3>Cantidad</h3></td>
 			<td><h3>Estado</h3></td>
@@ -40,6 +41,7 @@
 	{% for s in solicitudes %}
 		<tr>
 			<td><h3 style = "color: gray;">{{ s.fecha|date:"d-m-Y, H:i" }}</h3></td>
+			<td><h3 style = "color: gray;">{{ s.id_item.id_categoria.nombre }}</h3></td>
 			<td><h3 style = "color: gray;">{{ s.id_item.nombre }}</h3></td>
 			<td><h3 style = "color: gray;">{{ s.id_solicitud.cantidad }}</h3></td>
 			<td><h3 style = "color: gray;">{{ s.id_solicitud.get_estado_display }}</h3></td>

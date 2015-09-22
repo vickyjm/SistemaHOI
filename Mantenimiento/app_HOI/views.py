@@ -305,14 +305,14 @@ def inventario(request):
 
 
 def solicitud(request):
-    solic_creadas = Crea.objects.order_by('fecha')
+    solic_creadas = Crea.objects.order_by('-fecha')
 
     # Si es un técnico, solo puede ver sus solicitudes
     if not request.user.groups.filter(name = "Almacenistas").exists():
         solicitudes = solic_creadas.filter(id_usuario = request.user)
     # Si es almacenista o administrador, solo ve las solicitudes de los técnicos
     else:
-        solicitudes = solic_creadas.exclude(id_usuario = request.user)
+        solicitudes = solic_creadas.exclude(id_usuario = request.user)  ########### QUITAR
     if request.method == "POST":
         pass  
     else:
@@ -322,53 +322,54 @@ def solicitud(request):
 
 @login_required
 def crearSolicitud(request):
-    categorias = Categoria.objects.order_by('nombre')
+    categorias = Categoria.objects.values_list('nombre', flat = True)
     items = Item.objects.order_by('nombre') 
-
+    error_obligatorio = None
     if request.method == "POST":
         mensaje = None
         form = solicitudForm(request.POST)
 
         if form.is_valid():
 
-            cat = request.POST.get("role")
-            item = request.POST.get("item")
-            
-            if cat == "":
-                form = solicitudForm(initial={'dpto': form.cleaned_data['dpto'],
-                                              'cantidad': form.cleaned_data['cantidad']})
-                mensaje = "Debe seleccionar una categoría."
+            fecha = datetime.datetime.now()
+            scategoria = request.POST.get("role")
+            sitem = request.POST.get("item")
+            sdpto = form.cleaned_data['dpto']
+            scantidad = form.cleaned_data['cantidad']
+
+            if scategoria == "":
+                form = solicitudForm(initial={'dpto': sdpto,
+                                              'cantidad': scantidad})
+                error_obligatorio = "Este campo es obligatorio."
                 return render(request,'crearSolicitud.html', {'form': form,
                                                       'mensaje': mensaje,
+                                                      'error_obligatorio': error_obligatorio,
                                                       'categorias': categorias,
                                                       'items': items})
 
-            fecha = datetime.datetime.now()
-            sdpto = form.cleaned_data['dpto']
-            #scategoria = form.cleaned_data['categoria']
-            #sitem = form.cleaned_data['item']
-            scantidad = form.cleaned_data['cantidad']
-            # iditem = Item.objects.filter(id_categoria = scategoria).get(nombre = sitem)
+    
+            nueva_solicitud = Solicitud(fecha = fecha,
+                                        dpto = sdpto,
+                                        cantidad = scantidad)
+            nueva_solicitud.save()
 
-            # nueva_solicitud = Solicitud(fecha = fecha,
-            #                             dpto = sdpto,
-            #                             cantidad = scantidad)
-            # nueva_solicitud.save()
-
-            # obj = Crea(id_usuario = request.user,
-            #            id_item = iditem,
-            #            id_solicitud = nueva_solicitud,
-            #            fecha = fecha)
-            # obj.save()
+            id_cat = Categoria.objects.get(nombre = scategoria)
+            iditem = Item.objects.filter(id_categoria = id_cat).get(nombre = sitem)
+            obj = Crea(id_usuario = request.user,
+                       id_item = iditem,
+                       id_solicitud = nueva_solicitud,
+                       fecha = fecha)
+            obj.save()
 
             mensaje = "Solicitud creada exitosamente" 
             form = solicitudForm(initial={'cantidad': '1'})
     else:
         mensaje = None
         form = solicitudForm(initial={'cantidad': '1'})
-
+    
     return render(request,'crearSolicitud.html', {'form': form,
                                                   'mensaje':mensaje,
+                                                  'error_obligatorio': error_obligatorio,
                                                   'categorias': categorias,
                                                   'items':items})
 

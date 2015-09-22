@@ -12,62 +12,7 @@
 {% block page_left %}{% endblock page_left %}
 {% block page_content %}
 
-
-<!--div>
-<form action="" method="get" accept-charset="utf-8">
-
-{% for field in form %}
-
-{% if field.label == "Categoría" %}
-
-    <style type="text/css">
-        .hidden{
-            display: none;
-    }
-    </style>
-
-    <div class="field">
-        <div class="f-wrapper">
-           <select id="roleSel" class="cbx" tabindex="50" name="role">
-                {% for cat in categorias%}
-                    <option value="{{cat.nombre}}">{{cat.nombre}}</option>
-                {% endfor %}
-           </select>
-        </div>
-     </div>
-
-
-    {% for cat in categorias %}
-        <div id="{{cat.nombre}}" class="hidden">
-            <select id="roleSel" class="cbx" tabindex="50" name="role">
-                {% for i in items %}
-                        {% if i.id_categoria.nombre == cat.nombre %}
-                            <option value="{{cat}}">{{i.nombre}}</option>
-                        {% endif %}
-                {% endfor %}
-             </select>
-        </div>
-    {% endfor %}
-
-    <script>
-        var ids=["Eléctricos", "Limpieza"];
-        var dropDown = document.getElementById("roleSel");
-
-        dropDown.onchange = function(){
-            for (var x = 0; x < ids.length; x++){
-                document.getElementById(ids[x]).style.display="none";
-            }
-            document.getElementById(this.value).style.display = "block";
-        }
-    </script>
-{% endif %}
-{% endfor %}
-</form>
-</div-->
-
 <form action="" method="post">
-
-
 	<table style="width:100%" >
 		<thead>
 		</thead>
@@ -76,34 +21,42 @@
 			{% if mensaje %}
 				<h3 style="color:green">{{mensaje}}</h3>
 			{% endif %}
+                {% if error_obligatorio %}
+                    <h4 style = "color:#CC0000">{{error_obligatorio}}</h4>
+                {% endif %}
                 <h3>Categoría:</h3>
 
                     <style type="text/css">
-                        .hidden{
-                            display: none;
-                    }
+                        .hidden { display: none; }
                     </style>
-
 
                      <div class="field">
                         <div class="f-wrapper">
-                           <select id="roleSel" class="cbx" tabindex="50" name="role" style="width: 100%;background-color:white">
+                           <select id="roleSel" class="cbx" name="role" style="width: 100%;background-color:white">
                                 <option value="" selected>---------</option>
                                 {% for cat in categorias%}
-                                    <option value="{{cat.nombre}}">{{cat.nombre}}</option>
+                                    <option value="{{cat}}">{{cat}}</option>
                                 {% endfor %}
                            </select>
                         </div>
                      </div>
-                
-                <br><br>
+                <br>
+
+                {% if error_obligatorio %}
+                    <h4 style = "color:#CC0000">{{error_obligatorio}}</h4>
+                {% endif %}
                 <h3>Item:</h3>
-                
+                    <div id="noitem">
+                        <select id="roleSel" class="cbx" name="item" style="width: 100%;background-color:white">
+                            <option value="">---------</option>
+                         </select>
+                    </div>
+
                     {% for cat in categorias %}
-                        <div id="{{cat.nombre}}" class="hidden">
-                            <select id="roleSel" class="cbx" tabindex="50" name="item">
+                        <div id="{{cat}}" class="hidden">
+                            <select id="roleSel" class="cbx" name="item" style="width: 100%;background-color:white">
                                 {% for i in items %}
-                                        {% if i.id_categoria.nombre == cat.nombre %}
+                                        {% if i.id_categoria.nombre == cat %}
                                             <option value="{{i.nombre}}">{{i.nombre}}</option>
                                         {% endif %}
                                 {% endfor %}
@@ -113,17 +66,22 @@
                 
 
                     <script>
-                        var ids=["Eléctricos", "Limpieza"];
+                        var ids = {{categorias|safe}};
                         var dropDown = document.getElementById("roleSel");
 
                         dropDown.onchange = function(){
-                            for (var x = 0; x < ids.length; x++){
+                            for (var x = 0; x < ids.length; x++) {
                                 document.getElementById(ids[x]).style.display="none";
+                                if (this.value == ""){
+                                    document.getElementById("noitem").style.display = "block";         
+                                } else {
+                                    document.getElementById("noitem").style.display = "none";   
+                                }
                             }
                             document.getElementById(this.value).style.display = "block";
                         }
                     </script>
-                <br><br>
+                <br>
 
                 {% for field in form %}
                     <h3>{{field.label_tag}}</h3>
