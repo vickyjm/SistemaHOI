@@ -1,3 +1,9 @@
+=========================================================
+		REPORTES
+=========================================================
+Para los reportes utilicé ReportLab. Tienen que instalarlo con pipX install reportlab, con X la versión de
+pip que han estado usando. En caso que ya lo tengan te dice que ya ese requerimiento está listo.
+
 ==========================================================
 		ENVÍO DE ALERTAS DE INVENTARIO
 ==========================================================
@@ -5,6 +11,16 @@
  Para correrlo pensé en utilizar lo mismo que hacemos para correr el sistema de Patrick y ponerlo semanal.
 Así sería independiente de la ejecución del sistema normal y no afectaría al usuario (porque tarda unos segundos
 en enviar el email dependiendo de la conexión a internet).
+
+Tuve que crear un correo para el sistema desde donde se manda todo. Info en settings.
+
+Para probarlo: python3 manage.py alertasInventario
+OJO: Asegurénse que alguno de los usuarios Administradores que tengan registrados tengan su correo para que puedan
+revisarlo, porque se mandan las alertas a TODOS los correos de los administradores.
+
+===========================================================
+		USUARIOS
+===========================================================
 
 -> Aqui explica todo lo de los usuarios de Django, manejar permisos, cambios de contraseña, etc
 	https://docs.djangoproject.com/en/1.8/topics/auth/default/

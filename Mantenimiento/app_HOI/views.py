@@ -12,8 +12,10 @@ from django.http import HttpResponseRedirect, HttpResponse
 from app_HOI.forms import * 
 from app_HOI.models import *
 from django.contrib.auth.decorators import login_required 
+from app_HOI.generarPdf import *
+from io import BytesIO
 import datetime
-import json
+from django.http.response import HttpResponse
 
 @login_required
 def verperfil(request):
@@ -348,7 +350,13 @@ def crearSolicitud(request):
     else:
         mensaje = None
         form = solicitudForm(initial={'cantidad': '1'})
-    return render(request,'crearSolicitud.html', {'form': form, 'mensaje':mensaje})
+
+    categorias = Categoria.objects.order_by('nombre')
+    items = Item.objects.order_by('nombre') 
+    return render(request,'crearSolicitud.html', {'form': form,
+                                                  'mensaje':mensaje,
+                                                  'categorias': categorias,
+                                                  'items':items})
 
 @login_required
 def solicitud_eliminar(request, _id):
@@ -499,13 +507,27 @@ def item_retirar(request, _id):
                                                          'item': item,
                                                          'mensaje': mensaje,
                                                          'color': color})
-
-
-
-
-def all_json_items(request, _cat):
-    current_categoria = Categoria.objects.get(nombre = _cat)
-    items = Item.objects.all().filter(id_categoria=current_categoria)
-    print(items)
-    json_items = serializers.serialize("json", items)
-    return HttpResponse(json_items, mimetype="application/javascript")
+def imprimirReporte(request):
+    msg = None
+    if request.method == 'POST':
+        form = reportesForm(request.POST)
+        
+        if form.is_valid():
+            fechaIni = form.cleaned_data['fechaInicio']
+            fechaFin = form.cleaned_data['fechaFin']
+            
+            if (fechaFin < fechaIni):
+                msg = "Fechas inválidas. Intente de nuevo"
+                
+            else:
+                response = HttpResponse(content_type='application/pdf')
+                response['Content-Disposition'] = 'attachment; filename="Inventario_'+str(fechaIni)+'_'+str(fechaFin)+'.pdf"'
+                buffer = BytesIO()
+                report = MiPDF(buffer,'Letter')
+                usuario = request.user
+                pdf = report.imprimir_reporte(usuario,fechaIni,fechaFin)
+                response.write(pdf)
+                return response
+    else:
+        form = reportesForm()
+    return render(request,'reporte.html',{'form':form,'msg':msg})

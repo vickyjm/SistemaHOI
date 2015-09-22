@@ -8,6 +8,7 @@
 	<a href="./categorias">Categorías</a>
 	{% if user|has_group:"Administradores" %}
 		<a href="#">Administración</a>
+		<a href="./reporte">Reportes</a>
 	{% endif %}
 {% endblock page_menu%}
 {% block page_title %}Últimos movimientos{% endblock page_title %}

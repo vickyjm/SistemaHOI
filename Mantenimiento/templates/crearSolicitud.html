@@ -12,60 +12,56 @@
 {% block page_left %}{% endblock page_left %}
 {% block page_content %}
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
 <form action="" method="get" accept-charset="utf-8">
-	
-	<select name="categoria" id="categoria">
-        <option value="">*CATEGORIAS*</option>
-		{% lista_categorias %}
-    </select>
+
+{% for field in form %}
+
+{% if field.label == "Categoría" %}
+
+    <style type="text/css">
+        .hidden{
+            display: none;
+    }
+    </style>
+
+    <div class="field">
+        <div class="f-wrapper">
+           <select id="roleSel" class="cbx" tabindex="50" name="role">
+                {% for cat in categorias%}
+                    <option value="{{cat.nombre}}">{{cat.nombre}}</option>
+                {% endfor %}
+           </select>
+        </div>
+     </div>
 
 
-    <select name="item" id="item" disabled = "true">
-        <option>---------</option>
-    </select>
+    {% for cat in categorias %}
+        <div id="{{cat.nombre}}" class="hidden">
+            <select id="roleSel" class="cbx" tabindex="50" name="role">
+                {% for i in items %}
+                        {% if i.id_categoria.nombre == cat.nombre %}
+                            <option value="{{cat}}">{{i.nombre}}</option>
+                        {% endif %}
+                {% endfor %}
+             </select>
+        </div>
+    {% endfor %}
+
+    <script>
+        var ids=["Eléctricos", "Limpieza"];
+        var dropDown = document.getElementById("roleSel");
+
+        dropDown.onchange = function(){
+            for (var x = 0; x < ids.length; x++){
+                document.getElementById(ids[x]).style.display="none";
+            }
+            document.getElementById(this.value).style.display = "block";
+        }
+    </script>
+{% endif %}
+{% endfor %}
 </form>
-
-
-<script>
-    $(function() {
-        $("select#categoria").change(function() {
-            if ($(this).val() == "") {
-                $("select#item").html("<option>---------</option>");
-                $("select#item").attr('disabled', true);
-            }
-            else {
-                var cat_nombre = $(this).find('option:selected').val();
-                var url = "/categoria/" + cat_nombre + "/all_json_items";
-                
-                $.getJSON(url, function(items) {
-                    var options = '<option value="" selected="selected">---------</option>';
-                    for (var i = 0; i < items.length; i++) {
-                		options += '<option value="' + items[i].pk + '">' + items[i].fields['nombre'] + '</option>';
-             		}
-                    //$.each(items, function(k,v){
-    				//	var option = "<option value="+k+">";
-    				//	option += v;
-    				//	option += "</option>";
-    				//	options += option
-    				//});
-                    $("select#item").html(options);
-                    $("select#item option:first").attr('selected', 'selected');
-                    $("select#item").attr('disabled', false);
-                });
-            }
-        });
-
-
-        $("select#item").change(function(vent) {
-            if ($(this).val() == -1) {
-                return;
-            }
-        });
-    });
-</script>
-
 
 
 <form action="" method="post">
