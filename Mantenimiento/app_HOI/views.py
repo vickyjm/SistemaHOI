@@ -312,7 +312,7 @@ def solicitud(request):
         solicitudes = solic_creadas.filter(id_usuario = request.user)
     # Si es almacenista o administrador, solo ve las solicitudes de los técnicos
     else:
-        solicitudes = solic_creadas.exclude(id_usuario = request.user)  ########### QUITAR
+        solicitudes = solic_creadas.exclude(id_usuario = request.user)
     if request.method == "POST":
         pass  
     else:
@@ -324,7 +324,10 @@ def solicitud(request):
 def crearSolicitud(request):
     categorias = Categoria.objects.values_list('nombre', flat = True)
     items = Item.objects.order_by('nombre') 
-    error_obligatorio = None
+    falta_item = None
+    falta_categoria = None
+    color = "#009900"   # Color rojo para los errores
+
     if request.method == "POST":
         mensaje = None
         form = solicitudForm(request.POST)
@@ -333,43 +336,64 @@ def crearSolicitud(request):
 
             fecha = datetime.datetime.now()
             scategoria = request.POST.get("role")
-            sitem = request.POST.get("item")
-            sdpto = form.cleaned_data['dpto']
+            sitem = request.POST.get(scategoria)
             scantidad = form.cleaned_data['cantidad']
+            sdpto = form.cleaned_data['dpto']
 
+            # Si el técnico no seleccionó ninguna categoría
             if scategoria == "":
-                form = solicitudForm(initial={'dpto': sdpto,
-                                              'cantidad': scantidad})
-                error_obligatorio = "Este campo es obligatorio."
-                return render(request,'crearSolicitud.html', {'form': form,
-                                                      'mensaje': mensaje,
-                                                      'error_obligatorio': error_obligatorio,
-                                                      'categorias': categorias,
-                                                      'items': items})
+                form = solicitudForm(initial={'cantidad': scantidad,
+                                              'dpto': sdpto})
+                falta_categoria = "Este campo es obligatorio."
+            
+            # Si el técnico no seleccionó ningún ítem
+            if sitem == None:
+                form = solicitudForm(initial={'cantidad': scantidad,
+                                              'dpto': sdpto})
+                falta_item = "Este campo es obligatorio."
 
-    
-            nueva_solicitud = Solicitud(fecha = fecha,
-                                        dpto = sdpto,
-                                        cantidad = scantidad)
-            nueva_solicitud.save()
 
-            id_cat = Categoria.objects.get(nombre = scategoria)
-            iditem = Item.objects.filter(id_categoria = id_cat).get(nombre = sitem)
-            obj = Crea(id_usuario = request.user,
-                       id_item = iditem,
-                       id_solicitud = nueva_solicitud,
-                       fecha = fecha)
-            obj.save()
+            if (scategoria != "") and (sitem != ""):
+                id_cat = Categoria.objects.get(nombre = scategoria)
+                id_item = Item.objects.filter(id_categoria = id_cat).get(nombre = sitem)
 
-            mensaje = "Solicitud creada exitosamente" 
-            form = solicitudForm(initial={'cantidad': '1'})
+                # Si el técnico pide más items de los disponibles
+                if scantidad > id_item.cantidad:
+                    mensaje = "La solicitud no se puede realizar. Solo quedan '%d' unidades de este item." % (id_item.cantidad)
+                    color = "#CC0000"
+
+                # Si el técnico pide 0 items
+                elif scantidad == 0:
+                    mensaje = "La solicitud no se puede realizar. No quedan unidades de este item."
+                    color = "#CC0000"
+
+                # Si no hay errores
+                else:
+                    nueva_solicitud = Solicitud(fecha = fecha,
+                                                dpto = sdpto,
+                                                cantidad = scantidad)
+                    nueva_solicitud.save()
+
+                    obj = Crea(id_usuario = request.user,
+                               id_item = id_item,
+                               id_solicitud = nueva_solicitud,
+                               fecha = fecha)
+                    obj.save()
+
+                    id_item.cantidad = id_item.cantidad - scantidad # Se hace una reserva hasta que "A" o "R"
+                    id_item.save()
+
+                    mensaje = "Solicitud creada exitosamente" 
+                    form = solicitudForm(initial={'cantidad': '1'})
     else:
         mensaje = None
         form = solicitudForm(initial={'cantidad': '1'})
     
     return render(request,'crearSolicitud.html', {'form': form,
-                                                  'mensaje':mensaje,
-                                                  'error_obligatorio': error_obligatorio,
+                                                  'mensaje': mensaje,
+                                                  'color': color,
+                                                  'falta_categoria': falta_categoria,
+                                                  'falta_item': falta_item,
                                                   'categorias': categorias,
                                                   'items':items})
 
@@ -408,7 +432,7 @@ def solicitud_eliminar(request, _id):
 
 # Actualiza el estado de las solicitudes de un técnico
 def solicitud_estado(request, _id, _nuevo_estado):
-    solic_creadas = Crea.objects.order_by('fecha')
+    solic_creadas = Crea.objects.order_by('-fecha')
 
     # Si es un técnico, solo puede ver sus solicitudes
     if not request.user.groups.filter(name = "Almacenistas").exists():
@@ -422,6 +446,10 @@ def solicitud_estado(request, _id, _nuevo_estado):
         solicitud = Solicitud.objects.get(pk = obj.id_solicitud.pk)        
         solicitud.estado = _nuevo_estado
         solicitud.save()
+        
+        for s in solic_creadas: 
+            if s.id_solicitud == solicitud:
+                item = Item.objects.get(pk = s.id_item.pk)
 
         if _nuevo_estado == "A":
             aprobado = Aprueba(id_usuario = request.user,
@@ -429,12 +457,14 @@ def solicitud_estado(request, _id, _nuevo_estado):
                                fecha = datetime.datetime.now())
             aprobado.save()
 
-            # Si la solicitud se aprobó, se reduce la cantidad de ese item del inventario
-            for s in solic_creadas: 
-                if s.id_solicitud == solicitud:
-                    item = Item.objects.get(pk = s.id_item.pk)
-                    item.cantidad = item.cantidad - solicitud.cantidad
-                    item.save()
+            # Si la solicitud se aprobó, se reduce la cantidad de ese item del inventario    
+            item.cantidad = item.cantidad - solicitud.cantidad
+            item.save()
+        
+        else:
+            # Si la solicitud se rechazó, se suma al inventario el valor que se le había reservado
+            item.cantidad = item.cantidad + solicitud.cantidad
+            item.save()
     else:
         pass
     return render(request,'solicitud_estado.html', {'solicitudes':solicitudes})

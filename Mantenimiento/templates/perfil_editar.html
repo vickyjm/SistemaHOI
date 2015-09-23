@@ -18,12 +18,12 @@
 		<td style="width: 50%"><h4 style = "color: gray;"> {{ user.username }}</h4></td></tr>
 	
 	<tr><td style="width: 50%"><h4 style = "color: black; font-size: 22px">Cargo: </h4></td>
-	{% if user|has_group:"Administrador" %}
-		<td style="width: 50%"><h4 style = "color: gray;"> Administrador </h4></td></tr>
+	{% if user|has_group:"Administradores" %}
+		<td style="width: 60%"><h4 style = "color: gray;"> Administrador </h4></td></tr>
 	{% elif user|has_group:"Almacenistas" %}
-		<td style="width: 50%"><h4 style = "color: gray;"> Almacenista </h4></td></tr>
+		<td style="width: 60%"><h4 style = "color: gray;"> Almacenista </h4></td></tr>
 	{% else %}
-		<td style="width: 50%"><h4 style = "color: gray;"> Técnico </h4></td></tr>
+		<td style="width: 60%"><h4 style = "color: gray;"> Técnico </h4></td></tr>
 	{% endif %}
 		
 </table>

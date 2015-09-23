@@ -169,15 +169,6 @@ class categoria_editarForm(categoriaForm):
                     choices=opciones_estado)
 
 class solicitudForm(forms.Form):
-    opciones_dpto = (('0', 'Dpto 1'),       # No estoy segura de qué va aqui
-                     ('1', 'Dpto 2'),
-                     ('2', 'Dpto 3'))
-    dpto = forms.ChoiceField(
-                    required = True,
-                    widget=forms.Select(attrs={'style':'width:100%; background-color:white'}),
-                    label= "Departamento que lo solicita",
-                    choices = opciones_dpto)
-    
     # categoria = forms.ModelChoiceField(
     #                 label = "Categoría",
     #                 widget = forms.Select(attrs={'style':'width:100%; background-color:white'}), 
@@ -195,6 +186,17 @@ class solicitudForm(forms.Form):
                     label = "Cantidad",
                     widget=forms.NumberInput(attrs={'style': 'width:100%'}))
     
+    opciones_dpto = (('0', 'Dpto 1'),       # No estoy segura de qué va aqui
+                 ('1', 'Dpto 2'),
+                 ('2', 'Dpto 3'))
+
+    dpto = forms.ChoiceField(
+                    required = True,
+                    widget=forms.Select(attrs={'style':'width:100%; background-color:white'}),
+                    label= "Departamento que lo solicita",
+                    choices = opciones_dpto)
+
+
 class reportesForm(forms.Form):
     fechaInicio = forms.DateField(
                         label = "Fecha inicial",
