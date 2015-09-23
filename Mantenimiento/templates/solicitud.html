@@ -47,7 +47,7 @@
 			<td><h3 style = "color: gray;">{{ s.id_solicitud.get_estado_display }}</h3></td>
 
 			{% if not user|has_group:"Almacenistas" %}
-				<td><a href="#"><i class="fa fa-pencil-square-o"></i></a></td>
+				<td><a href="./solicitud/{{s.id}}/editar"><i class="fa fa-pencil-square-o"></i></a></td>
 
 				{% if s.id_solicitud.estado == "E" %}
 					<td><a href="./solicitud/{{s.id}}/eliminar"> <i class="fa fa-trash-o"></i></a></td>

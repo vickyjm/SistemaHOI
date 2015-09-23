@@ -359,12 +359,15 @@ def crearSolicitud(request):
 
                 # Si el técnico pide más items de los disponibles
                 if scantidad > id_item.cantidad:
-                    mensaje = "La solicitud no se puede realizar. Solo quedan '%d' unidades de este item." % (id_item.cantidad)
+                    if id_item.cantidad == 0:
+                        mensaje = "La solicitud no se puede realizar. No quedan unidades de este item."    
+                    else:
+                        mensaje = "La solicitud no se puede realizar. Solo quedan '%d' unidades de este item." % (id_item.cantidad)
                     color = "#CC0000"
 
                 # Si el técnico pide 0 items
                 elif scantidad == 0:
-                    mensaje = "La solicitud no se puede realizar. No quedan unidades de este item."
+                    mensaje = "La cantidad de items a solicitar debe ser mayor a cero."
                     color = "#CC0000"
 
                 # Si no hay errores
@@ -410,25 +413,48 @@ def solicitud_eliminar(request, _id):
         obj.delete()
     return HttpResponseRedirect('/solicitud')
 
-# def solicitud_editar(request, _id):
-#     obj = Crea.objects.get(pk = _id)
-#     solicitud = Solicitud.objects.get(pk = obj.id_solicitud.pk)
-#     if request.method == "POST":
-#         form = solicitudForm(request.POST)
+def solicitud_editar(request, _id):
+    obj = Crea.objects.get(pk = _id)
+    solicitud = Solicitud.objects.get(pk = obj.id_solicitud.pk)
+    item = Item.objects.get(pk = obj.id_item.pk)
+    categoria = item.id_categoria.nombre
+    color = "#009900"
 
-#         if form.is_valid():
-#             #sdpto = form.cleaned_data['dpto']
-#             #sitem = form.cleaned_data['item']
-#             #scantidad = form.cleaned_data['cantidad']
+    if request.method == "POST":
+        form = solicitudForm(request.POST)
+
+        if form.is_valid():
+            scantidad = form.cleaned_data['cantidad']
+            sdpto = form.cleaned_data['dpto']
             
-#             mensaje = "Solicitud editada exitosamente"
-#     else:
-#         mensaje = None
-#         form = solicitudForm(initial = {'dpto': item.nombre, 
-#                                           #'item': ,
-#                                           'cantidad': item.cantidad})
-#     return render(request, 'solicitud_seditar.html', {'form' : form,
-#                                                 'mensaje': mensaje})
+            if scantidad > item.cantidad:
+                if item.cantidad == 0:
+                    mensaje = "La solicitud no se puede modificar. No quedan unidades de este item."
+                else:
+                    mensaje = "La solicitud no se puede editar. Solo quedan '%d' unidades de este item." % (item.cantidad)
+                    color = "#CC0000"
+
+            elif scantidad == 0:
+                mensaje = "La cantidad de items a solicitar debe ser mayor a cero."
+                color = "#CC0000"
+
+                # Si no hay errores
+            else:
+                solicitud.cantidad = scantidad
+                solicitud.dpto = sdpto
+                solicitud.save()
+
+                mensaje = "Solicitud editada exitosamente"
+    else:
+        mensaje = None
+        form = solicitudForm(initial = {'cantidad': solicitud.cantidad,
+                                        'dpto': solicitud.dpto})
+
+    return render(request, 'solicitud_editar.html', {'item': item,
+                                                     'categoria': categoria,
+                                                     'form': form,
+                                                     'mensaje': mensaje,
+                                                     'color': color})
 
 # Actualiza el estado de las solicitudes de un técnico
 def solicitud_estado(request, _id, _nuevo_estado):
