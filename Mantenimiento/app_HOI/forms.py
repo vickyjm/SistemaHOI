@@ -199,7 +199,7 @@ class solicitudForm(forms.Form):
 
 
 class reportesForm(forms.Form):
-    DateInput = partial(forms.DateInput, {'class': 'datepicker'})
+    DateInput = partial(forms.DateInput, {'class': 'datepicker','style':'width:100%'})
     fechaInicio = forms.DateField(
                         label = "Fecha inicial",
                         required = True,
