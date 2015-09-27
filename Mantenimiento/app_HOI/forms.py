@@ -6,6 +6,7 @@ from app_HOI.models import Categoria,Item
 from django.forms import ModelChoiceField
 from django.utils.translation import ugettext, ugettext_lazy as _
 from django.forms.extras.widgets import SelectDateWidget
+from functools import partial
 import datetime
 
 
@@ -198,13 +199,14 @@ class solicitudForm(forms.Form):
 
 
 class reportesForm(forms.Form):
+    DateInput = partial(forms.DateInput, {'class': 'datepicker'})
     fechaInicio = forms.DateField(
                         label = "Fecha inicial",
                         required = True,
-                        widget = SelectDateWidget(years=range(2015,datetime.datetime.now().year+1)))
+                        widget = DateInput())
     
     fechaFin = forms.DateField(
                         label = "Fecha final",
                         required = True,
-                        widget = SelectDateWidget(years=range(2015,datetime.datetime.now().year+1)))
+                        widget = DateInput())
     

@@ -1,4 +1,4 @@
-{% extends "base-col1.html" %}
+{% extends "base-col3.html" %}
 {% load templatetags %}
 
 {% block page_menu %}
@@ -12,7 +12,7 @@
 	{% endif %}
 {% endblock page_menu%}
 {% block page_title %}Reportes{% endblock page_title %}
-
+{% block page_left %}{% endblock page_left %}
 {% block page_content %}
 <form action="./reporte" method="post">
 	<table style="width:100%" >
@@ -36,7 +36,7 @@
 			 
 			 {% endfor %}
 			<tr>
-				<td align="right"><br><br>
+				<td align="center"><br><br>
 				<input type="submit" class="button" value="Generar reporte"></td>
 			</tr>
 		</tbody>
@@ -44,3 +44,4 @@
 	
 </form>
 {% endblock page_content %}
+{% block page_right %}{% endblock page_right %}
