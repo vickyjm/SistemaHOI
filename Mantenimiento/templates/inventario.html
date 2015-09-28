@@ -31,38 +31,38 @@
 		<td><h3>Estado</h3></td>
 		{% if user|has_group:"Almacenistas" %}
 			<td><h3>Ingresar</h3></td>
-			<td><h3>Retirar</h3></td>
 		{% endif %}
 		{% if user|has_group:"Administradores" %}
+			<td><h3>Retirar</h3></td>
 			<td><h3>Editar</h3></td>
 		{% endif %}
 		</tr>
-
 	</thead>
-{% if items %}
+
 	<tbody>
-		{% for i in items %}
-		<tr>
-			<td><h3 style = "color: gray;">{{ i.nombre }}</h3></td>
-			<td><h3 style = "color: gray;">{{ i.cantidad }}</h3></td>
-			<td><h3 style = "color: gray;">{{ i.id_categoria }}</h3></td>
-			<td><h3 style = "color: gray;">{{ i.minimo }}</h3></td>
-			<td><h3 style = "color: gray;">{{ i.get_estado_display }}</h3></td>
-			
-			{% if user|has_group:"Almacenistas" %}
-			<td><h3><a href="./inventario/{{i.id}}/ingresar"><i class="fa fa-plus" style="color:green"></i></a></h3></td>
-			<td><h3><a href="./inventario/{{i.id}}/retirar"><i class="fa fa-minus" style="color:red"></i></a></h3></td>
-			{% endif %}
-	
-			{% if user|has_group:"Administradores" %}
-			<td><h3><a href="./inventario/{{i.id}}/editar"><i class="fa fa-pencil-square-o"></i></a></h3></td>
-			{% endif %}
-			<!--td><i class="fa fa-pencil-square-o"></td>
-			<td><i class="fa fa-times"></i></i></h3></td-->
-		</tr>
-		{% endfor %}
+		{% if items %}
+			{% for i in items %}
+			<tr>
+				<td><h3 style = "color: gray;">{{ i.nombre }}</h3></td>
+				<td><h3 style = "color: gray;">{{ i.cantidad }}</h3></td>
+				<td><h3 style = "color: gray;">{{ i.id_categoria }}</h3></td>
+				<td><h3 style = "color: gray;">{{ i.minimo }}</h3></td>
+				<td><h3 style = "color: gray;">{{ i.get_estado_display }}</h3></td>
+				
+				{% if user|has_group:"Almacenistas" %}
+				<td><h3><a href="./inventario/{{i.id}}/ingresar"><i class="fa fa-plus" style="color:green"></i></a></h3></td>
+				{% endif %}
+		
+				{% if user|has_group:"Administradores" %}
+				<td><h3><a href="./inventario/{{i.id}}/retirar"><i class="fa fa-minus" style="color:red"></i></a></h3></td>
+				<td><h3><a href="./inventario/{{i.id}}/editar"><i class="fa fa-pencil-square-o"></i></a></h3></td>
+				{% endif %}
+
+				<!--td><i class="fa fa-times"></i></i></h3></td-->
+			</tr>
+			{% endfor %}
+		{% endif %}
 	</tbody>
-{% endif %}
 </table>
 {% endblock page_content %}
 {% block page_right %}{% endblock page_right %}

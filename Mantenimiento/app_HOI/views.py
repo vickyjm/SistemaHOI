@@ -326,7 +326,7 @@ def item_ingresar(request, _id):
     else:
         mensaje = None
         color = "#000000"
-        form = item_ingresarForm(initial={'cantidad': '1'})
+        form = item_cantidadForm(initial={'cantidad': '1'})
 
     accion = "Ingresar"
     return render(request,'item_ingresar_retirar.html', {'form': form, 
@@ -360,7 +360,7 @@ def item_retirar(request, _id):
     else:
         mensaje = None
         color = "#000000"
-        form = item_retirarForm(initial={'cantidad': '1'})
+        form = item_cantidadForm(initial={'cantidad': '1'})
 
     accion = "Retirar"
     return render(request,'item_ingresar_retirar.html', {'form': form, 
