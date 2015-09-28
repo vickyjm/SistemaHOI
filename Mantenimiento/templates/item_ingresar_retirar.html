@@ -10,6 +10,11 @@
 {% block page_title %}{{accion}} unidades del item '{{item}}'{% endblock page_title %}
 {% block page_left %}{% endblock page_left %}
 {% block page_content %}
+
+{% if accion == "Retirar" %}
+	<h4>Modifique la cantidad de items que queda en el inventario</h4>
+{% endif %}
+
 <form action="" method="post">
 <table style="width:100%" >
 		<thead>

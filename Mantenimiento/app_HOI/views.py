@@ -320,6 +320,45 @@ def solicitud(request):
     return render(request,'solicitud.html', {'user' : request.user,
                                              'solicitudes': solicitudes})
 
+# Actualiza el estado de las solicitudes de un técnico
+def solicitud_estado(request, _id, _nuevo_estado):
+    solic_creadas = Crea.objects.order_by('-fecha')
+
+    # Si es un técnico, solo puede ver sus solicitudes
+    if not request.user.groups.filter(name = "Almacenistas").exists():
+        solicitudes = solic_creadas.filter(id_usuario = request.user)
+    # Si es almacenista o administrador, solo ve las solicitudes de los técnicos
+    else:
+        solicitudes = solic_creadas.exclude(id_usuario = request.user)
+
+    if request.method == "GET":
+        obj = Crea.objects.get(pk=_id)
+        solicitud = Solicitud.objects.get(pk = obj.id_solicitud.pk)        
+        solicitud.estado = _nuevo_estado
+        solicitud.save()
+        
+        for s in solic_creadas: 
+            if s.id_solicitud == solicitud:
+                item = Item.objects.get(pk = s.id_item.pk)
+
+        if _nuevo_estado == "A":
+            aprobado = Aprueba(id_usuario = request.user,
+                               id_solicitud = solicitud,
+                               fecha = datetime.datetime.now())
+            aprobado.save()
+
+            # Si la solicitud se aprobó, se reduce la cantidad de ese item del inventario    
+            item.cantidad = item.cantidad - solicitud.cantidad
+            item.save()
+        
+        else:
+            # Si la solicitud se rechazó, se suma al inventario el valor que se le había reservado
+            item.cantidad = item.cantidad + solicitud.cantidad
+            item.save()
+    else:
+        pass
+    return render(request,'solicitud_estado.html', {'solicitudes':solicitudes})
+
 @login_required
 def crearSolicitud(request):
     categorias = Categoria.objects.values_list('nombre', flat = True)
@@ -372,9 +411,15 @@ def crearSolicitud(request):
 
                 # Si no hay errores
                 else:
+                    if request.user.groups.filter(name = "Almacenistas").exists():
+                        sestado = "A"
+                    else:
+                        sestado = "E"
+
                     nueva_solicitud = Solicitud(fecha = fecha,
                                                 dpto = sdpto,
-                                                cantidad = scantidad)
+                                                cantidad = scantidad,
+                                                estado = sestado)
                     nueva_solicitud.save()
 
                     obj = Crea(id_usuario = request.user,
@@ -383,6 +428,12 @@ def crearSolicitud(request):
                                fecha = fecha)
                     obj.save()
 
+                    if request.user.groups.filter(name = "Almacenistas").exists():
+                        aprobar = Aprueba(id_usuario = request.user,
+                                          id_solicitud = nueva_solicitud,
+                                          fecha = fecha)
+                        aprobar.save() 
+                    
                     id_item.cantidad = id_item.cantidad - scantidad # Se hace una reserva hasta que "A" o "R"
                     id_item.save()
 
@@ -456,50 +507,11 @@ def solicitud_editar(request, _id):
                                                      'mensaje': mensaje,
                                                      'color': color})
 
-# Actualiza el estado de las solicitudes de un técnico
-def solicitud_estado(request, _id, _nuevo_estado):
-    solic_creadas = Crea.objects.order_by('-fecha')
-
-    # Si es un técnico, solo puede ver sus solicitudes
-    if not request.user.groups.filter(name = "Almacenistas").exists():
-        solicitudes = solic_creadas.filter(id_usuario = request.user)
-    # Si es almacenista o administrador, solo ve las solicitudes de los técnicos
-    else:
-        solicitudes = solic_creadas.exclude(id_usuario = request.user)
-
-    if request.method == "GET":
-        obj = Crea.objects.get(pk=_id)
-        solicitud = Solicitud.objects.get(pk = obj.id_solicitud.pk)        
-        solicitud.estado = _nuevo_estado
-        solicitud.save()
-        
-        for s in solic_creadas: 
-            if s.id_solicitud == solicitud:
-                item = Item.objects.get(pk = s.id_item.pk)
-
-        if _nuevo_estado == "A":
-            aprobado = Aprueba(id_usuario = request.user,
-                               id_solicitud = solicitud,
-                               fecha = datetime.datetime.now())
-            aprobado.save()
-
-            # Si la solicitud se aprobó, se reduce la cantidad de ese item del inventario    
-            item.cantidad = item.cantidad - solicitud.cantidad
-            item.save()
-        
-        else:
-            # Si la solicitud se rechazó, se suma al inventario el valor que se le había reservado
-            item.cantidad = item.cantidad + solicitud.cantidad
-            item.save()
-    else:
-        pass
-    return render(request,'solicitud_estado.html', {'solicitudes':solicitudes})
-
 def item_ingresar(request, _id):
     item = Item.objects.get(pk = _id)
     
     if request.method == "POST":
-        form = item_ingresarForm(request.POST)
+        form = item_cantidadForm(request.POST)
         
         if form.is_valid():
             fecha = datetime.datetime.now()
@@ -531,39 +543,21 @@ def item_retirar(request, _id):
     item = Item.objects.get(pk = _id)
 
     if request.method == "POST":
-        form = item_retirarForm(request.POST)
+        form = item_cantidadForm(request.POST)
         
         if form.is_valid():
             fecha = datetime.datetime.now()
             icantidad = form.cleaned_data['cantidad']
-            idpto = form.cleaned_data['dpto']
 
             if icantidad > item.cantidad:
                 if item.cantidad == 0:
-                    mensaje = "No quedan unidades de este item."
+                    mensaje = "No se puede retirar. No quedan unidades de este item."
                 else:
-                    mensaje = "Solo quedan '%d' unidades de este item" % (item.cantidad)
+                    mensaje = "No puede retirar '%d' items. Solo quedan '%d' unidades." % (icantidad,item.cantidad)
                 color = "#CC0000"
             else:
                 item.cantidad = item.cantidad - icantidad
                 item.save()            
-
-                nueva_solicitud = Solicitud(fecha = fecha,
-                                            dpto = idpto,
-                                            cantidad = icantidad,
-                                            estado = "A")
-                nueva_solicitud.save()
-
-                obj = Crea(id_usuario = request.user,
-                           id_item = item,
-                           id_solicitud = nueva_solicitud,
-                           fecha = fecha)
-                obj.save()
-
-                aprobar = Aprueba(id_usuario = request.user,
-                                  id_solicitud = nueva_solicitud,
-                                  fecha = fecha)
-                aprobar.save()
 
                 mensaje = "Cantidad retirada exitosamente"
                 color = "#009900"

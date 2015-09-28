@@ -12,13 +12,13 @@
 {% block page_left %}{% endblock page_left %}
 
 {% block page_content %}
-	{% if not user|has_group:"Almacenistas" %}
+
 	<table style="width:100%">
 		<tr align="right">
 			<td><a href="./crearSolicitud" class="button" align = "right">(+) Crear solicitud</a></td>
 		</tr>
 	</table>
-	{% endif %}
+
 	<h2>Solicitudes de retiro de Items</h2>
 	<table style="width:100%" >
  		<thead>
