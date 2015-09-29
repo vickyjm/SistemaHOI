@@ -35,7 +35,7 @@ class Categoria(models.Model):
     estado = models.PositiveIntegerField(choices=opciones_estado, default = 1)
 
     def __str__(self):
-        return self.nombre.capitalize()
+        return self.nombre
     
 class Item(models.Model):
     nombre = models.CharField(max_length = 100)
@@ -47,7 +47,7 @@ class Item(models.Model):
     estado = models.PositiveIntegerField(choices=opciones_estado, default = 1)
     
     def __str__(self):
-        return self.nombre.capitalize()
+        return self.nombre
 
 class Solicitud(models.Model):
     fecha = models.DateTimeField()

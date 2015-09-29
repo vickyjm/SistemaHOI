@@ -138,16 +138,16 @@ def crearItem(request):
 
         if form.is_valid():
             inombre = form.cleaned_data['nombre']
-            inombre = inombre.lower()
+            inombre = inombre.upper()
             icategoria = form.cleaned_data['categoria']
-            icategoria = icategoria.nombre.lower()
+            icategoria = icategoria.nombre.upper()
             idcat = Categoria.objects.get(nombre = icategoria)
             # Verifica si ya existe un item con el mismo nombre y categoria
             itemexiste = Item.objects.filter(nombre = inombre, 
                                             id_categoria = idcat.id).exists()
             # Si el item ya existe
             if itemexiste:
-                mensaje = "Item '%s' ya existe" % (inombre.capitalize())
+                mensaje = "Item '%s' ya existe en la categoría '%s'" % (inombre,icategoria)
                 color = "color:#CC0000"
             # Si el item no existe, lo crea
             else:
@@ -157,7 +157,7 @@ def crearItem(request):
                             minimo = form.cleaned_data['minimo']
                             )
                 obj.save()
-                mensaje = "Item '%s' creado exitosamente" % (inombre.capitalize())
+                mensaje = "Item '%s' creado exitosamente" % (inombre)
                 color = "color:#00CC00" 
                 form = itemForm(initial={'cantidad': '0', 'minimo': '5'})   
     else:
@@ -177,20 +177,20 @@ def categoria(request):
 
         if form.is_valid():
             catnombre = form.cleaned_data['nombre']
-            catnombre = catnombre.lower()
+            catnombre = catnombre.upper()
         
             try: 
                 cat = Categoria.objects.get(nombre = catnombre)
                 # Verifica si el nombre de la categoria ya existe
                 if Categoria.objects.filter(pk=cat.pk).exists():
-                    mensaje = "Categoría '%s' ya existe" % (catnombre.capitalize())
+                    mensaje = "Categoría '%s' ya existe" % (catnombre)
                     color = "color:#CC0000"
             # Si no existe, crea el objeto y lo guarda
             except ObjectDoesNotExist:
                 obj = Categoria(nombre = catnombre,
                                 estado = 1)
                 obj.save()
-                mensaje = "Categoría '%s' creada exitosamente" % (catnombre.capitalize())
+                mensaje = "Categoría '%s' creada exitosamente" % (catnombre)
                 color = "color:#00CC00"
                 form = categoriaForm()
         categorias = Categoria.objects.order_by('nombre')
@@ -221,7 +221,7 @@ def categoria_editar(request, _id):
         if form.is_valid():
             #Obtiene datos del formulario
             cnombre = form.cleaned_data['nombre']
-            cnombre = cnombre.lower()
+            cnombre = cnombre.upper()
             cestado = form.cleaned_data['estado']
             try:
                 # Obtiene la categoria con el nombre del formulario
@@ -239,7 +239,7 @@ def categoria_editar(request, _id):
                         mensaje = None
                 # Si la categoria no es la misma a editar
                 else:
-                    mensaje = "La categoría '%s' ya existe" % cnombre.capitalize()
+                    mensaje = "La categoría '%s' ya existe" % cnombre
                     color = "color:#CC0000"
             # Si no existe una categoria con el nombre introducido
             except:
@@ -251,7 +251,7 @@ def categoria_editar(request, _id):
 
     else:
         # Formulario con los datos a editar
-        form = categoria_editarForm(initial={'nombre': categoria.nombre.capitalize(), 
+        form = categoria_editarForm(initial={'nombre': categoria.nombre, 
                                              'estado': categoria.estado})
         mensaje = None
     return render(request,'categoria_editar.html', {'categoria': categoria, 
@@ -271,9 +271,9 @@ def item_editar(request, _id):
         if form.is_valid():
             # Obtiene los datos del formulario
             inombre = form.cleaned_data['nombre']
-            inombre = inombre.lower()
+            inombre = inombre.upper()
             icategoria = form.cleaned_data['categoria']
-            icategoria = icategoria.nombre.lower()
+            icategoria = icategoria.nombre.upper()
             print (icategoria)
             idcat = Categoria.objects.get(nombre = icategoria)
             try:
@@ -284,10 +284,10 @@ def item_editar(request, _id):
                     item.minimo = form.cleaned_data['minimo']
                     item.estado = form.cleaned_data['estado']
                     item.save()
-                    mensaje = "Item '%s' editado exitosamente" %nombre.capitalize()
+                    mensaje = "Item '%s' editado exitosamente" %nombre
                     color = "color:#00CC00"
                 else:
-                    mensaje = "Nombre '%s' ya existe en la categoría '%s'" %(inombre.capitalize(), idcat)
+                    mensaje = "Nombre '%s' ya existe en la categoría '%s'" %(inombre, idcat)
                     color = "color:#CC0000"
                     
             except ObjectDoesNotExist:
@@ -298,12 +298,12 @@ def item_editar(request, _id):
                 item.minimo = form.cleaned_data['minimo']
                 item.estado = form.cleaned_data['estado']
                 item.save()
-                mensaje = "Item '%s' editado exitosamente" %nombre.capitalize()
+                mensaje = "Item '%s' editado exitosamente" %nombre
                 color = "color:#00CC00"
-                nombre = inombre.capitalize()
+                nombre = inombre
     else: 
         # Formulario con los datos del item a editar
-        form = item_editarForm(initial = {'nombre': item.nombre.capitalize(), 
+        form = item_editarForm(initial = {'nombre': item.nombre, 
                                         'cantidad': item.cantidad,
                                         'categoria': item.id_categoria,
                                         'minimo': item.minimo,
@@ -311,7 +311,7 @@ def item_editar(request, _id):
 
         mensaje = None
     return render(request, 'item_editar.html', {'form' : form, 
-                                                'nombre' : nombre.capitalize(),
+                                                'nombre' : nombre,
                                                 'mensaje': mensaje,
                                                 'color': color})
            
