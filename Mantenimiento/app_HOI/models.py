@@ -74,9 +74,3 @@ class Ingresa(models.Model):
     id_item = models.ForeignKey(Item)
     fecha = models.DateTimeField()
     cantidad = models.PositiveIntegerField()
-    
-class Reporte(models.Model):
-    fecha_ini = models.DateTimeField()
-    fecha_fin = models.DateTimeField()
-    contenido = TextField(max_length = 100) # Tentativo. Depende de cómo queramos el reporte.
-    ciUsuario = models.ForeignKey(User)

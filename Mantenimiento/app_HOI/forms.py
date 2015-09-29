@@ -203,12 +203,14 @@ class reportesForm(forms.Form):
     fechaInicio = forms.DateField(
                         label = "Fecha inicial",
                         required = True,
-                        widget = DateInput())
+                        widget = DateInput(),
+                        input_formats = ['%d/%m/%Y'])
     
-    #fechaFin = forms.DateField(
-     #                   label = "Fecha final",
-      #                  required = True,
-       #                 widget = DateInput())
+    fechaFin = forms.DateField(
+                       label = "Fecha final",
+                       required = True,
+                       widget = DateInput(),
+                       input_formats = ['%d/%m/%Y'])
     
 class editarUsuarioForm(forms.Form):
     cedula = forms.CharField(

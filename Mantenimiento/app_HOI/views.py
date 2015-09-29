@@ -599,6 +599,7 @@ def imprimirReporte(request):
                 pdf = report.imprimir_reporte(usuario,fechaIni,fechaFin)
                 response.write(pdf)
                 return response
+        
     else:
         form = reportesForm()
     return render(request,'reporte.html',{'form':form,'msg':msg})
@@ -617,12 +618,34 @@ def editarUsuario(request,_id):
     if request.method == "POST":
         form = editarUsuarioForm(request.POST)
         if form.is_valid():
-            usuario.username = form.cleaned_data['cedula']
+            if (usuario.username != form.cleaned_data['cedula']):
+                try:
+                    ciNueva = User.objects.get(username=form.cleaned_data['cedula'])
+                    msg = "La cédula ingresada ya existe. Intente de nuevo."
+                    return render(request,'editarUsuario.html',{'form':form,'nombre':nombre,'mensaje':msg})
+                except User.DoesNotExist:
+                    usuario.username = form.cleaned_data['cedula']
             usuario.first_name = form.cleaned_data['nombre']
             usuario.last_name = form.cleaned_data['apellido']
             usuario.email = form.cleaned_data['correo']
+            if (form.cleaned_data['tipo']=="administrador"):
+                usuario.groups = [Group.objects.get(name='Administradores'),
+                                  Group.objects.get(name='Almacenistas'),
+                                  Group.objects.get(name='Técnicos')]
+            elif(form.cleaned_data['tipo']=="almacenista"):
+                usuario.groups = [Group.objects.get(name='Almacenistas'),
+                                  Group.objects.get(name='Técnicos')]
+            else:
+                usuario.groups = [Group.objects.get(name='Técnicos')]
             usuario.save()
     else:
+        if (usuario.groups.filter(name="Administradores")):
+                cargo = "administrador"
+        elif(usuario.groups.filter(name="Almacenistas")):
+                cargo = "almacenista"
+        else: 
+            cargo = "tecnico"
         form = editarUsuarioForm(initial = {'cedula':usuario.username,'nombre':usuario.first_name,
-                                            'apellido':usuario.last_name,'correo':usuario.email})
+                                            'apellido':usuario.last_name,'correo':usuario.email,
+                                            'tipo':cargo})
     return render(request,'editarUsuario.html',{'form':form,'nombre':nombre})
