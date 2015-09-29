@@ -17,6 +17,10 @@ from io import BytesIO
 import datetime
 from django.http.response import HttpResponse
 
+red = "color:#CC0000"
+black = "color:#FFFFFF"
+green = "color:#009900"
+
 @login_required
 def verperfil(request):
     grupo = request.user.groups.values('name')
@@ -70,16 +74,27 @@ def inicio_sesion(request):
     return render(request, 'inicio_sesion.html', {'form': form})
 
 def registro(request):
+
     if request.method == "POST":
         form = registroForm(request.POST)
+
         if form.is_valid():
             ci = form.cleaned_data['cedula']
+
             if User.objects.filter(username=ci).exists():
                 msg = "Esta cédula ya se encuentra registrada"
-                return render(request,'registro.html',{'form' : form, 'msg' : msg})
+                color = red
+                return render(request,'registro.html',{'form' : form, 
+                                                       'msg' : msg,
+                                                       'color': color})
+
             if (form.cleaned_data['contraseña1']!= form.cleaned_data['contraseña2']):
                 msg = "Las contraseñas no coinciden. Intente de nuevo"
-                return render(request,'registro.html',{'form' : form, 'msg' : msg})
+                color = red
+                return render(request,'registro.html',{'form' : form, 
+                                                       'msg' : msg,
+                                                       'color': color})
+
             user = User.objects.create_user(username=ci,
                                  password=form.cleaned_data['contraseña1'])
             user.first_name = form.cleaned_data['nombre']
@@ -98,7 +113,11 @@ def registro(request):
             user.is_active = True
             user.save()
             msg = "Su usuario fue registrado exitosamente"
-            return render(request,'registro.html',{'form': form, 'msg': msg})
+            color = green
+            form = registroForm()
+            return render(request,'registro.html',{'form': form, 
+                                                   'msg': msg,
+                                                   'color':color})
     else:
         form = registroForm()
     return render(request,'registro.html', {'form': form})
@@ -148,7 +167,7 @@ def crearItem(request):
             # Si el item ya existe
             if itemexiste:
                 mensaje = "Ítem '%s' ya existe en la categoría '%s'" % (inombre,icategoria)
-                color = "color:#CC0000"
+                color = red
             # Si el item no existe, lo crea
             else:
                 obj = Item(nombre = inombre,
@@ -158,7 +177,7 @@ def crearItem(request):
                             )
                 obj.save()
                 mensaje = "Ítem '%s' creado exitosamente" % (inombre)
-                color = "color:#00CC00" 
+                color = green 
                 form = itemForm(initial={'cantidad': '0', 'minimo': '5'})   
     else:
         form = itemForm(initial={'cantidad': '0', 'minimo': '5'})
@@ -184,14 +203,14 @@ def categoria(request):
                 # Verifica si el nombre de la categoria ya existe
                 if Categoria.objects.filter(pk=cat.pk).exists():
                     mensaje = "Categoría '%s' ya existe" % (catnombre)
-                    color = "color:#CC0000"
+                    color = red
             # Si no existe, crea el objeto y lo guarda
             except ObjectDoesNotExist:
                 obj = Categoria(nombre = catnombre,
                                 estado = 1)
                 obj.save()
                 mensaje = "Categoría '%s' creada exitosamente" % (catnombre)
-                color = "color:#00CC00"
+                color = green
                 form = categoriaForm()
         categorias = Categoria.objects.order_by('nombre')
 
@@ -207,7 +226,7 @@ def categoria(request):
 # Vista creada para editar una categoria en el sistema
 def categoria_editar(request, _id):
 
-    color = "color:#FFFFFF"
+    color = black
     categoria = Categoria.objects.get(id = _id)
     # Lista de items dentro de la categoria
     #items = Item.objects.filter(id_categoria = _id)
@@ -233,21 +252,21 @@ def categoria_editar(request, _id):
                         categoria.estado = cestado
                         categoria.save()
                         mensaje = "Categoría editada exitosamente"
-                        color = "color:#00CC00"
+                        color = green
                     # No hubo cambios en la categoria
                     else: 
                         mensaje = None
                 # Si la categoria no es la misma a editar
                 else:
                     mensaje = "La categoría '%s' ya existe" % cnombre
-                    color = "color:#CC0000"
+                    color = red
             # Si no existe una categoria con el nombre introducido
             except:
                 categoria.nombre = cnombre
                 categoria.estado = cestado
                 categoria.save()
                 mensaje = "Categoría editada exitosamente"
-                color = "color:#00CC00"
+                color = green
 
     else:
         # Formulario con los datos a editar
@@ -285,10 +304,10 @@ def item_editar(request, _id):
                     item.estado = form.cleaned_data['estado']
                     item.save()
                     mensaje = "Ítem '%s' editado exitosamente" %nombre
-                    color = "color:#00CC00"
+                    color = green
                 else:
                     mensaje = "Ítem '%s' ya existe en la categoría '%s'" %(inombre, idcat)
-                    color = "color:#CC0000"
+                    color = red
                     
             except ObjectDoesNotExist:
 
@@ -299,7 +318,7 @@ def item_editar(request, _id):
                 item.estado = form.cleaned_data['estado']
                 item.save()
                 mensaje = "Ítem '%s' editado exitosamente" %nombre
-                color = "color:#00CC00"
+                color = green
                 nombre = inombre
     else: 
         # Formulario con los datos del item a editar
