@@ -90,18 +90,6 @@ class recuperarContraseñaForm(forms.Form):
                      widget=forms.PasswordInput(attrs={'style': 'width:100%'}))
 
 class perfilForm(forms.Form):
-    cedula = forms.CharField(
-                    max_length = 11,
-                    required = True,
-                    label = "Cédula de Identidad",
-                    widget=forms.TextInput(attrs={'style': 'width:100%'}),
-                    validators = [
-                        RegexValidator(
-                            regex = '^([1-9][0-9]{0,2})([0-9]{3}){0,3}$',
-                            message = 'Formato erróneo'
-                        )
-                    ]
-            )
     nombre = forms.CharField(max_length = 30, 
                     required = True, 
                     label = "Nombre", 
