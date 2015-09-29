@@ -34,6 +34,7 @@ def perfil_editar(request, _id):
     if request.method == "POST":
         form = perfilForm(request.POST)
         if form.is_valid():
+            request.user.first_name = form.cleaned_data['cedula']
             request.user.first_name = form.cleaned_data['nombre']
             request.user.last_name = form.cleaned_data['apellido']
             request.user.email = form.cleaned_data['correo']
@@ -41,7 +42,8 @@ def perfil_editar(request, _id):
             return HttpResponseRedirect('/verperfil')
     else:
 
-        form = perfilForm(initial = {'nombre':request.user.first_name,
+        form = perfilForm(initial = {'cedula': request.user.username,
+                                     'nombre':request.user.first_name,
                                      'apellido':request.user.last_name,
                                      'correo':request.user.email})
 
