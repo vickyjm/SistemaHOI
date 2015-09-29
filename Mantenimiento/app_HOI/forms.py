@@ -6,6 +6,7 @@ from app_HOI.models import Categoria,Item
 from django.forms import ModelChoiceField
 from django.utils.translation import ugettext, ugettext_lazy as _
 from django.forms.extras.widgets import SelectDateWidget
+from functools import partial
 import datetime
 
 
@@ -132,28 +133,14 @@ class item_editarForm(itemForm):
                     label = "Estado",
                     choices=opciones_estado)
  
-class item_ingresarForm(forms.Form):
+ # Cantidad de items a ingresar o retirar
+class item_cantidadForm(forms.Form):
     cantidad = forms.IntegerField(max_value = 2147483647, 
                     min_value = 0, 
                     required = True, 
                     label = "Cantidad", 
                     widget=forms.NumberInput(attrs={'style': 'width:100%'}))
 
-class item_retirarForm(forms.Form):
-    cantidad = forms.IntegerField(max_value = 2147483647, 
-                    min_value = 0, 
-                    required = True, 
-                    label = "Cantidad", 
-                    widget=forms.NumberInput(attrs={'style': 'width:100%'}))
-    opciones_dpto = (('0', 'Dpto 1'),       # No estoy segura de qué va aqui
-                     ('1', 'Dpto 2'),
-                     ('2', 'Dpto 3'))
-    dpto = forms.ChoiceField(
-                    required = True,
-                    widget=forms.Select(attrs={'style':'width:100%; background-color:white'}),
-                    label= "Departamento que lo solicita",
-                    choices = opciones_dpto)
-    
 class categoriaForm(forms.Form):
     nombre = forms.CharField(max_length = 100, 
                     required = True, 
@@ -169,24 +156,15 @@ class categoria_editarForm(categoriaForm):
                     choices=opciones_estado)
 
 class solicitudForm(forms.Form):
-    opciones_dpto = (('0', 'Dpto 1'),       # No estoy segura de qué va aqui
-                     ('1', 'Dpto 2'),
-                     ('2', 'Dpto 3'))
-    dpto = forms.ChoiceField(
-                    required = True,
-                    widget=forms.Select(attrs={'style':'width:100%; background-color:white'}),
-                    label= "Departamento",
-                    choices = opciones_dpto)
-    
-    categoria = forms.ModelChoiceField(
-                    label = "Categoría",
-                    widget = forms.Select(attrs={'style':'width:100%; background-color:white'}), 
-                    queryset = Categoria.objects.order_by('nombre'))
+    # categoria = forms.ModelChoiceField(
+    #                 label = "Categoría",
+    #                 widget = forms.Select(attrs={'style':'width:100%; background-color:white'}), 
+    #                 queryset = Categoria.objects.order_by('nombre'))
 
-    item = forms.ModelChoiceField(
-                    label = "Item",
-                    widget = forms.Select(attrs={'style':'width:100%; background-color:white'}), 
-                    queryset = Item.objects.order_by('nombre'))
+    # item = forms.ModelChoiceField(
+    #                 label = "Item",
+    #                 widget = forms.Select(attrs={'style':'width:100%; background-color:white'}), 
+    #                 queryset = Item.objects.order_by('nombre'))
 
     cantidad = forms.IntegerField(
                     max_value = 2147483647, 
@@ -195,14 +173,26 @@ class solicitudForm(forms.Form):
                     label = "Cantidad",
                     widget=forms.NumberInput(attrs={'style': 'width:100%'}))
     
+    opciones_dpto = (('0', 'Dpto 1'),       # No estoy segura de qué va aqui
+                 ('1', 'Dpto 2'),
+                 ('2', 'Dpto 3'))
+
+    dpto = forms.ChoiceField(
+                    required = True,
+                    widget=forms.Select(attrs={'style':'width:100%; background-color:white'}),
+                    label= "Departamento que lo solicita",
+                    choices = opciones_dpto)
+
+
 class reportesForm(forms.Form):
+    DateInput = partial(forms.DateInput, {'class': 'datepicker','style':'width:100%'})
     fechaInicio = forms.DateField(
                         label = "Fecha inicial",
                         required = True,
-                        widget = SelectDateWidget(years=range(2015,datetime.datetime.now().year+1)))
+                        widget = DateInput())
     
     fechaFin = forms.DateField(
                         label = "Fecha final",
                         required = True,
-                        widget = SelectDateWidget(years=range(2015,datetime.datetime.now().year+1)))
+                        widget = DateInput())
     

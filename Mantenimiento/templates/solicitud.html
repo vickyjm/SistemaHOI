@@ -14,19 +14,20 @@
 {% block page_left %}{% endblock page_left %}
 
 {% block page_content %}
-	{% if not user|has_group:"Almacenistas" %}
+
 	<table style="width:100%">
 		<tr align="right">
 			<td><a href="{% url 'crearSolicitud' %}" class="button" align = "right">(+) Crear solicitud</a></td>
 		</tr>
 	</table>
-	{% endif %}
-	<h2>Solicitudes de retiro de Items</h2>
+
+	<h2>Solicitudes de retiro de ítems</h2>
 	<table style="width:100%" >
  		<thead>
 			<td><h3>Fecha</h3></td>
 			<td><h3>Item</h3></td>
 			<td><h3>Cantidad</h3></td>
+			<td><h3>Categoría</h3></td>
 			<td><h3>Estado</h3></td>
 
 			{% if not user|has_group:"Almacenistas" %}
@@ -44,10 +45,11 @@
 			<td><h3 style = "color: gray;">{{ s.fecha|date:"d-m-Y, H:i" }}</h3></td>
 			<td><h3 style = "color: gray;">{{ s.id_item.nombre }}</h3></td>
 			<td><h3 style = "color: gray;">{{ s.id_solicitud.cantidad }}</h3></td>
+			<td><h3 style = "color: gray;">{{ s.id_item.id_categoria.nombre }}</h3></td>
 			<td><h3 style = "color: gray;">{{ s.id_solicitud.get_estado_display }}</h3></td>
 
 			{% if not user|has_group:"Almacenistas" %}
-				<td><a href="#"><i class="fa fa-pencil-square-o"></i></a></td>
+				<td><a href="./solicitud/{{s.id}}/editar"><i class="fa fa-pencil-square-o"></i></a></td>
 
 				{% if s.id_solicitud.estado == "E" %}
 					<td><a href="./solicitud/{{s.id}}/eliminar"> <i class="fa fa-trash-o"></i></a></td>

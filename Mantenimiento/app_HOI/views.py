@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.core import validators
 from django.core.exceptions import ValidationError
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from app_HOI.forms import * 
 from app_HOI.models import *
 from django.contrib.auth.decorators import login_required 
@@ -344,126 +344,11 @@ def inventario(request):
         pass
     return render(request,'inventario.html', {'items': items})
 
-
-def solicitud(request):
-    solic_creadas = Crea.objects.order_by('fecha')
-
-    # Si es un técnico, solo puede ver sus solicitudes
-    if not request.user.groups.filter(name = "Almacenistas").exists():
-        solicitudes = solic_creadas.filter(id_usuario = request.user)
-    # Si es almacenista o administrador, solo ve las solicitudes de los técnicos
-    else:
-        solicitudes = solic_creadas.exclude(id_usuario = request.user)
-    if request.method == "POST":
-        pass  
-    else:
-        pass
-    return render(request,'solicitud.html', {'user' : request.user,
-                                             'solicitudes': solicitudes})
-
-@login_required
-def crearSolicitud(request):
-    if request.method == "POST":
-        mensaje = None
-        form = solicitudForm(request.POST)
-
-        if form.is_valid():
-            fecha = datetime.datetime.now()
-            sdpto = form.cleaned_data['dpto']
-            scategoria = form.cleaned_data['categoria']
-            sitem = form.cleaned_data['item']
-            scantidad = form.cleaned_data['cantidad']
-            iditem = Item.objects.filter(id_categoria = scategoria).get(nombre = sitem)
-
-            nueva_solicitud = Solicitud(fecha = fecha,
-                                        dpto = sdpto,
-                                        cantidad = scantidad)
-            nueva_solicitud.save()
-
-            obj = Crea(id_usuario = request.user,
-                       id_item = iditem,
-                       id_solicitud = nueva_solicitud,
-                       fecha = fecha)
-            obj.save()
-
-            mensaje = "Solicitud creada exitosamente" 
-            form = solicitudForm(initial={'cantidad': '1'})
-    else:
-        mensaje = None
-        form = solicitudForm(initial={'cantidad': '1'})
-    return render(request,'crearSolicitud.html', {'form': form, 'mensaje':mensaje})
-
-@login_required
-def solicitud_eliminar(request, _id):
-    if request.method == "GET":
-        return render(request,'solicitud_eliminar.html')
-    else:
-        obj = Crea.objects.get(pk=_id)
-
-        solicitud = Solicitud.objects.get(pk = obj.id_solicitud.pk)
-        solicitud.delete()
-    
-        obj.delete()
-    return HttpResponseRedirect('/solicitud')
-
-# def solicitud_editar(request, _id):
-#     obj = Crea.objects.get(pk = _id)
-#     solicitud = Solicitud.objects.get(pk = obj.id_solicitud.pk)
-#     if request.method == "POST":
-#         form = solicitudForm(request.POST)
-
-#         if form.is_valid():
-#             #sdpto = form.cleaned_data['dpto']
-#             #sitem = form.cleaned_data['item']
-#             #scantidad = form.cleaned_data['cantidad']
-            
-#             mensaje = "Solicitud editada exitosamente"
-#     else:
-#         mensaje = None
-#         form = solicitudForm(initial = {'dpto': item.nombre, 
-#                                           #'item': ,
-#                                           'cantidad': item.cantidad})
-#     return render(request, 'solicitud_seditar.html', {'form' : form,
-#                                                 'mensaje': mensaje})
-
-# Actualiza el estado de las solicitudes de un técnico
-def solicitud_estado(request, _id, _nuevo_estado):
-    solic_creadas = Crea.objects.order_by('fecha')
-
-    # Si es un técnico, solo puede ver sus solicitudes
-    if not request.user.groups.filter(name = "Almacenistas").exists():
-        solicitudes = solic_creadas.filter(id_usuario = request.user)
-    # Si es almacenista o administrador, solo ve las solicitudes de los técnicos
-    else:
-        solicitudes = solic_creadas.exclude(id_usuario = request.user)
-
-    if request.method == "GET":
-        obj = Crea.objects.get(pk=_id)
-        solicitud = Solicitud.objects.get(pk = obj.id_solicitud.pk)        
-        solicitud.estado = _nuevo_estado
-        solicitud.save()
-
-        if _nuevo_estado == "A":
-            aprobado = Aprueba(id_usuario = request.user,
-                               id_solicitud = solicitud,
-                               fecha = datetime.datetime.now())
-            aprobado.save()
-
-            # Si la solicitud se aprobó, se reduce la cantidad de ese item del inventario
-            for s in solic_creadas: 
-                if s.id_solicitud == solicitud:
-                    item = Item.objects.get(pk = s.id_item.pk)
-                    item.cantidad = item.cantidad - solicitud.cantidad
-                    item.save()
-    else:
-        pass
-    return render(request,'solicitud_estado.html', {'solicitudes':solicitudes})
-
 def item_ingresar(request, _id):
     item = Item.objects.get(pk = _id)
     
     if request.method == "POST":
-        form = item_ingresarForm(request.POST)
+        form = item_cantidadForm(request.POST)
         
         if form.is_valid():
             fecha = datetime.datetime.now()
@@ -482,7 +367,7 @@ def item_ingresar(request, _id):
     else:
         mensaje = None
         color = "#000000"
-        form = item_ingresarForm(initial={'cantidad': '1'})
+        form = item_cantidadForm(initial={'cantidad': '1'})
 
     accion = "Ingresar"
     return render(request,'item_ingresar_retirar.html', {'form': form, 
@@ -495,46 +380,28 @@ def item_retirar(request, _id):
     item = Item.objects.get(pk = _id)
 
     if request.method == "POST":
-        form = item_retirarForm(request.POST)
+        form = item_cantidadForm(request.POST)
         
         if form.is_valid():
             fecha = datetime.datetime.now()
             icantidad = form.cleaned_data['cantidad']
-            idpto = form.cleaned_data['dpto']
 
             if icantidad > item.cantidad:
                 if item.cantidad == 0:
-                    mensaje = "No quedan unidades de este ítem."
+                    mensaje = "No se puede retirar. No quedan unidades de este item."
                 else:
-                    mensaje = "Solo quedan '%d' unidades de este ítem" % (item.cantidad)
+                    mensaje = "No puede retirar '%d' items. Solo quedan '%d' unidades." % (icantidad,item.cantidad)
                 color = "#CC0000"
             else:
                 item.cantidad = item.cantidad - icantidad
                 item.save()            
-
-                nueva_solicitud = Solicitud(fecha = fecha,
-                                            dpto = idpto,
-                                            cantidad = icantidad,
-                                            estado = "A")
-                nueva_solicitud.save()
-
-                obj = Crea(id_usuario = request.user,
-                           id_item = item,
-                           id_solicitud = nueva_solicitud,
-                           fecha = fecha)
-                obj.save()
-
-                aprobar = Aprueba(id_usuario = request.user,
-                                  id_solicitud = nueva_solicitud,
-                                  fecha = fecha)
-                aprobar.save()
 
                 mensaje = "Cantidad retirada exitosamente"
                 color = "#009900"
     else:
         mensaje = None
         color = "#000000"
-        form = item_retirarForm(initial={'cantidad': '1'})
+        form = item_cantidadForm(initial={'cantidad': '1'})
 
     accion = "Retirar"
     return render(request,'item_ingresar_retirar.html', {'form': form, 
@@ -542,6 +409,213 @@ def item_retirar(request, _id):
                                                          'item': item,
                                                          'mensaje': mensaje,
                                                          'color': color})
+
+def solicitud(request):
+    solic_creadas = Crea.objects.order_by('-fecha')
+
+    # Si es un técnico, solo puede ver sus solicitudes
+    if not request.user.groups.filter(name = "Almacenistas").exists():
+        solicitudes = solic_creadas.filter(id_usuario = request.user)
+    # Si es almacenista o administrador, solo ve las solicitudes de los técnicos
+    else:
+        solicitudes = solic_creadas.exclude(id_usuario = request.user)
+    
+    if request.method == "POST":
+        pass  
+    else:
+        pass
+    return render(request,'solicitud.html', {'user' : request.user,
+                                             'solicitudes': solicitudes})
+
+# Actualiza el estado de las solicitudes de un técnico
+def solicitud_estado(request, _id, _nuevo_estado):
+    solic_creadas = Crea.objects.order_by('-fecha')
+
+    # Si es un técnico, solo puede ver sus solicitudes
+    if not request.user.groups.filter(name = "Almacenistas").exists():
+        solicitudes = solic_creadas.filter(id_usuario = request.user)
+    # Si es almacenista o administrador, solo ve las solicitudes de los técnicos
+    else:
+        solicitudes = solic_creadas.exclude(id_usuario = request.user)
+
+    if request.method == "GET":
+        obj = Crea.objects.get(pk=_id)
+        solicitud = Solicitud.objects.get(pk = obj.id_solicitud.pk)        
+        solicitud.estado = _nuevo_estado
+        solicitud.save()
+        
+        for s in solic_creadas: 
+            if s.id_solicitud == solicitud:
+                item = Item.objects.get(pk = s.id_item.pk)
+
+        if _nuevo_estado == "A":
+            aprobado = Aprueba(id_usuario = request.user,
+                               id_solicitud = solicitud,
+                               fecha = datetime.datetime.now())
+            aprobado.save()
+
+            # Si la solicitud se aprobó, se reduce la cantidad de ese item del inventario    
+            item.cantidad = item.cantidad - solicitud.cantidad
+            item.save()
+        
+        else:
+            # Si la solicitud se rechazó, se suma al inventario la cantidad que se había reservado
+            item.cantidad = item.cantidad + solicitud.cantidad
+            item.save()
+    else:
+        pass
+    return render(request,'solicitud_estado.html', {'solicitudes':solicitudes})
+
+@login_required
+def crearSolicitud(request):
+    categorias = Categoria.objects.values_list('nombre', flat = True)
+    items = Item.objects.order_by('nombre') 
+    falta_item = None
+    falta_categoria = None
+    color = "#009900"   # Color rojo para los errores
+
+    if request.method == "POST":
+        mensaje = None
+        form = solicitudForm(request.POST)
+
+        if form.is_valid():
+
+            fecha = datetime.datetime.now()
+            scategoria = request.POST.get("role")
+            sitem = request.POST.get(scategoria)
+            scantidad = form.cleaned_data['cantidad']
+            sdpto = form.cleaned_data['dpto']
+
+            # Si el técnico no seleccionó ninguna categoría
+            if scategoria == "":
+                form = solicitudForm(initial={'cantidad': scantidad,
+                                              'dpto': sdpto})
+                falta_categoria = "Este campo es obligatorio."
+            
+            # Si el técnico no seleccionó ningún ítem
+            if sitem == None:
+                form = solicitudForm(initial={'cantidad': scantidad,
+                                              'dpto': sdpto})
+                falta_item = "Este campo es obligatorio."
+
+
+            if (scategoria != "") and (sitem != ""):
+                cat = Categoria.objects.get(nombre = scategoria)
+                item = Item.objects.filter(id_categoria = cat).get(nombre = sitem)
+
+                # Si el técnico pide más items de los disponibles
+                if scantidad > item.cantidad:
+                    if item.cantidad == 0:
+                        mensaje = "La solicitud no se puede realizar. No quedan unidades de este item."    
+                    else:
+                        mensaje = "La solicitud no se puede realizar. Solo quedan '%d' unidades de este item." % (item.cantidad)
+                    color = "#CC0000"
+
+                # Si el técnico pide 0 items
+                elif scantidad == 0:
+                    mensaje = "La cantidad de items a solicitar debe ser mayor a cero."
+                    color = "#CC0000"
+
+                # Si no hay errores
+                else:
+                    if request.user.groups.filter(name = "Almacenistas").exists():
+                        sestado = "A"
+                    else:
+                        sestado = "E"
+
+                    nueva_solicitud = Solicitud(fecha = fecha,
+                                                dpto = sdpto,
+                                                cantidad = scantidad,
+                                                estado = sestado)
+                    nueva_solicitud.save()
+
+                    obj = Crea(id_usuario = request.user,
+                               id_item = item,
+                               id_solicitud = nueva_solicitud,
+                               fecha = fecha)
+                    obj.save()
+
+                    if request.user.groups.filter(name = "Almacenistas").exists():
+                        aprobar = Aprueba(id_usuario = request.user,
+                                          id_solicitud = nueva_solicitud,
+                                          fecha = fecha)
+                        aprobar.save() 
+                    
+                    # Se hace una reserva hasta que "A" o "R"
+                    item.cantidad = item.cantidad - scantidad
+                    item.save()
+
+                    mensaje = "Solicitud creada exitosamente" 
+                    form = solicitudForm(initial={'cantidad': '1'})
+    else:
+        mensaje = None
+        form = solicitudForm(initial={'cantidad': '1'})
+    
+    return render(request,'crearSolicitud.html', {'form': form,
+                                                  'mensaje': mensaje,
+                                                  'color': color,
+                                                  'falta_categoria': falta_categoria,
+                                                  'falta_item': falta_item,
+                                                  'categorias': categorias,
+                                                  'items':items})
+
+def solicitud_editar(request, _id):
+    obj = Crea.objects.get(pk = _id)
+    solicitud = Solicitud.objects.get(pk = obj.id_solicitud.pk)
+    item = Item.objects.get(pk = obj.id_item.pk)
+    categoria = item.id_categoria.nombre
+    color = "#009900"
+
+    if request.method == "POST":
+        form = solicitudForm(request.POST)
+
+        if form.is_valid():
+            scantidad = form.cleaned_data['cantidad']
+            sdpto = form.cleaned_data['dpto']
+            
+            if scantidad > item.cantidad:
+                if item.cantidad == 0:
+
+                    mensaje = "La solicitud no se puede modificar. No quedan unidades de este item."
+                else:
+                    mensaje = "La solicitud no se puede editar. Solo quedan '%d' unidades de este item." % (item.cantidad)
+                    color = "#CC0000"
+
+            elif scantidad == 0:
+                mensaje = "La cantidad de items a solicitar debe ser mayor a cero."
+
+                color = "#CC0000"
+
+            # Si no hay errores
+            else:
+                solicitud.cantidad = scantidad
+                solicitud.dpto = sdpto
+                solicitud.save()
+
+                mensaje = "Solicitud editada exitosamente"
+    else:
+        mensaje = None
+        form = solicitudForm(initial = {'cantidad': solicitud.cantidad,
+                                        'dpto': solicitud.dpto})
+
+    return render(request, 'solicitud_editar.html', {'item': item,
+                                                     'categoria': categoria,
+                                                     'form': form,
+                                                     'mensaje': mensaje,
+                                                     'color': color})
+
+@login_required
+def solicitud_eliminar(request, _id):
+    if request.method == "GET":
+        return render(request,'solicitud_eliminar.html')
+    else:
+        obj = Crea.objects.get(pk=_id)
+
+        solicitud = Solicitud.objects.get(pk = obj.id_solicitud.pk)
+        solicitud.delete()
+    
+        obj.delete()
+    return HttpResponseRedirect('/solicitud')
 
 def imprimirReporte(request):
     msg = None

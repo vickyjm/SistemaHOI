@@ -1,0 +1,6 @@
+<select name="categoria" id="categoria">
+<option value="Z">-CATEGORIAS-</option>
+    {% for cat in categorias %}
+        <option> {{cat.nombre}} </option>        
+    {% endfor %}
+</select>
