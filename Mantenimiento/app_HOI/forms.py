@@ -205,8 +205,37 @@ class reportesForm(forms.Form):
                         required = True,
                         widget = DateInput())
     
-    fechaFin = forms.DateField(
-                        label = "Fecha final",
-                        required = True,
-                        widget = DateInput())
+    #fechaFin = forms.DateField(
+     #                   label = "Fecha final",
+      #                  required = True,
+       #                 widget = DateInput())
     
+class editarUsuarioForm(forms.Form):
+    cedula = forms.CharField(
+                    max_length = 11,
+                    required = True,
+                    label = "Cédula de Identidad",
+                    widget=forms.TextInput(attrs={'style': 'width:100%'}),
+                    validators = [
+                        RegexValidator(
+                            regex = '^([1-9][0-9]{0,2})([0-9]{3}){0,3}$',
+                            message = 'Formato erróneo'
+                        )
+                    ]
+            )
+    nombre = forms.CharField(max_length = 30, 
+                    required = True, 
+                    label = "Nombre", 
+                    widget=forms.TextInput(attrs={'style': 'width:100%'}))
+    apellido = forms.CharField(max_length = 30, 
+                    required = True, 
+                    label = "Apellido", 
+                    widget=forms.TextInput(attrs={'style': 'width:100%'}))
+    correo = forms.EmailField(required = False, 
+                    label = "Correo electrónico", 
+                    widget=forms.EmailInput(attrs={'style': 'width:100%'}))
+    tipoEmpleado = (("tecnico","Técnico"), ("almacenista", "Almacenista"),("administrador","Administrador"))
+    tipo = forms.ChoiceField(required = True, 
+                    choices = tipoEmpleado, 
+                    widget = forms.Select(attrs={'style': 'width:100%; background-color:white'}), 
+                    label = "Cargo")

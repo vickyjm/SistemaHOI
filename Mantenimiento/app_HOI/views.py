@@ -602,3 +602,27 @@ def imprimirReporte(request):
     else:
         form = reportesForm()
     return render(request,'reporte.html',{'form':form,'msg':msg})
+
+def adminUsuarios(request):
+    usuarios = User.objects.order_by('first_name')
+    if request.method == "POST":
+        pass
+    else:
+        pass
+    return render(request,'adminUsuarios.html',{'usuarios':usuarios})
+
+def editarUsuario(request,_id):
+    usuario = User.objects.get(id = _id)
+    nombre = usuario.first_name + " " + usuario.last_name
+    if request.method == "POST":
+        form = editarUsuarioForm(request.POST)
+        if form.is_valid():
+            usuario.username = form.cleaned_data['cedula']
+            usuario.first_name = form.cleaned_data['nombre']
+            usuario.last_name = form.cleaned_data['apellido']
+            usuario.email = form.cleaned_data['correo']
+            usuario.save()
+    else:
+        form = editarUsuarioForm(initial = {'cedula':usuario.username,'nombre':usuario.first_name,
+                                            'apellido':usuario.last_name,'correo':usuario.email})
+    return render(request,'editarUsuario.html',{'form':form,'nombre':nombre})
