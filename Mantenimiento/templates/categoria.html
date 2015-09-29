@@ -1,4 +1,4 @@
-{% extends "base-col22.html" %}
+{% extends "base-col21.html" %}
 
 {% block page_menu %}
 <a href="{% url 'verperfil' %}">Perfil</a>
@@ -9,6 +9,30 @@
 
 {% block page_title %}Categorías{% endblock page_title %}
 {% block page_left %}
+{% endblock page_left %}
+{% block page_content %}
+	{% if categorias %}
+	<table style="width:100%" >
+		<thead>
+			<td><h3>Nombre</h3></td>
+			<td><h3>Estado</h3></td>
+			<td><h3>Editar</h3></td>
+		</thead>
+	<tbody>
+	{% for cat in categorias %}
+		<tr>
+			<td><h3 style = "color: gray;">{{ cat }}</h3></td>
+			<td><h3 style = "color: gray;">{{ cat.get_estado_display }}</h3></td>
+			<td ><a href="{% url 'categoria_editar' cat.id %}"><i class="fa fa-pencil-square-o"></i></a></td>
+			<!--td><i class="fa fa-pencil-square-o"></td>
+			<td><i class="fa fa-times"></i></i></h3></td-->
+		</tr>
+	{% endfor %}
+	</tbody>
+	</table>
+	{% endif %}
+{% endblock page_content %}
+{% block page_right %}
 <form action="{% url 'categorias' %}" method="post">
 
 <h2>Crear categoría</h2>
@@ -34,27 +58,4 @@
 		</tbody>
 	</table>
 </form>
-{% endblock page_left %}
-{% block page_content %}
-	{% if categorias %}
-	<table style="width:100%" >
-		<thead>
-			<td><h3>Nombre</h3></td>
-			<td><h3>Estado</h3></td>
-			<td><h3>Editar</h3></td>
-		</thead>
-	<tbody>
-	{% for cat in categorias %}
-		<tr>
-			<td><h3 style = "color: gray;">{{ cat }}</h3></td>
-			<td><h3 style = "color: gray;">{{ cat.get_estado_display }}</h3></td>
-			<td ><a href="{% url 'categoria_editar' cat.id %}"><i class="fa fa-pencil-square-o"></i></a></td>
-			<!--td><i class="fa fa-pencil-square-o"></td>
-			<td><i class="fa fa-times"></i></i></h3></td-->
-		</tr>
-	{% endfor %}
-	</tbody>
-	</table>
-	{% endif %}
-{% endblock page_content %}
-{% block page_right %}{% endblock page_right %}
+{% endblock page_right %}
