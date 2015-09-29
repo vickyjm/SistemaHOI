@@ -7,7 +7,7 @@
 	<a href="{% url 'categorias' %}">Categorías</a>
 {% endblock page_menu%}
 
-{% block page_title %}Editar item '{{ nombre }}'{% endblock page_title %}
+{% block page_title %}Editar ítem '{{ nombre }}'{% endblock page_title %}
 {% block page_left %}
 	<ul align= "center"> <td><a href="{% url 'inventario' %}" class="button"><i class="fa fa-arrow-left"></i></a></td>
 	</ul>
@@ -32,7 +32,7 @@
 			 {% endfor %}
 		 <tr>
 			<td align="right"><br><br>
-			<input type="submit" class="button" value="Guardar item">
+			<input type="submit" class="button" value="Guardar ítem">
 			<a href="{% url 'inventario' %}" class="button">Cancelar</a>
 			</td>
 		</tr>

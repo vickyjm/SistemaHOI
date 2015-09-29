@@ -147,7 +147,7 @@ def crearItem(request):
                                             id_categoria = idcat.id).exists()
             # Si el item ya existe
             if itemexiste:
-                mensaje = "Item '%s' ya existe en la categoría '%s'" % (inombre,icategoria)
+                mensaje = "Ítem '%s' ya existe en la categoría '%s'" % (inombre,icategoria)
                 color = "color:#CC0000"
             # Si el item no existe, lo crea
             else:
@@ -157,7 +157,7 @@ def crearItem(request):
                             minimo = form.cleaned_data['minimo']
                             )
                 obj.save()
-                mensaje = "Item '%s' creado exitosamente" % (inombre)
+                mensaje = "Ítem '%s' creado exitosamente" % (inombre)
                 color = "color:#00CC00" 
                 form = itemForm(initial={'cantidad': '0', 'minimo': '5'})   
     else:
@@ -284,10 +284,10 @@ def item_editar(request, _id):
                     item.minimo = form.cleaned_data['minimo']
                     item.estado = form.cleaned_data['estado']
                     item.save()
-                    mensaje = "Item '%s' editado exitosamente" %nombre
+                    mensaje = "Ítem '%s' editado exitosamente" %nombre
                     color = "color:#00CC00"
                 else:
-                    mensaje = "Nombre '%s' ya existe en la categoría '%s'" %(inombre, idcat)
+                    mensaje = "Ítem '%s' ya existe en la categoría '%s'" %(inombre, idcat)
                     color = "color:#CC0000"
                     
             except ObjectDoesNotExist:
@@ -298,7 +298,7 @@ def item_editar(request, _id):
                 item.minimo = form.cleaned_data['minimo']
                 item.estado = form.cleaned_data['estado']
                 item.save()
-                mensaje = "Item '%s' editado exitosamente" %nombre
+                mensaje = "Ítem '%s' editado exitosamente" %nombre
                 color = "color:#00CC00"
                 nombre = inombre
     else: 
@@ -485,9 +485,9 @@ def item_retirar(request, _id):
 
             if icantidad > item.cantidad:
                 if item.cantidad == 0:
-                    mensaje = "No quedan unidades de este item."
+                    mensaje = "No quedan unidades de este ítem."
                 else:
-                    mensaje = "Solo quedan '%d' unidades de este item" % (item.cantidad)
+                    mensaje = "Solo quedan '%d' unidades de este ítem" % (item.cantidad)
                 color = "#CC0000"
             else:
                 item.cantidad = item.cantidad - icantidad
