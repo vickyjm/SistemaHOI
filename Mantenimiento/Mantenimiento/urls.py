@@ -26,7 +26,8 @@ urlpatterns = patterns('',
     url(r'^cerrarSesion$', views.cerrarSesion, name = 'cerrarSesion'),
     url(r'^reporte$',views.imprimirReporte, name='reporte'),
     url(r'^usuarios$',views.adminUsuarios,name='adminUsuarios'),
-    url(r'^usuarios/(?P<_id>\d+)/editar', views.editarUsuario,name = 'editarUsuario'),
+    url(r'^usuarios/(?P<_id>\d+)/editar$', views.editarUsuario,name = 'editarUsuario'),
+    url(r'^crearUsuario$',views.adminUsuarios,name='crearUsuario')
 
 )
 

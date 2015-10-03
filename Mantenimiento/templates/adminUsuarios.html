@@ -1,0 +1,57 @@
+{% extends "base-col1.html" %}
+{% load templatetags %}
+
+{% block page_menu %}
+<a href="{% url 'verperfil' %}" >Perfil</a>
+<a href="{% url 'solicitud' %}" >Solicitudes</a>
+<a href="{% url 'inventario' %}" >Inventario</a>
+<a href="{% url 'categoria' %}" >Categorías</a>
+{% endblock page_menu%}
+
+{% block page_title %}
+Administración de Usuarios
+{% endblock page_title %}
+
+{% block page_content %}
+<table style="width:100%">
+	<tr align="right">
+		<td><a href="{% url 'crearUsuario' %}" class="button" align = "right">(+) Crear usuario</a></td>
+	</tr>
+</table>
+<table style="width:100%" >
+	<thead >
+		<tr>
+		<td><h3><b>Nombre</b></h3></td>
+		<td><h3>Apellido</h3></td>
+		<td><h3>Cédula</h3></td>
+		<td><h3>Cargo</h3></td>
+		<td><h3>Estado</h3></td>
+		<td><h3>Editar</h3></td>
+		</tr>
+	</thead>
+{% if usuarios %}
+	<tbody>
+		{% for u in usuarios %}
+		<tr>
+			<td><h3 style = "color: gray;">{{ u.first_name }}</h3></td>
+			<td><h3 style = "color: gray;">{{ u.last_name }}</h3></td>
+			<td><h3 style = "color: gray;">{{ u.username }}</h3></td>
+			{% if u|has_group:"Administradores" %}
+				<td><h3 style = "color: gray;">Administrador</h3></td>
+			{% elif u|has_group:"Almacenistas" %}
+				<td><h3 style = "color: gray;">Almacenista</h3></td>
+			{% else %}
+				<td><h3 style = "color: gray;">Técnico</h3></td>
+			{% endif %}
+			{% if u.is_active %}
+				<td><h3 style = "color: gray;">Activo</h3></td>
+			{% else %}
+				<td><h3 style = "color: gray;">Inactivo</h3></td>
+			{% endif %}
+			<td><h3><a href="{% url 'editarUsuario' u.id %}"><i class="fa fa-pencil-square-o"></i></a></h3></td>
+		</tr>
+		{% endfor %}
+	</tbody>
+{% endif %}
+</table>
+{% endblock page_content %}
