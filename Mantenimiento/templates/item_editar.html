@@ -1,14 +1,17 @@
 {% extends "base-col3.html" %}
 
 {% block page_menu %}
-<a href="../../../verperfil" >Perfil</a>
-<a href="../../../solicitud" >Solicitudes</a>
-<a href="../../../inventario" >Inventario</a>
-<a href="../../../categorias" >Categorías</a>
+	<a href="{% url 'verperfil' %}">Perfil</a>
+	<a href="{% url 'solicitud' %}">Solicitudes</a>
+	<a href="{% url 'inventario' %}">Inventario</a>
+	<a href="{% url 'categorias' %}">Categorías</a>
 {% endblock page_menu%}
 
-{% block page_title %}Editar item '{{ nombre }}'{% endblock page_title %}
-{% block page_left %}{% endblock page_left %}
+{% block page_title %}Editar ítem '{{ nombre }}'{% endblock page_title %}
+{% block page_left %}
+	<ul align= "center"> <td><a href="{% url 'inventario' %}" class="button"><i class="fa fa-arrow-left"></i></a></td>
+	</ul>
+{% endblock page_left %}
 {% block page_content %}
 <form action="" method="post">
 
@@ -18,7 +21,7 @@
 		{% csrf_token %}
 		<tbody>
 			{% if mensaje %}
-				<h3>{{mensaje}}</h3>
+				<h3 style={{color | safe}}>{{mensaje}}</h3>
 			{% endif %}
 			{% for field in form %}
 
@@ -29,7 +32,9 @@
 			 {% endfor %}
 		 <tr>
 			<td align="right"><br><br>
-			<input type="submit" class="button" value="Guardar item"></td>
+			<input type="submit" class="button" value="Guardar ítem">
+			<a href="{% url 'inventario' %}" class="button">Cancelar</a>
+			</td>
 		</tr>
 		</tbody>
 	</table>

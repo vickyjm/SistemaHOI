@@ -1,14 +1,14 @@
 {% extends "base-col3.html" %}
 
 {% block page_menu %}
-	<a href="./">Iniciar sesión</a>
-	<a href="./registrar">Registro</a>
+	<a href="{% url 'inicio_sesion' %}">Iniciar sesión</a>
+	<a href="{% url 'registrar' %}">Registro</a>
 {% endblock page_menu%}
 
 {% block page_title %}Recuperar contraseña{% endblock page_title %}
 {% block page_left %}{% endblock page_left %}
 {% block page_content %}
-<form action="./recuperarContraseña" method="post">
+<form action="{% url 'recuperarContraseña' %}" method="post">
 	<table style="width:100%" >
 		<thead>
 		</thead>

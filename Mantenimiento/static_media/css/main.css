@@ -1199,6 +1199,7 @@
 		text-decoration: none;
 		color: #fff;
 		font-size: 1.2em;
+		font: inherit;
 		letter-spacing: -1px;
 		border: solid 1px #006e8b;
 		box-shadow: inset 0px 0px 0px 1px #18a8c8;
@@ -1210,6 +1211,7 @@
 			background-image: -ms-linear-gradient(top, #1b9fbe, #118eb1);
 			background-image: linear-gradient(top, #1b9fbe, #118eb1);
 			background-color: #118eb1;
+			font: inherit;
 			box-shadow: inset 0px 0px 0px 1px #3ecceb;
 		}
 

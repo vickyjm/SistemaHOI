@@ -2,19 +2,20 @@
 {% load templatetags %}
 
 {% block page_menu %}
-	<a href="./verperfil">Perfil</a>
-	<a href="./solicitud">Solicitudes</a>
-	<a href="./inventario">Inventario</a>
-	<a href="./categorias">Categorías</a>
+	<a href="{% url 'verperfil' %}">Perfil</a>
+	<a href="{% url 'solicitud' %}">Solicitudes</a>
+	<a href="{% url 'inventario' %}">Inventario</a>
+	<a href="{% url 'categorias' %}">Categorías</a>
+
 	{% if user|has_group:"Administradores" %}
 		<a href="#">Administración</a>
-		<a href="./reporte" class="current-page-item">Reportes</a>
+		<a href="{% url 'reporte' %}" class="current-page-item">Reportes</a>
 	{% endif %}
 {% endblock page_menu%}
 {% block page_title %}Reportes{% endblock page_title %}
 {% block page_left %}{% endblock page_left %}
 {% block page_content %}
-<form action="./reporte" method="post">
+<form action="{% url 'reporte' %}" method="post">
 	<table style="width:100%" >
 		<thead>
 		</thead>
@@ -36,7 +37,7 @@
 			 
 			 {% endfor %}
 			<tr>
-				<td align="center"><br><br>
+				<td align="right"><br><br>
 				<input type="submit" class="button" value="Generar reporte"></td>
 			</tr>
 		</tbody>

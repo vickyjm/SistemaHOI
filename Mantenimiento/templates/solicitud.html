@@ -2,30 +2,32 @@
 {% load templatetags %}
 
 {% block page_menu %}
-	<a href="./verperfil">Perfil</a>
-	<a href="" class="current-page-item">Solicitudes</a>	
-	<a href="./inventario">Inventario</a>
-	<a href="./categorias" >Categorías</a>
+
+	<a href="{% url 'verperfil' %}">Perfil</a>
+	<a href="." class="current-page-item">Solicitudes</a>
+	<a href="{% url 'inventario' %}">Inventario</a>
+	<a href="{% url 'categorias' %}">Categorías</a>
+	
 {% endblock page_menu%}
 
 {% block page_title %}{% endblock page_title %}
 {% block page_left %}{% endblock page_left %}
 
 {% block page_content %}
-	{% if not user|has_group:"Almacenistas" %}
+
 	<table style="width:100%">
 		<tr align="right">
-			<td><a href="./crearSolicitud" class="button" align = "right">(+) Crear solicitud</a></td>
+			<td><a href="{% url 'crearSolicitud' %}" class="button" align = "right">(+) Crear solicitud</a></td>
 		</tr>
 	</table>
-	{% endif %}
-	<h2>Solicitudes de retiro de Items</h2>
+
+	<h2>Solicitudes de retiro de ítems</h2>
 	<table style="width:100%" >
  		<thead>
 			<td><h3>Fecha</h3></td>
 			<td><h3>Item</h3></td>
 			<td><h3>Cantidad</h3></td>
-			<td><h3>Categoria</h3></td>
+			<td><h3>Categoría</h3></td>
 			<td><h3>Estado</h3></td>
 
 			{% if not user|has_group:"Almacenistas" %}

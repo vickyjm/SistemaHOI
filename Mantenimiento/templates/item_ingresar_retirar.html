@@ -1,15 +1,20 @@
 {% extends "base-col3.html" %}
 
 {% block page_menu %}
-	<a href="../../../verperfil">Perfil</a>
-	<a href="../../../solicitud">Solicitudes</a>
-	<a href="../../../inventario">Inventario</a>
-	<a href="../../../categorias">Categorías</a>
+	<a href="{% url 'verperfil' %}">Perfil</a>
+	<a href="{% url 'solicitud' %}">Solicitudes</a>
+	<a href="{% url 'inventario' %}">Inventario</a>
+	<a href="{% url 'categorias' %}">Categorías</a>
 {% endblock page_menu%}
 
 {% block page_title %}{{accion}} unidades del item '{{item}}'{% endblock page_title %}
 {% block page_left %}{% endblock page_left %}
 {% block page_content %}
+
+{% if accion == "Retirar" %}
+	<h4>Modifique la cantidad de items que queda en el inventario</h4>
+{% endif %}
+
 <form action="" method="post">
 <table style="width:100%" >
 		<thead>
