@@ -8,16 +8,16 @@
 <a href="{% url 'categorias' %}" >Categorías</a>
 {% endblock page_menu%}
 
-{% block page_title %}
-Administración de Usuarios
-{% endblock page_title %}
-
+{% block page_title %}{% endblock page_title %}
 {% block page_content %}
 <table style="width:100%">
 	<tr align="right">
 		<td><a href="{% url 'crearUsuario' %}" class="button" align = "right">(+) Crear usuario</a></td>
 	</tr>
 </table>
+
+<h2>Administración de Usuarios</h2>
+
 <table style="width:100%" >
 	<thead >
 		<tr>

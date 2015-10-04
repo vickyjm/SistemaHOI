@@ -15,7 +15,12 @@
 {% endblock page_menu%}
 
 {% block page_title %}Registro{% endblock page_title %}
-{% block page_left %}{% endblock page_left %}
+{% block page_left %}
+	{% if user|has_group:"Administradores" %}
+		<ul align= "center"> <td><a href="{% url 'adminUsuarios' %}" class="button"><i class="fa fa-arrow-left"></i></a></td>
+		</ul>
+	{% endif %}
+{% endblock page_left %}
 {% block page_content %}
 <form action="{% url 'registrar' %}" method="post">
 	<table style="width:100%" >
@@ -37,7 +42,11 @@
 
 			<tr>
 				<td align="right"><br><br>
-				<input type="submit" class="button" value="Registrar"></td>
+				<input type="submit" class="button" value="Registrar">
+				{% if user|has_group:"Administradores" %}
+					<a href="{% url 'adminUsuarios' %}" class="button">Cancelar</a>
+				{% endif %}			
+				</td>
 			</tr>
 		</tbody>
 	</table>
