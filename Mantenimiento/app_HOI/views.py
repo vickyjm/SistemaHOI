@@ -111,7 +111,10 @@ def registro(request):
                             
             print(user.groups.values('name'))
             print(user.groups.values_list('name',flat=True))
-            user.is_active = True
+            if (request.user.groups.filter(name = "Administradores").exists()):
+                user.is_active = form.cleaned_data['estado']
+            else:
+                user.is_active = True
             user.save()
             msg = "El usuario fue registrado exitosamente"
             color = green
@@ -683,6 +686,8 @@ def editarUsuario(request,_id):
                                   Group.objects.get(name='Técnicos')]
             else:
                 usuario.groups = [Group.objects.get(name='Técnicos')]
+        
+            usuario.is_active = int(form.cleaned_data['estado'])
             usuario.save()
             color = green
             msg = "El usuario '%s' fue editado exitosamente" % nombre 
@@ -695,5 +700,5 @@ def editarUsuario(request,_id):
             cargo = "tecnico"
         form = editarUsuarioForm(initial = {'cedula':usuario.username,'nombre':usuario.first_name,
                                             'apellido':usuario.last_name,'correo':usuario.email,
-                                            'tipo':cargo})
+                                            'tipo':cargo,'estado':str(int(usuario.is_active))})
     return render(request,'editarUsuario.html',{'form':form,'nombre':nombre,'color':color,'mensaje':msg})
