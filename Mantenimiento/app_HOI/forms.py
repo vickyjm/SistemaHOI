@@ -19,7 +19,7 @@ class iniciarSesionForm(forms.Form):
                     validators = [
                         RegexValidator(
                             regex = '^([1-9][0-9]{0,2})([0-9]{3}){0,3}$',
-                            message = 'Formato erróneo'
+                            message = 'Formato erróneo.'
                         )
                     ]
             )
@@ -37,18 +37,29 @@ class registroForm(forms.Form):
                     validators = [
                         RegexValidator(
                             regex = '^([1-9][0-9]{0,2})([0-9]{3}){0,3}$',
-                            message = 'Formato erróneo'
+                            message = 'Formato erróneo.'
                         )
                     ]
             )
     nombre = forms.CharField(max_length = 30, 
                     required = True, 
                     label = "Nombre", 
-                    widget=forms.TextInput(attrs={'style': 'width:100%'}))
+                    widget=forms.TextInput(attrs={'style': 'width:100%'}),
+                    validators = [
+                          RegexValidator(
+                                regex = '^[a-zA-ZáéíóúñÑÁÉÍÓÚ][a-zA-ZáéíóúñÑÁÉÍÓÚ ]+$',
+                                message = 'Sólo debe contener letras.'
+                        )])
     apellido = forms.CharField(max_length = 30, 
                     required = True, 
                     label = "Apellido", 
-                    widget=forms.TextInput(attrs={'style': 'width:100%'}))
+                    widget=forms.TextInput(attrs={'style': 'width:100%'}),
+                    validators = [
+                          RegexValidator(
+                                regex = '^[a-zA-ZáéíóúñÑÁÉÍÓÚ][a-zA-ZáéíóúñÑÁÉÍÓÚ ]+$',
+                                message = 'Sólo debe contener letras.'
+                        )
+                    ])
     correo = forms.EmailField(required = False, 
                     label = "Correo electrónico", 
                     widget=forms.EmailInput(attrs={'style': 'width:100%'}))
@@ -76,7 +87,7 @@ class recuperarContraseñaForm(forms.Form):
                     validators = [
                         RegexValidator(
                             regex = '^([1-9][0-9]{0,2})([0-9]{3}){0,3}$',
-                            message = 'Formato erróneo'
+                            message = 'Formato erróneo.'
                         )
                     ]
             )
@@ -110,7 +121,12 @@ class itemForm(forms.Form):
     nombre = forms.CharField(max_length = 100, 
                     required = True, 
                     label = "Nombre", 
-                    widget = forms.TextInput(attrs={'style': 'width:100%'}))
+                    widget = forms.TextInput(attrs={'style': 'width:100%'}),
+                    validators = [
+                                RegexValidator(
+                                    regex = '^[^ ].*$',
+                                    message = 'Formato erróneo.'
+                                )])
     cantidad = forms.IntegerField(max_value = 2147483647, 
                     min_value = 0, 
                     required = True, 
@@ -145,7 +161,12 @@ class categoriaForm(forms.Form):
     nombre = forms.CharField(max_length = 100, 
                     required = True, 
                     label = "Nombre", 
-                    widget = forms.TextInput(attrs={'style': 'width:100%'}))
+                    widget = forms.TextInput(attrs={'style': 'width:100%'}),
+                    validators = [
+                                RegexValidator(
+                                    regex = '^[^ ].*$',
+                                    message = 'Formato erróneo.'
+                                )])
 
 # Form para editar categorias, hereda de categoriaForm
 class categoria_editarForm(categoriaForm):
@@ -214,12 +235,32 @@ class editarUsuarioForm(forms.Form):
     nombre = forms.CharField(max_length = 30, 
                     required = True, 
                     label = "Nombre", 
-                    widget=forms.TextInput(attrs={'style': 'width:100%'}))
+                    widget=forms.TextInput(attrs={'style': 'width:100%'}),
+                    validators = [
+                          RegexValidator(
+                                regex = '^[a-zA-ZáéíóúñÑÁÉÍÓÚ][a-zA-ZáéíóúñÑÁÉÍÓÚ ]+$',
+                                message = 'Sólo debe contener letras.'
+                        )])
     apellido = forms.CharField(max_length = 30, 
                     required = True, 
                     label = "Apellido", 
-                    widget=forms.TextInput(attrs={'style': 'width:100%'}))
+                    widget=forms.TextInput(attrs={'style': 'width:100%'}),
+                    validators = [
+                          RegexValidator(
+                                regex = '^[a-zA-ZáéíóúñÑÁÉÍÓÚ][a-zA-ZáéíóúñÑÁÉÍÓÚ ]+$',
+                                message = 'Sólo debe contener letras.'
+                        )])
     correo = forms.EmailField(required = False, 
+                    label = "Correo electrónico", 
+                    widget=forms.EmailInput(attrs={'style': 'width:100%'}))
+    tipoEmpleado = (("tecnico","Técnico"), ("almacenista", "Almacenista"),("administrador","Administrador"))
+    tipo = forms.ChoiceField(required = True, 
+                    choices = tipoEmpleado, 
+                    widget = forms.Select(attrs={'style': 'width:100%; background-color:white'}), 
+                    label = "Cargo")
+
+class registroAdminForm(registroForm):
+    correo = forms.EmailField(required = True, 
                     label = "Correo electrónico", 
                     widget=forms.EmailInput(attrs={'style': 'width:100%'}))
     tipoEmpleado = (("tecnico","Técnico"), ("almacenista", "Almacenista"),("administrador","Administrador"))

@@ -74,13 +74,14 @@ def inicio_sesion(request):
     return render(request, 'inicio_sesion.html', {'form': form})
 
 def registro(request):
-
     if request.method == "POST":
-        form = registroForm(request.POST)
+        if (request.user.groups.filter(name = "Administradores").exists()):
+            form = registroAdminForm(request.POST)
+        else:
+            form = registroForm(request.POST)
 
         if form.is_valid():
             ci = form.cleaned_data['cedula']
-
             if User.objects.filter(username=ci).exists():
                 msg = "Esta cédula ya se encuentra registrada"
                 color = red
@@ -112,14 +113,17 @@ def registro(request):
             print(user.groups.values_list('name',flat=True))
             user.is_active = True
             user.save()
-            msg = "Su usuario fue registrado exitosamente"
+            msg = "El usuario fue registrado exitosamente"
             color = green
             form = registroForm()
             return render(request,'registro.html',{'form': form, 
                                                    'msg': msg,
                                                    'color':color})
     else:
-        form = registroForm()
+        if (request.user.groups.filter(name = "Administradores").exists()):
+            form = registroAdminForm()
+        else:
+            form = registroForm()
     return render(request,'registro.html', {'form': form})
    
 def recuperarContraseña(request):
@@ -284,6 +288,7 @@ def item_editar(request, _id):
     color = "color:#FFFFFF"
     item = Item.objects.get(id = _id)
     nombre = item.nombre
+    mensaje = None
     if request.method == "POST":
         form = item_editarForm(request.POST)
 
@@ -327,8 +332,6 @@ def item_editar(request, _id):
                                         'categoria': item.id_categoria,
                                         'minimo': item.minimo,
                                         'estado': item.estado})
-
-        mensaje = None
     return render(request, 'item_editar.html', {'form' : form, 
                                                 'nombre' : nombre,
                                                 'mensaje': mensaje,
