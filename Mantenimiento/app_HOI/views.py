@@ -702,3 +702,57 @@ def editarUsuario(request,_id):
                                             'apellido':usuario.last_name,'correo':usuario.email,
                                             'tipo':cargo,'estado':str(int(usuario.is_active))})
     return render(request,'editarUsuario.html',{'form':form,'nombre':nombre,'color':color,'mensaje':msg})
+
+def adminDptos(request):
+    color = black
+    msg = None
+    if request.method == 'POST':
+        form = departamentoForm(request.POST)
+        if form.is_valid():
+            dptonombre = form.cleaned_data['nombre']
+            dptonombre = dptonombre.upper()
+        
+            try: 
+                dpto = Departamento.objects.get(nombre = dptonombre)
+                if Departamento.objects.filter(pk=dpto.pk).exists():
+                    msg = "El departamento '%s' ya existe" % (dptonombre)
+                    color = red
+            except ObjectDoesNotExist:
+                obj = Departamento(nombre = dptonombre,
+                                estado = 1)
+                obj.save()
+                msg = "Departamento '%s' creado exitosamente" % (dptonombre)
+                color = green
+                form = departamentoForm()
+        dptos = Departamento.objects.order_by('nombre')
+    else:
+        form = departamentoForm()
+        dptos = Departamento.objects.order_by('nombre')
+    return render(request,'adminDptos.html',{'dptos':dptos,'form':form,'color':color,'mensaje':msg})
+
+def editarDpto(request,_id):
+    dpto = Departamento.objects.get(id = _id)
+    nombre = dpto.nombre
+    color = black
+    msg = None
+    if request.method == "POST":
+        form = editarDptoForm(request.POST)
+        if form.is_valid():
+            nombreMayus = form.cleaned_data['nombre'].upper()
+            if (dpto.nombre != nombreMayus):
+                try:
+                    nombreNuevo = Departamento.objects.get(nombre=nombreMayus)
+                    msg = "El Departamento ingresado ya existe. Intente de nuevo."
+                    color = red
+                    return render(request,'editarDpto.html',{'form':form,'mensaje':msg,'color':color,'nombre':nombre})
+                except Departamento.DoesNotExist:
+                    dpto.nombre = nombreMayus
+        
+            dpto.estado = int(form.cleaned_data['estado'])
+            dpto.save()
+            color = green
+            msg = "El Departamento '%s' fue editado exitosamente" % dpto.nombre 
+    else:
+        form = editarDptoForm(initial = {'nombre':dpto.nombre,'estado':str(dpto.estado)})
+        
+    return render(request,'editarDpto.html',{'form':form,'color':color,'mensaje':msg,'nombre':nombre})

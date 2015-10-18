@@ -5,14 +5,14 @@
 <a href="{% url 'verperfil' %}">Perfil</a>
 <a href="{% url 'solicitud' %}">Solicitudes</a>
 <a href="{% url 'inventario' %}" >Inventario</a>
-<a href="" class="current-page-item">Categorías</a>
+<a href="{% url 'categorias' %}">Categorías</a>
 {% endblock page_menu%}
 
-{% block page_title %}Categorías{% endblock page_title %}
+{% block page_title %}Departamentos{% endblock page_title %}
 {% block page_left %}
 {% endblock page_left %}
 {% block page_content %}
-	{% if categorias %}
+	{% if dptos %}
 	<table style="width:100%" >
 		<thead>
 			<td><h3>Nombre</h3></td>
@@ -20,26 +20,24 @@
 			<td><h3>Editar</h3></td>
 		</thead>
 	<tbody>
-	{% for cat in categorias %}
+	{% for d in dptos %}
 		<tr>
-			<td><h3 style = "color: gray;">{{ cat }}</h3></td>
-			<td><h3 style = "color: gray;">{{ cat.get_estado_display }}</h3></td>
-			<td ><a href="{% url 'categoria_editar' cat.id %}"><i class="fa fa-pencil-square-o"></i></a></td>
-			<!--td><i class="fa fa-pencil-square-o"></td>
-			<td><i class="fa fa-times"></i></i></h3></td-->
+			<td><h3 style = "color: gray;">{{ d }}</h3></td>
+			<td><h3 style = "color: gray;">{{ d.get_estado_display }}</h3></td>
+			<td ><a href="{% url 'editarDpto' d.id %}"><i class="fa fa-pencil-square-o"></i></a></td>
 		</tr>
 	{% endfor %}
 	</tbody>
 	</table>
 	{% else %}
-		<h3>No hay categorías registradas.</h3>
+		<h3>No hay departamentos registrados.</h3>
 	{% endif %}
 {% endblock page_content %}
 {% block page_right %}
-<form action="{% url 'categorias' %}" method="post">
+<form action="{% url 'adminDptos' %}" method="post">
 
 {% if user|has_group:"Administradores" %}
-<h2>Crear categoría</h2>
+<h2>Crear Departamento</h2>
 	<table style="width:100%" >
 		<thead>
 		</thead>
@@ -57,7 +55,7 @@
 				 {% endfor %}
 			 <tr>
 				<td align="right"><br><br>
-				<input type="submit" class="button" value="Crear categoría"></td>
+				<input type="submit" class="button" value="(+) Crear Departamento"></td>
 			</tr>
 			</tbody>
 		</table>

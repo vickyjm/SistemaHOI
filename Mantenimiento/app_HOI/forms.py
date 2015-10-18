@@ -2,7 +2,7 @@
 
 from django import forms
 from django.core.validators import RegexValidator
-from app_HOI.models import Categoria,Item
+from app_HOI.models import Categoria,Item, Departamento
 from django.forms import ModelChoiceField
 from django.utils.translation import ugettext, ugettext_lazy as _
 from django.forms.extras.widgets import SelectDateWidget
@@ -197,13 +197,10 @@ class solicitudForm(forms.Form):
     opciones_dpto = (('0', 'Dpto 1'),       # No estoy segura de qué va aqui
                  ('1', 'Dpto 2'),
                  ('2', 'Dpto 3'))
-
-    dpto = forms.ChoiceField(
-                    required = True,
-                    widget=forms.Select(attrs={'style':'width:100%; background-color:white'}),
-                    label= "Departamento que lo solicita",
-                    choices = opciones_dpto)
-
+    dpto = forms.ModelChoiceField(label = "Departamento que lo solicita",
+        widget=forms.Select(attrs={'style':'width:100%; background-color:white'}), 
+        queryset=Departamento.objects.order_by('nombre'),
+        required = True)
 
 class reportesForm(forms.Form):
     DateInput = partial(forms.DateInput, {'class': 'datepicker','style':'width:100%'})
@@ -274,6 +271,24 @@ class registroAdminForm(registroForm):
                     widget = forms.Select(attrs={'style': 'width:100%; background-color:white'}), 
                     label = "Cargo")
     opciones_estado = ((False, 'Inactivo',), (True, 'Activo'))
+    estado = forms.ChoiceField(required = True,
+                    widget=forms.RadioSelect(attrs={'style': 'width:100%; background-color:white'}), 
+                    label = "Estado",
+                    choices=opciones_estado)
+    
+class departamentoForm(forms.Form):
+    nombre = forms.CharField(max_length = 500, 
+                    required = True, 
+                    label = "Nombre", 
+                    widget = forms.TextInput(attrs={'style': 'width:100%'}),
+                    validators = [
+                                RegexValidator(
+                                    regex = '^[^ ].*$',
+                                    message = 'Formato erróneo.'
+                                )])
+
+class editarDptoForm(departamentoForm):
+    opciones_estado = (('0', 'Inactivo',), ('1', 'Activo'))
     estado = forms.ChoiceField(required = True,
                     widget=forms.RadioSelect(attrs={'style': 'width:100%; background-color:white'}), 
                     label = "Estado",
