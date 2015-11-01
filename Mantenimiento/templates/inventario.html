@@ -22,15 +22,15 @@
 {%endif%}
 
 <h2>Ítems</h2>
-
-<table style="width:100%" >
+{% if items %}
+<table  id="rowspan" cellspacing="0" class="tablesorter" >
 	<thead >
 		<tr>
-		<td><h3><b>Nombre</b></h3></td>
-		<td><h3>Cantidad</h3></td>
-		<td><h3>Categoría</h3></td>
-		<td><h3>Mínimo</h3></td>
-		<td><h3>Estado</h3></td>
+		<th><h3>Nombre</h3></th>
+		<th><h3>Cantidad</h3></th>
+		<th><h3>Categoría</h3></th>
+		<th><h3>Mínimo</h3></th>
+		<th><h3>Estado</h3></th>
 		{% if user|has_group:"Almacenistas" %}
 			<td><h3>Ingresar</h3></td>
 		{% endif %}
@@ -40,32 +40,28 @@
 		{% endif %}
 		</tr>
 	</thead>
-
-{% if items %}
 	<tbody>
 		{% for i in items %}
 		<tr>
-			<td><h3 style = "color: gray;">{{ i }}</h3></td>
-			<td><h3 style = "color: gray;">{{ i.cantidad }}</h3></td>
-			<td><h3 style = "color: gray;">{{ i.id_categoria }}</h3></td>
-			<td><h3 style = "color: gray;">{{ i.minimo }}</h3></td>
-			<td><h3 style = "color: gray;">{{ i.get_estado_display }}</h3></td>
+			<td><h3>{{ i }}</h3></td>
+			<td><h3>{{ i.cantidad }}</h3></td>
+			<td><h3>{{ i.id_categoria }}</h3></td>
+			<td><h3>{{ i.minimo }}</h3></td>
+			<td><h3>{{ i.get_estado_display }}</h3></td>
 			
-				{% if user|has_group:"Almacenistas" %}
-			<td><h3><a href="{% url 'item_ingresar' i.id %}"><i class="fa fa-plus" style="color:green"></i></a></h3></td>
-				{% endif %}
-				{% if user|has_group:"Administradores" %}
-			<td><h3><a href="{% url 'item_retirar' i.id %}"><i class="fa fa-minus" style="color:red"></i></a></h3></td>
-			<td><h3><a href="{% url 'item_editar' i.id %}"><i class="fa fa-pencil-square-o"></i></a></h3></td>
-				{% endif %}
-
-
-
-				<!--td><i class="fa fa-times"></i></i></h3></td-->
-			</tr>
-			{% endfor %}
-		{% endif %}
+			{% if user|has_group:"Almacenistas" %}
+				<td><h3><a href="{% url 'item_ingresar' i.id %}"><i class="fa fa-plus" style="color:green"></i></a></h3></td>
+			{% endif %}
+			{% if user|has_group:"Administradores" %}
+				<td><h3><a href="{% url 'item_retirar' i.id %}"><i class="fa fa-minus" style="color:red"></i></a></h3></td>
+				<td><h3><a href="{% url 'item_editar' i.id %}"><i class="fa fa-pencil-square-o"></i></a></h3></td>
+			{% endif %}
+		</tr>
+		{% endfor %}
 	</tbody>
+{% else %}
+	<h3>No hay ítems registrados.</h3>
+{% endif %}
 </table>
 {% endblock page_content %}
 {% block page_right %}{% endblock page_right %}
