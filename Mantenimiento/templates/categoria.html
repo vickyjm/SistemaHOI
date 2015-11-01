@@ -16,20 +16,18 @@
 {% block page_content %}
 
 	{% if categorias %}
-	<table style="width:100%" >
+	<table  id="rowspan" cellspacing="0" class="tablesorter" style="width:100%" style="width:100%" >
 		<thead>
-			<td><h3>Nombre</h3></td>
-			<td><h3>Estado</h3></td>
+			<th><h3>Nombre</h3></th>
+			<th><h3>Estado</h3></th>
 			<td><h3>Editar</h3></td>
 		</thead>
 	<tbody>
 	{% for cat in categorias %}
 		<tr>
-			<td><h3 style = "color: gray;">{{ cat }}</h3></td>
-			<td><h3 style = "color: gray;">{{ cat.get_estado_display }}</h3></td>
+			<td><h3>{{ cat }}</h3></td>
+			<td><h3>{{ cat.get_estado_display }}</h3></td>
 			<td ><a href="{% url 'categoria_editar' cat.id %}"><i class="fa fa-pencil-square-o"></i></a></td>
-			<!--td><i class="fa fa-pencil-square-o"></td>
-			<td><i class="fa fa-times"></i></i></h3></td-->
 		</tr>
 	{% endfor %}
 	</tbody>

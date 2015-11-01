@@ -15,17 +15,19 @@
 {% endblock page_left %}
 {% block page_content %}
 	{% if dptos %}
-	<table style="width:100%" >
+	<table  id="rowspan" cellspacing="0" class="tablesorter" style="width:100%" >
 		<thead>
-			<td><h3>Nombre</h3></td>
-			<td><h3>Estado</h3></td>
+			<tr>
+			<th><h3>Nombre</h3></th>
+			<th><h3>Estado</h3></th>
 			<td><h3>Editar</h3></td>
+			</tr>
 		</thead>
 	<tbody>
 	{% for d in dptos %}
 		<tr>
-			<td><h3 style = "color: gray;">{{ d }}</h3></td>
-			<td><h3 style = "color: gray;">{{ d.get_estado_display }}</h3></td>
+			<td><h3>{{ d }}</h3></td>
+			<td><h3>{{ d.get_estado_display }}</h3></td>
 			<td ><a href="{% url 'editarDpto' d.id %}"><i class="fa fa-pencil-square-o"></i></a></td>
 		</tr>
 	{% endfor %}

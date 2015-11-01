@@ -1,0 +1,68 @@
+@import url("http://fonts.googleapis.com/css?family=Ubuntu+Condensed");
+
+/* tables */
+table.tablesorter {
+	font-family: 'Ubuntu Condensed',sans-serif;
+	background-color: #CDCDCD;
+	margin:10px 0pt 15px;
+	font-size: 12pt;
+	width: 100%;
+	color: #878e83;
+	text-align: left;
+}
+table.tablesorter thead tr th, table.tablesorter tfoot tr th , table.tablesorter thead tr td{
+	background-color: #007294;
+	border: 1px solid white;
+	font-size: 12pt;
+	padding: 4px;
+	vertical-align: bottom;
+	height: 55px;
+}
+
+table.tablesorter thead tr th h3, table.tablesorter thead tr td h3 {
+	color: white;
+}
+
+table.tablesorter thead tr .header {
+	background-image: url(bg.gif);
+	background-repeat: no-repeat;
+	background-position: right;
+	background-color: #007294;
+	cursor: pointer;
+}
+
+table.tablesorter tbody td {
+	color: #3D3D3D;
+	padding: 4px;
+	background-color: white;
+	vertical-align: top;
+}
+
+table.tablesorter tbody td h3 {
+	color: gray;
+}
+
+table.tablesorter tbody tr.odd td {
+	background-color:#F0F0F6;
+}
+
+table.tablesorter tbody td {
+	border: 1px solid white;
+}
+
+table.tablesorter thead tr .headerSortUp {
+	background-image: url(asc.gif);
+}
+table.tablesorter thead tr .headerSortDown {
+	background-image: url(desc.gif);
+}
+table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp {
+	background-color: #007294;
+}
+
+table.tablesorter th.tablesorter-headerUnSorted {
+    background-image: url(bg.gif);
+    background-repeat: no-repeat;
+    background-position: center right;
+    cursor: pointer;
+}
