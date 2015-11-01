@@ -2,21 +2,12 @@
 {% load templatetags %}
 
 {% block page_menu %}
-    <ul>
-        <li><a href="{% url 'verperfil' %}" >Perfil</a></li>
-        <li><a href="{% url 'solicitud' %}">Solicitudes</a></li>
-        <li><a href="{% url 'inventario' %}">Inventario</a></li>
-        <li><a href="{% url 'categorias' %}">Categorías</a></li>
-        {% if user|has_group:"Administradores" %}   
-        <li><a href="#" class="current-page-item">Administración</a>
-            <ul>  
-                <li><a href="{% url 'reporte' %}">Reportes</a></li>
-                <li><a href="{% url 'adminDptos' %}">Departamentos</a></li>
-                <li><a href="{% url 'adminUsuarios' %}" class="current-page-item">Usuarios</a></li>
-            </ul>                
-        </li>
-        {% endif %}
-    </ul>
+    <script type="text/javascript">
+        window.onload = function WindowLoad(event) {
+            document.getElementById("administracion").setAttribute("class","current-page-item");
+            document.getElementById("adminUsuarios").setAttribute("class","current-page-item");
+        }  
+    </script>
 {% endblock page_menu%}
 
 {% block page_title %}Editar usuario '{{nombre}}'{% endblock page_title %}

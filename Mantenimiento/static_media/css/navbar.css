@@ -55,10 +55,6 @@ li li {
 	clear:left; 
 }
 
-li li:hover { 				/*Esto es inutil*/
-	background-image:none; 
-}
-
 ul li li a:hover { 
 	border-right:none; 
 }
@@ -66,6 +62,7 @@ ul li li a:hover {
 ul li li:first-child a { 
 	border-radius: 0px 0px 0px 0px;
 }
+
 
 /* Sublista de "Administración" */
 ul ul { 
@@ -89,10 +86,6 @@ ul ul a:hover {
 	background-color: #0882a1;
 }
 
-ul ul li.last { 
-	margin-bottom:10px; 
-}
-
 ul ul li a { 
 	padding:5px 10px; 
 	border-left:0; 
@@ -110,3 +103,16 @@ li a.current-page-item {
 	background-color: #004050;
 	box-shadow: inset 0px 1px 5px 1px rgba(0, 0, 0, 0.1), 0px 0px 5px 1px rgba(255, 255, 255, 0.1);
 }
+
+li.last a {									/*Cableado.. descablear...*/
+	transform: translate(400%,0px); 
+	border-right:none;
+	border-left:none; 	
+	background-color: none;
+}
+
+li.last:hover {
+	background-color: #007b9d;		/*cableado.. descablear...*/
+}
+
+

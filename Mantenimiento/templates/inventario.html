@@ -2,21 +2,11 @@
 {% load templatetags %}
 
 {% block page_menu %}
-    <ul>
-        <li><a href="{% url 'verperfil' %}" >Perfil</a></li>
-        <li><a href="{% url 'solicitud' %}">Solicitudes</a></li>
-        <li><a href="" class="current-page-item">Inventario</a></li>
-        <li><a href="{% url 'categorias' %}" >Categorías</a></li>
-        {% if user|has_group:"Administradores" %}   
-        <li><a href="#">Administración</a>
-            <ul>  
-                <li><a href="{% url 'reporte' %}">Reportes</a></li>
-                <li><a href="#">Departamentos</a></li>
-                <li><a href="#">Usuarios</a></li>
-            </ul>                
-        </li>
-        {% endif %}
-    </ul>
+    <script type="text/javascript">
+        window.onload = function WindowLoad(event) {
+            document.getElementById("inventario").setAttribute("class","current-page-item");
+        }  
+    </script>
 {% endblock page_menu%}
 
 {% block page_title %}
