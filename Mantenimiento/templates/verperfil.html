@@ -11,8 +11,8 @@
         <li><a href="#">Administración</a>
             <ul>  
                 <li><a href="{% url 'reporte' %}">Reportes</a></li>
-                <li><a href="#">Departamentos</a></li>
-                <li><a href="#">Usuarios</a></li>
+                <li><a href="{% url 'adminDptos' %}">Departamentos</a></li>
+                <li><a href="{% url 'adminUsuarios' %}">Usuarios</a></li>
             </ul>                
         </li>
 		{% endif %}

@@ -55,12 +55,16 @@ li li {
 	clear:left; 
 }
 
-li li:hover { 
+li li:hover { 				/*Esto es inutil*/
 	background-image:none; 
 }
 
 ul li li a:hover { 
 	border-right:none; 
+}
+
+ul li li:first-child a { 
+	border-radius: 0px 0px 0px 0px;
 }
 
 /* Sublista de "Administración" */
@@ -77,7 +81,7 @@ ul li:hover ul {
 
 li li { 
 	height:35px; 
-	width:98%; 
+	width:101%; 		/*Estaba en 98% y no se sombreaba todo el rectangulo en la parte derecha*/
 	left:-2px; 
 }
 
