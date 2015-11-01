@@ -12,6 +12,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
 		<link rel="stylesheet" href="/{{ STATIC_URL }}css/main.css" />
+		<link rel="stylesheet" href="/{{ STATIC_URL }}css/navmenu.css" />
 		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 	</head>
@@ -24,14 +25,13 @@
 
 							<header id="header">
 								<h1><a href="#" id="logo">Departamento de Mantenimiento</a></h1>
-								<nav id="nav">
-									{% block page_menu %}
-									<a href="#">Homepage</a>
-									<a href="#">Two Column #1</a>
-									<a href="#" class="current-page-item">Two Column #2</a>
-								{% endblock page_menu %}	
-								</nav>
 							</header>
+
+							<nav id="nav">
+								{% block page_menu %}
+		
+								{% endblock page_menu %}
+							</nav>
 
 						</div>
 					</div>

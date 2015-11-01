@@ -2,10 +2,21 @@
 {% load templatetags %}
 
 {% block page_menu %}
-	<a href="./verperfil">Perfil</a>
-	<a href="" class="current-page-item">Solicitudes</a>	
-	<a href="./inventario">Inventario</a>
-	<a href="./categorias" >Categorías</a>
+    <ul>
+        <li><a href="./verperfil" >Perfil</a></li>
+        <li><a href="" class="current-page-item">Solicitudes</a></li>
+        <li><a href="./inventario">Inventario</a></li>
+        <li><a href="./categorias" >Categorías</a></li>
+        {% if user|has_group:"Administradores" %}   
+        <li><a href="#">Administración</a>
+            <ul>  
+                <li><a href="./reporte">Reportes</a></li>
+                <li><a href="#">Departamentos</a></li>
+                <li><a href="#">Usuarios</a></li>
+            </ul>                
+        </li>
+        {% endif %}
+    </ul>
 {% endblock page_menu%}
 
 {% block page_title %}{% endblock page_title %}
@@ -13,63 +24,63 @@
 
 {% block page_content %}
 
-	<table style="width:100%">
-		<tr align="right">
-			<td><a href="./crearSolicitud" class="button" align = "right">(+) Crear solicitud</a></td>
-		</tr>
-	</table>
+    <table style="width:100%">
+        <tr align="right">
+            <td><a href="./crearSolicitud" class="button" align = "right">(+) Crear solicitud</a></td>
+        </tr>
+    </table>
 
-	<h2>Solicitudes de retiro de Items</h2>
-	<table style="width:100%" >
- 		<thead>
-			<td><h3>Fecha</h3></td>
-			<td><h3>Item</h3></td>
-			<td><h3>Cantidad</h3></td>
-			<td><h3>Categoria</h3></td>
-			<td><h3>Estado</h3></td>
+    <h2>Solicitudes de retiro de Items</h2>
+    <table style="width:100%" >
+        <thead>
+            <td><h3>Fecha</h3></td>
+            <td><h3>Item</h3></td>
+            <td><h3>Cantidad</h3></td>
+            <td><h3>Categoria</h3></td>
+            <td><h3>Estado</h3></td>
 
-			{% if not user|has_group:"Almacenistas" %}
-				<td><h3>Editar</h3></td>
-				<td><h3>Eliminar</h3></td>
-			{% else %}
-				<td><h3>Usuario</h3></td>
-				<td><h3>Aprobar</h3></td>
-				<td><h3>Rechazar</h3></td>
-			{% endif %}
-		</thead>
-	<tbody>
-	{% for s in solicitudes %}
-		<tr>
-			<td><h3 style = "color: gray;">{{ s.fecha|date:"d-m-Y, H:i" }}</h3></td>
-			<td><h3 style = "color: gray;">{{ s.id_item.nombre }}</h3></td>
-			<td><h3 style = "color: gray;">{{ s.id_solicitud.cantidad }}</h3></td>
-			<td><h3 style = "color: gray;">{{ s.id_item.id_categoria.nombre }}</h3></td>
-			<td><h3 style = "color: gray;">{{ s.id_solicitud.get_estado_display }}</h3></td>
+            {% if not user|has_group:"Almacenistas" %}
+                <td><h3>Editar</h3></td>
+                <td><h3>Eliminar</h3></td>
+            {% else %}
+                <td><h3>Usuario</h3></td>
+                <td><h3>Aprobar</h3></td>
+                <td><h3>Rechazar</h3></td>
+            {% endif %}
+        </thead>
+    <tbody>
+    {% for s in solicitudes %}
+        <tr>
+            <td><h3 style = "color: gray;">{{ s.fecha|date:"d-m-Y, H:i" }}</h3></td>
+            <td><h3 style = "color: gray;">{{ s.id_item.nombre }}</h3></td>
+            <td><h3 style = "color: gray;">{{ s.id_solicitud.cantidad }}</h3></td>
+            <td><h3 style = "color: gray;">{{ s.id_item.id_categoria.nombre }}</h3></td>
+            <td><h3 style = "color: gray;">{{ s.id_solicitud.get_estado_display }}</h3></td>
 
-			{% if not user|has_group:"Almacenistas" %}
-				<td><a href="./solicitud/{{s.id}}/editar"><i class="fa fa-pencil-square-o"></i></a></td>
+            {% if not user|has_group:"Almacenistas" %}
+                <td><a href="./solicitud/{{s.id}}/editar"><i class="fa fa-pencil-square-o"></i></a></td>
 
-				{% if s.id_solicitud.estado == "E" %}
-					<td><a href="./solicitud/{{s.id}}/eliminar"> <i class="fa fa-trash-o"></i></a></td>
-				{% else %}
-					<td>-</td>
-				{% endif%}
-			{% else %}
-				<td><h3 style = "color: gray;">{{ s.id_usuario.first_name}} {{ s.id_usuario.last_name}}</h3></td>
-				{% if s.id_solicitud.get_estado_display == "Esperando respuesta" %}
-					<td><a href="./solicitud_estado/{{s.id}}/A"><i class="fa fa-check" style="color:green"></i></a></td>
-					<td><a href="./solicitud_estado/{{s.id}}/R"><i class="fa fa-times" style="color:red"></i></a></td>
-				{% else %}
-					<td>-</td>
-					<td>-</td>
-				{% endif %}
-			{% endif %}
-		
-		</tr>
-	{% endfor %}
+                {% if s.id_solicitud.estado == "E" %}
+                    <td><a href="./solicitud/{{s.id}}/eliminar"> <i class="fa fa-trash-o"></i></a></td>
+                {% else %}
+                    <td>-</td>
+                {% endif%}
+            {% else %}
+                <td><h3 style = "color: gray;">{{ s.id_usuario.first_name}} {{ s.id_usuario.last_name}}</h3></td>
+                {% if s.id_solicitud.get_estado_display == "Esperando respuesta" %}
+                    <td><a href="./solicitud_estado/{{s.id}}/A"><i class="fa fa-check" style="color:green"></i></a></td>
+                    <td><a href="./solicitud_estado/{{s.id}}/R"><i class="fa fa-times" style="color:red"></i></a></td>
+                {% else %}
+                    <td>-</td>
+                    <td>-</td>
+                {% endif %}
+            {% endif %}
+        
+        </tr>
+    {% endfor %}
 
-	</tbody>
-	</table>
+    </tbody>
+    </table>
 {% endblock page_content %}
 
 {% block page_right %}{% endblock page_right %}

@@ -2,14 +2,21 @@
 {% load templatetags %}
 
 {% block page_menu %}
-	<a href="" class="current-page-item">Perfil</a>
-	<a href="./solicitud">Solicitudes</a>
-	<a href="./inventario">Inventario</a>
-	<a href="./categorias">Categorías</a>
-	{% if user|has_group:"Administradores" %}
-		<a href="#">Administración</a>
-		<a href="./reporte">Reportes</a>
-	{% endif %}
+	<ul>
+        <li><a href="" class="current-page-item">Perfil</a></li>
+        <li><a href="./solicitud">Solicitudes</a></li>
+        <li><a href="./inventario">Inventario</a></li>
+        <li><a href="./categorias" >Categorías</a></li>
+        {% if user|has_group:"Administradores" %}	
+        <li><a href="#">Administración</a>
+            <ul>  
+                <li><a href="./reporte">Reportes</a></li>
+                <li><a href="#">Departamentos</a></li>
+                <li><a href="#">Usuarios</a></li>
+            </ul>                
+        </li>
+		{% endif %}
+    </ul>
 {% endblock page_menu%}
 {% block page_title %}Últimos movimientos{% endblock page_title %}
 {% block page_left %}
