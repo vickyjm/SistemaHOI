@@ -207,9 +207,10 @@ def crearItem(request):
                 obj.save()
                 mensaje = "Ítem '%s' creado exitosamente" % (inombre)
                 color = green 
-                
+
                 if "Crear" in request.POST:
-                    return HttpResponseRedirect('/inventario')
+                    items = Item.objects.order_by('nombre')
+                    return render(request,'inventario.html', {'items': items, 'mensaje': mensaje})
                 else:
                     form = itemForm(initial={'cantidad': '0', 'minimo': '5'})   
     else:
@@ -218,6 +219,66 @@ def crearItem(request):
     return render(request,'crearItem.html', {'form': form, 
                                              'mensaje': mensaje,
                                              'color' : color})
+    
+# Vista utilizada para editar un item en el sistema
+def item_editar(request, _id):
+    if not request.user.groups.filter(name = "Administradores").exists():
+        raise PermissionDenied
+
+    # Obtiene el objeto de item a editar
+    color = "color:#FFFFFF"
+    item = Item.objects.get(id = _id)
+    nombre = item.nombre
+    mensaje = None
+
+    if request.method == "POST":
+        form = item_editarForm(request.POST)
+
+        if form.is_valid():
+            # Obtiene los datos del formulario
+            inombre = form.cleaned_data['nombre']
+            inombre = inombre.upper()
+            icategoria = form.cleaned_data['categoria']
+            icategoria = icategoria.nombre.upper()
+            print (icategoria)
+            idcat = Categoria.objects.get(nombre = icategoria)
+            try:
+                itemexiste = Item.objects.get(nombre = inombre, 
+                                              id_categoria = idcat.id)
+                if int(itemexiste.id) == int(_id): 
+                    item.cantidad = form.cleaned_data['cantidad']
+                    item.minimo = form.cleaned_data['minimo']
+                    item.estado = form.cleaned_data['estado']
+                    item.save()
+                    mensaje = "Ítem '%s' editado exitosamente" %nombre
+                    color = green
+                else:
+                    mensaje = "Ítem '%s' ya existe en la categoría '%s'" %(inombre, idcat)
+                    color = red
+                    
+            except ObjectDoesNotExist:
+
+                item.nombre = inombre
+                item.cantidad = form.cleaned_data['cantidad']
+                item.id_categoria = idcat
+                item.minimo = form.cleaned_data['minimo']
+                item.estado = form.cleaned_data['estado']
+                item.save()
+                mensaje = "Ítem '%s' editado exitosamente" %nombre
+                color = green
+                nombre = inombre
+    else: 
+        # Formulario con los datos del item a editar
+        form = item_editarForm(initial = {'nombre': item.nombre, 
+                                        'cantidad': item.cantidad,
+                                        'categoria': item.id_categoria,
+                                        'minimo': item.minimo,
+                                        'estado': item.estado})
+    return render(request, 'item_editar.html', {'form' : form, 
+                                                'nombre' : nombre,
+                                                'mensaje': mensaje,
+                                                'color': color})
+
 @login_required
 def categoria(request):
 
@@ -313,75 +374,18 @@ def categoria_editar(request, _id):
                                                     'mensaje': mensaje,
                                                     'color':color})
 
-# Vista utilizada para editar un item en el sistema
-def item_editar(request, _id):
-    if not request.user.groups.filter(name = "Administradores").exists():
-        raise PermissionDenied
-
-    # Obtiene el objeto de item a editar
-    color = "color:#FFFFFF"
-    item = Item.objects.get(id = _id)
-    nombre = item.nombre
-    mensaje = None
-
-    if request.method == "POST":
-        form = item_editarForm(request.POST)
-
-        if form.is_valid():
-            # Obtiene los datos del formulario
-            inombre = form.cleaned_data['nombre']
-            inombre = inombre.upper()
-            icategoria = form.cleaned_data['categoria']
-            icategoria = icategoria.nombre.upper()
-            print (icategoria)
-            idcat = Categoria.objects.get(nombre = icategoria)
-            try:
-                itemexiste = Item.objects.get(nombre = inombre, 
-                                              id_categoria = idcat.id)
-                if int(itemexiste.id) == int(_id): 
-                    item.cantidad = form.cleaned_data['cantidad']
-                    item.minimo = form.cleaned_data['minimo']
-                    item.estado = form.cleaned_data['estado']
-                    item.save()
-                    mensaje = "Ítem '%s' editado exitosamente" %nombre
-                    color = green
-                else:
-                    mensaje = "Ítem '%s' ya existe en la categoría '%s'" %(inombre, idcat)
-                    color = red
-                    
-            except ObjectDoesNotExist:
-
-                item.nombre = inombre
-                item.cantidad = form.cleaned_data['cantidad']
-                item.id_categoria = idcat
-                item.minimo = form.cleaned_data['minimo']
-                item.estado = form.cleaned_data['estado']
-                item.save()
-                mensaje = "Ítem '%s' editado exitosamente" %nombre
-                color = green
-                nombre = inombre
-    else: 
-        # Formulario con los datos del item a editar
-        form = item_editarForm(initial = {'nombre': item.nombre, 
-                                        'cantidad': item.cantidad,
-                                        'categoria': item.id_categoria,
-                                        'minimo': item.minimo,
-                                        'estado': item.estado})
-    return render(request, 'item_editar.html', {'form' : form, 
-                                                'nombre' : nombre,
-                                                'mensaje': mensaje,
-                                                'color': color})
            
            
 # Vista utilizada para mostrar los items del inventario
 @login_required
 def inventario(request):
     items = Item.objects.order_by('nombre')
+    mensaje = None
     if request.method == "POST":
         pass  
     else:
         pass
-    return render(request,'inventario.html', {'items': items})
+    return render(request,'inventario.html', {'items': items, 'mensaje':mensaje})
 
 def item_ingresar(request, _id):
     item = Item.objects.get(pk = _id)
