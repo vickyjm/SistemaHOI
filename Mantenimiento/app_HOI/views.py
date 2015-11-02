@@ -292,6 +292,7 @@ def categoria(request):
 
     color = "color:#FFFFFF"
     mensaje = None
+    mensaje2 = None
 
     if request.method == "POST":
         form = categoriaForm(request.POST)
@@ -323,6 +324,7 @@ def categoria(request):
     return render(request,'categoria.html', {'form': form, 
                                              'categorias': categorias, 
                                              'mensaje': mensaje,
+                                             'mensaje2': mensaje2,
                                              'color': color})
 
 # Vista creada para editar una categoria en el sistema
@@ -357,6 +359,17 @@ def categoria_editar(request, _id):
                         categoria.save()
                         mensaje = "Categoría '%s'editada exitosamente" % cnombre
                         color = green
+
+                        if "Guardar" in request.POST:
+                            form = categoriaForm
+                            categorias = Categoria.objects.order_by('nombre')
+                            mensaje2 = mensaje
+                            mensaje = None
+                            return render(request,'categoria.html', {'form': form, 
+                                                     'categorias': categorias, 
+                                                     'mensaje': mensaje,
+                                                     'mensaje2': mensaje,
+                                                     'color': color})
                     # No hubo cambios en la categoria
                     else: 
                         mensaje = None
@@ -371,6 +384,15 @@ def categoria_editar(request, _id):
                 categoria.save()
                 mensaje = "Categoría '%s'editada exitosamente" % cnombre
                 color = green
+
+                if "Guardar" in request.POST:
+                    form = categoriaForm
+                    categorias = Categoria.objects.order_by('nombre')
+                    return render(request,'categoria.html', {'form': form, 
+                                             'categorias': categorias, 
+                                             'mensaje': None,
+                                             'mensaje2': mensaje,
+                                             'color': color})
 
     else:
         # Formulario con los datos a editar

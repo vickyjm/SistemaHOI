@@ -15,6 +15,10 @@
 {% endblock page_left %}
 {% block page_content %}
 
+{% if mensaje2 %}
+	<h3 style="color:#009900; text-align:center">{{mensaje2}}</h3>
+{% endif %}
+
 	{% if categorias %}
 	<table  id="rowspan" cellspacing="0" class="tablesorter" style="width:100%" >
 		<thead>
