@@ -292,7 +292,6 @@ def categoria(request):
 
     color = "color:#FFFFFF"
     mensaje = None
-    mensaje2 = None
 
     if request.method == "POST":
         form = categoriaForm(request.POST)
@@ -324,7 +323,6 @@ def categoria(request):
     return render(request,'categoria.html', {'form': form, 
                                              'categorias': categorias, 
                                              'mensaje': mensaje,
-                                             'mensaje2': mensaje2,
                                              'color': color})
 
 # Vista creada para editar una categoria en el sistema

@@ -9,7 +9,9 @@
 {% endblock page_menu%}
 
 {% block page_title %}¿Está seguro de que desea eliminar esta solicitud? Aún no ha sido aprobada.{% endblock page_title %}
-{% block page_left %}{% endblock page_left %}
+{% block page_left %}
+	<td><a href="{% url 'solicitud' %}" class="button"><i class="fa fa-arrow-left"></i></a></td>
+{% endblock page_left %}
 {% block page_content %}
 <form action="" method="post">
 
@@ -20,7 +22,8 @@
 		<tbody>
 		 <tr>
 			<td align="right">
-				<input type="submit" class="button" value="Aceptar">
+				<input type="submit" class="button" value="Eliminar">
+				<a href="{% url 'solicitud' %}" class="button">Cancelar</a>
 			</td>
 		</tr>
 		</tbody>
