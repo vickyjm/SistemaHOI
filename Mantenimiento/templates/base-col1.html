@@ -31,11 +31,16 @@
 			<nav id="nav">
 
 		    <ul>
+
+	    	{% if not user|has_group:"Técnicos" %}
+		        <li><a id="inicio_sesion" href="{% url 'inicio_sesion' %}">Iniciar sesión</a></li>
+		        <li><a id="registrar" href="{% url 'registrar' %}">Registro</a></li>
+	    	{% else %}   
 		        <li><a id="verperfil" href="{% url 'verperfil' %}">Perfil</a></li>
 		        <li><a id="solicitud" href="{% url 'solicitud' %}">Solicitudes</a></li>
 		        <li><a id="inventario" href="{% url 'inventario' %}">Inventario</a></li>
 		        <li><a id="categorias" href="{% url 'categorias' %}">Categorías</a></li>
-		        {% if user|has_group:"Administradores" %}   
+	        {% if user|has_group:"Administradores" %}   
 		        <li><a id="administracion" href="#">Administración</a>
 		            <ul>  
 		                <li><a id="reporte" href="{% url 'reporte' %}">Reportes</a></li>
@@ -43,8 +48,10 @@
 		                <li><a id="adminUsuarios" href="{% url 'adminUsuarios' %}">Usuarios</a></li>
 		            </ul>                
 		        </li>
-		        {% endif %}
+	        {% endif %}
 		        <li class="last"><a id="cerrarSesion" href="{% url 'cerrarSesion' %}">Cerrar sesión</a></li>
+	        {% endif %}
+
 		    </ul>
 						
 			{% block page_menu %}

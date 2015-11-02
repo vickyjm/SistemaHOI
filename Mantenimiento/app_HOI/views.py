@@ -16,10 +16,27 @@ from app_HOI.generarPdf import *
 from io import BytesIO
 import datetime
 from django.http.response import HttpResponse
+from django.shortcuts import render_to_response #For error handling
+from django.template import RequestContext      #For error handling
+from django.core.exceptions import PermissionDenied # Forbiddden
 
 red = "color:#CC0000"
 black = "color:#FFFFFF"
 green = "color:#009900"
+
+def page_not_found(request):
+    response = render_to_response('404.html',
+                                    context_instance=RequestContext(request)
+    )
+    response.status_code = 404
+    return response
+
+def permission_denied(request):
+    response = render_to_response('403.html',
+                                    context_instance=RequestContext(request)
+    )
+    response.status_code = 403
+    return response
 
 @login_required
 def verperfil(request):
@@ -34,6 +51,7 @@ def verperfil(request):
 
     return render(request, 'verperfil.html',{'user': request.user, 'aprobar': aprobar, 'crear':crear})
 
+@login_required
 def perfil_editar(request, _id):
     if request.method == "POST":
         form = perfilForm(request.POST)
@@ -53,6 +71,7 @@ def perfil_editar(request, _id):
                                                   'user':request.user})
 
 # Vista usada al iniciar el sistema
+
 def inicio_sesion(request):
     if request.method == 'POST':
         form = iniciarSesionForm(request.POST)
@@ -149,13 +168,16 @@ def recuperarContraseña(request):
     else:
         form = recuperarContraseñaForm()
     return render(request,'recuperarContrasenia.html',{'form': form})
-   
+
 def cerrarSesion(request):
     logout(request)
     return HttpResponseRedirect('/')
 
+@login_required
 def crearItem(request):
-
+    if not request.user.groups.filter(name = "Administradores").exists():
+        raise PermissionDenied
+    
     color = "color:#FFFFFF"
     mensaje = None
     
@@ -192,7 +214,7 @@ def crearItem(request):
     return render(request,'crearItem.html', {'form': form, 
                                              'mensaje': mensaje,
                                              'color' : color})
-
+@login_required
 def categoria(request):
 
     color = "color:#FFFFFF"
@@ -232,6 +254,8 @@ def categoria(request):
 
 # Vista creada para editar una categoria en el sistema
 def categoria_editar(request, _id):
+    if not request.user.groups.filter(name = "Administradores").exists():
+        raise PermissionDenied
 
     color = black
     categoria = Categoria.objects.get(id = _id)
@@ -287,11 +311,15 @@ def categoria_editar(request, _id):
 
 # Vista utilizada para editar un item en el sistema
 def item_editar(request, _id):
+    if not request.user.groups.filter(name = "Administradores").exists():
+        raise PermissionDenied
+
     # Obtiene el objeto de item a editar
     color = "color:#FFFFFF"
     item = Item.objects.get(id = _id)
     nombre = item.nombre
     mensaje = None
+
     if request.method == "POST":
         form = item_editarForm(request.POST)
 
@@ -342,6 +370,7 @@ def item_editar(request, _id):
            
            
 # Vista utilizada para mostrar los items del inventario
+@login_required
 def inventario(request):
     items = Item.objects.order_by('nombre')
     if request.method == "POST":
@@ -382,6 +411,7 @@ def item_ingresar(request, _id):
                                                          'mensaje': mensaje,
                                                          'color': color})
 
+##### ESTE CONCEPTO ESTA MAL... CAMBIARLO
 def item_retirar(request, _id):
     item = Item.objects.get(pk = _id)
 
@@ -415,7 +445,7 @@ def item_retirar(request, _id):
                                                          'item': item,
                                                          'mensaje': mensaje,
                                                          'color': color})
-
+@login_required
 def solicitud(request):
     solic_creadas = Crea.objects.order_by('-fecha')
 
@@ -435,6 +465,8 @@ def solicitud(request):
 
 # Actualiza el estado de las solicitudes de un técnico
 def solicitud_estado(request, _id, _nuevo_estado):
+    if not request.user.groups.filter(name = "Almacenistas").exists():
+        raise PermissionDenied    
     solic_creadas = Crea.objects.order_by('-fecha')
 
     # Si es un técnico, solo puede ver sus solicitudes
@@ -564,7 +596,7 @@ def crearSolicitud(request):
                                                   'falta_item': falta_item,
                                                   'categorias': categorias,
                                                   'items':items})
-
+@login_required
 def solicitud_editar(request, _id):
     obj = Crea.objects.get(pk = _id)
     solicitud = Solicitud.objects.get(pk = obj.id_solicitud.pk)
@@ -624,6 +656,8 @@ def solicitud_eliminar(request, _id):
     return HttpResponseRedirect('/solicitud')
 
 def imprimirReporte(request):
+    if not request.user.groups.filter(name = "Administradores").exists():
+        raise PermissionDenied
     msg = None
     if request.method == 'POST':
         form = reportesForm(request.POST)
@@ -650,6 +684,8 @@ def imprimirReporte(request):
     return render(request,'reporte.html',{'form':form,'msg':msg})
 
 def adminUsuarios(request):
+    if not request.user.groups.filter(name = "Administradores").exists():
+        raise PermissionDenied
     usuarios = User.objects.order_by('first_name')
     if request.method == "POST":
         pass
@@ -658,6 +694,8 @@ def adminUsuarios(request):
     return render(request,'adminUsuarios.html',{'usuarios':usuarios})
 
 def editarUsuario(request,_id):
+    if not request.user.groups.filter(name = "Administradores").exists():
+        raise PermissionDenied
     usuario = User.objects.get(id = _id)
     nombre = usuario.first_name + " " + usuario.last_name
     color = black
@@ -704,6 +742,8 @@ def editarUsuario(request,_id):
     return render(request,'editarUsuario.html',{'form':form,'nombre':nombre,'color':color,'mensaje':msg})
 
 def adminDptos(request):
+    if not request.user.groups.filter(name = "Administradores").exists():
+        raise PermissionDenied
     color = black
     msg = None
     if request.method == 'POST':
@@ -731,6 +771,8 @@ def adminDptos(request):
     return render(request,'adminDptos.html',{'dptos':dptos,'form':form,'color':color,'mensaje':msg})
 
 def editarDpto(request,_id):
+    if not request.user.groups.filter(name = "Administradores").exists():
+        raise PermissionDenied
     dpto = Departamento.objects.get(id = _id)
     nombre = dpto.nombre
     color = black
