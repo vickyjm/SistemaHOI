@@ -2,10 +2,12 @@
 {% load templatetags %}
 
 {% block page_menu %}
-<a href="{% url 'verperfil' %}" >Perfil</a>
-<a href="{% url 'solicitud' %}" >Solicitudes</a>
-<a href="{% url 'inventario'%}" >Inventario</a>
-<a href="{% url 'categorias'%}" >Categorías</a>
+    <script type="text/javascript">
+        window.onload = function WindowLoad(event) {
+            document.getElementById("administracion").setAttribute("class","current-page-item");
+            document.getElementById("adminUsuarios").setAttribute("class","current-page-item");
+        }  
+    </script>
 {% endblock page_menu%}
 
 {% block page_title %}Editar usuario '{{nombre}}'{% endblock page_title %}

@@ -1,8 +1,11 @@
 {% extends "base-col3.html" %}
 
 {% block page_menu %}
-	<a href="" class="current-page-item">Iniciar sesión</a>
-	<a href="{% url 'registrar' %}">Registro</a>
+	<script type="text/javascript">
+		window.onload = function WindowLoad(event) {
+	    	document.getElementById("inicio_sesion").setAttribute("class","current-page-item");
+		}	
+	</script>
 {% endblock page_menu%}
 
 {% block page_title %}Iniciar sesión{% endblock page_title %}

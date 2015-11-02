@@ -2,10 +2,11 @@
 {% load templatetags %}
 
 {% block page_menu %}
-<a href="../../../verperfil" >Perfil</a>
-<a href="../../../solicitud" >Solicitudes</a>
-<a href="../../../inventario" >Inventario</a>
-<a href="../../../categorias" >Categorías</a>
+    <script type="text/javascript">
+        window.onload = function WindowLoad(event) {
+            document.getElementById("solicitud").setAttribute("class","current-page-item");
+        }  
+    </script>
 {% endblock page_menu%}
 
 {% block page_title %}Editar perfil{% endblock page_title %}

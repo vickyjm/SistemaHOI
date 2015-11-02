@@ -3,6 +3,10 @@ from django.contrib import admin
 from app_HOI import views
 from . import settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.conf.urls import handler404, handler403
+
+handler403 = 'app_HOI.views.permission_denied'
+handler404 = 'app_HOI.views.page_not_found'
 
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),

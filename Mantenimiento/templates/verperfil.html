@@ -2,23 +2,20 @@
 {% load templatetags %}
 
 {% block page_menu %}
-
-	<a href="" class="current-page-item">Perfil</a>
-	<a href="{% url 'solicitud' %}">Solicitudes</a>
-	<a href="{% url 'inventario' %}">Inventario</a>
-	<a href="{% url 'categorias' %}">Categorías</a>
-
-	{% if user|has_group:"Administradores" %}
-		<a href="#">Administración</a>
-		<a href="{% url 'reporte' %}">Reportes</a>	  
-		
-	{% endif %}
+	<script type="text/javascript">
+		window.onload = function WindowLoad(event) {
+	    	document.getElementById("verperfil").setAttribute("class","current-page-item");
+		}	
+	</script>
 {% endblock page_menu%}
+
 {% block page_title %}Últimos movimientos{% endblock page_title %}
 {% block page_left %}
 {% endblock page_left %}
 
 {% block page_content %}
+
+
 	<a href="{% url 'cerrarSesion' %}">Cerrar sesión</a>
 	<table style="width:100%" >
 		<thead>
