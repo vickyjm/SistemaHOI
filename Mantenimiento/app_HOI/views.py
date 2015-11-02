@@ -219,7 +219,7 @@ def crearItem(request):
     return render(request,'crearItem.html', {'form': form, 
                                              'mensaje': mensaje,
                                              'color' : color})
-    
+
 # Vista utilizada para editar un item en el sistema
 def item_editar(request, _id):
     if not request.user.groups.filter(name = "Administradores").exists():
@@ -252,6 +252,10 @@ def item_editar(request, _id):
                     item.save()
                     mensaje = "Ítem '%s' editado exitosamente" %nombre
                     color = green
+                    
+                    if "Guardar" in request.POST:
+                        items = Item.objects.order_by('nombre')
+                        return render(request,'inventario.html', {'items': items, 'mensaje': mensaje})
                 else:
                     mensaje = "Ítem '%s' ya existe en la categoría '%s'" %(inombre, idcat)
                     color = red
@@ -267,6 +271,10 @@ def item_editar(request, _id):
                 mensaje = "Ítem '%s' editado exitosamente" %nombre
                 color = green
                 nombre = inombre
+
+                if "Guardar" in request.POST:
+                    items = Item.objects.order_by('nombre')
+                    return render(request,'inventario.html', {'items': items, 'mensaje': mensaje})
     else: 
         # Formulario con los datos del item a editar
         form = item_editarForm(initial = {'nombre': item.nombre, 
