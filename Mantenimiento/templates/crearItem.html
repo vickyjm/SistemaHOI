@@ -11,8 +11,8 @@
 {% block page_title %}Crear ítem{% endblock page_title %}
 {% block page_left %}
 
-	<ul align= "center"> <td><a href="{% url 'inventario' %}" class="button"><i class="fa fa-arrow-left"></i></a></td>
-	</ul>
+    <td style="text-align: center;"><a href="{% url 'inventario' %}" class="button"><i class="fa fa-arrow-left"></i></a></td>
+
 {% endblock page_left %}
 {% block page_content %}
 <form action="" method="post">
@@ -27,11 +27,7 @@
 			{% endif %}
 			{% for field in form %}
 
-			 {% if field.name == "categoria" %}
-			 	<h3>{{field.label_tag}}      <a href="{% url 'categorias' %}" target="_blank"><i class="fa fa-plus-square"></i></a></h3>
-			 {% else %}
-			 	<h3>{{field.label_tag}}</h3>
-			 {% endif %}
+		 	<h3>{{field.label_tag}}</h3>
 
 			 <h4 style = "color:#CC0000">{{ field.errors}}</h4>
 

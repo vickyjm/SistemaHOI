@@ -44,12 +44,19 @@
 	<tbody>
 		{% for i in items %}
 		<tr>
+			{% if i.estado %}
+			<td><h3 style="color:#000000">{{ i }}</h3></td>
+			<td><h3 style="color:#000000">{{ i.cantidad }}</h3></td>
+			<td><h3 style="color:#000000">{{ i.id_categoria }}</h3></td>
+			<td><h3 style="color:#000000">{{ i.minimo }}</h3></td>
+			<td><h3 style="color:#000000">{{ i.get_estado_display }}</h3></td>
+			{% else %}
 			<td><h3>{{ i }}</h3></td>
 			<td><h3>{{ i.cantidad }}</h3></td>
 			<td><h3>{{ i.id_categoria }}</h3></td>
 			<td><h3>{{ i.minimo }}</h3></td>
 			<td><h3>{{ i.get_estado_display }}</h3></td>
-			
+			{% endif %}
 			{% if user|has_group:"Almacenistas" %}
 				<td><h3><a href="{% url 'item_ingresar' i.id %}"><i class="fa fa-plus" style="color:green"></i></a></h3></td>
 			{% endif %}

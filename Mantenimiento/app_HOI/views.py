@@ -282,7 +282,7 @@ def categoria_editar(request, _id):
                     if int(cestado) != int(categoria.estado):
                         categoria.estado = cestado
                         categoria.save()
-                        mensaje = "Categoría editada exitosamente"
+                        mensaje = "Categoría '%s'editada exitosamente" % cnombre
                         color = green
                     # No hubo cambios en la categoria
                     else: 
@@ -296,7 +296,7 @@ def categoria_editar(request, _id):
                 categoria.nombre = cnombre
                 categoria.estado = cestado
                 categoria.save()
-                mensaje = "Categoría editada exitosamente"
+                mensaje = "Categoría '%s'editada exitosamente" % cnombre
                 color = green
 
     else:
