@@ -14,6 +14,11 @@
 {% block page_left %}
 {% endblock page_left %}
 {% block page_content %}
+
+{% if mensaje2 %}
+	<h3 style="color:#009900; text-align:center">{{mensaje2}}</h3>
+{% endif %}
+
 	{% if dptos %}
 	<table  id="rowspan" cellspacing="0" class="tablesorter" style="width:100%" >
 		<thead>
@@ -59,7 +64,7 @@
 				 {% endfor %}
 			 <tr>
 				<td align="right"><br><br>
-				<input type="submit" class="button" value="(+) Crear Departamento"></td>
+				<input type="submit" class="button" value="Crear departamento"></td>
 			</tr>
 			</tbody>
 		</table>

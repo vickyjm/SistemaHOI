@@ -361,13 +361,9 @@ def categoria_editar(request, _id):
                         if "Guardar" in request.POST:
                             form = categoriaForm
                             categorias = Categoria.objects.order_by('nombre')
-                            mensaje2 = mensaje
-                            mensaje = None
                             return render(request,'categoria.html', {'form': form, 
-                                                     'categorias': categorias, 
-                                                     'mensaje': mensaje,
-                                                     'mensaje2': mensaje,
-                                                     'color': color})
+                                                                    'categorias': categorias, 
+                                                                    'mensaje2': mensaje})
                     # No hubo cambios en la categoria
                     else: 
                         mensaje = None
@@ -778,10 +774,12 @@ def editarUsuario(request,_id):
     return render(request,'editarUsuario.html',{'form':form,'nombre':nombre,'color':color,'mensaje':msg})
 
 def adminDptos(request):
+
     if not request.user.groups.filter(name = "Administradores").exists():
         raise PermissionDenied
     color = black
     msg = None
+
     if request.method == 'POST':
         form = departamentoForm(request.POST)
         if form.is_valid():
@@ -804,6 +802,7 @@ def adminDptos(request):
     else:
         form = departamentoForm()
         dptos = Departamento.objects.order_by('nombre')
+
     return render(request,'adminDptos.html',{'dptos':dptos,'form':form,'color':color,'mensaje':msg})
 
 def editarDpto(request,_id):
@@ -829,7 +828,17 @@ def editarDpto(request,_id):
             dpto.estado = int(form.cleaned_data['estado'])
             dpto.save()
             color = green
-            msg = "El Departamento '%s' fue editado exitosamente" % dpto.nombre 
+            msg = "El Departamento '%s' fue editado exitosamente." % dpto.nombre 
+
+            if "Guardar" in request.POST:
+                    form = departamentoForm()
+                    dptos = Departamento.objects.order_by('nombre')
+
+                    return render(request,'adminDptos.html',{'dptos':dptos,
+                                                      'form':form,
+                                                      'mensaje2':msg})
+
+
     else:
         form = editarDptoForm(initial = {'nombre':dpto.nombre,'estado':str(dpto.estado)})
         
