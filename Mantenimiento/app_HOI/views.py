@@ -21,7 +21,7 @@ from django.template import RequestContext      #For error handling
 from django.core.exceptions import PermissionDenied # Forbiddden
 
 red = "color:#CC0000"
-black = "color:#FFFFFF"
+black = "color:#000000"
 green = "color:#009900"
 
 def page_not_found(request):
@@ -178,7 +178,7 @@ def crearItem(request):
     if not request.user.groups.filter(name = "Administradores").exists():
         raise PermissionDenied
     
-    color = "color:#FFFFFF"
+    color = black
     mensaje = None
     
     if request.method == "POST":
@@ -207,7 +207,11 @@ def crearItem(request):
                 obj.save()
                 mensaje = "Ítem '%s' creado exitosamente" % (inombre)
                 color = green 
-                form = itemForm(initial={'cantidad': '0', 'minimo': '5'})   
+                
+                if "Crear" in request.POST:
+                    return HttpResponseRedirect('/inventario')
+                else:
+                    form = itemForm(initial={'cantidad': '0', 'minimo': '5'})   
     else:
         form = itemForm(initial={'cantidad': '0', 'minimo': '5'})
 
