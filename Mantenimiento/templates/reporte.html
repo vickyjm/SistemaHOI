@@ -19,7 +19,7 @@
 		{% csrf_token %}
 		<tbody>
 			{% if msg %}
-			 	{{ msg }}<br><br>
+			 	<h3 style="color:#CC0000;">{{msg}}</h3>
 			{% endif %}
 			{% for field in form %}
 			 <tr>
