@@ -398,10 +398,10 @@ def item_ingresar(request, _id):
             obj.save()
             
             mensaje = "Cantidad ingresada exitosamente"
-            color = "#009900"
+            color = green
     else:
         mensaje = None
-        color = "#000000"
+        color = black
         form = item_cantidadForm(initial={'cantidad': '1'})
 
     accion = "Ingresar"
@@ -427,16 +427,16 @@ def item_retirar(request, _id):
                     mensaje = "No se puede retirar. No quedan unidades de este item."
                 else:
                     mensaje = "No puede retirar '%d' items. Solo quedan '%d' unidades." % (icantidad,item.cantidad)
-                color = "#CC0000"
+                color = red
             else:
                 item.cantidad = item.cantidad - icantidad
                 item.save()            
 
                 mensaje = "Cantidad retirada exitosamente"
-                color = "#009900"
+                color = green
     else:
         mensaje = None
-        color = "#000000"
+        color = black
         form = item_cantidadForm(initial={'cantidad': '1'})
 
     accion = "Retirar"
