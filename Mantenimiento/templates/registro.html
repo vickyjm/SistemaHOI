@@ -21,7 +21,7 @@
 {% block page_title %}Registro{% endblock page_title %}
 {% block page_left %}
 	{% if user|has_group:"Administradores" %}
-		<ul align= "center"> <td><a href="{% url 'adminUsuarios' %}" class="button"><i class="fa fa-arrow-left"></i></a></td>
+		<td><a href="{% url 'adminUsuarios' %}" class="button"><i class="fa fa-arrow-left"></i></a></td>
 		</ul>
 	{% endif %}
 {% endblock page_left %}
@@ -46,8 +46,9 @@
 
 			<tr>
 				<td align="right"><br><br>
-				<input type="submit" class="button" value="Registrar">
+				<input type="submit" class="button" name="Guardar" value="Guardar">
 				{% if user|has_group:"Administradores" %}
+					<input type="submit" class="button" name="GuardarOtro" value="Guardar y registrar otro">
 					<a href="{% url 'adminUsuarios' %}" class="button">Cancelar</a>
 				{% endif %}			
 				</td>
