@@ -149,7 +149,12 @@ def registro(request):
             msg = "El usuario fue registrado exitosamente"
             color = green
             form = registroForm()
-            return render(request,'registro.html',{'form': form, 
+
+            if "Guardar" in request.POST and (request.user.groups.filter(name = "Administradores").exists()):
+                usuarios = User.objects.order_by('first_name')        
+                return render(request,'adminUsuarios.html', {'usuarios': usuarios, 'mensaje': msg})
+            else:
+                return render(request,'registro.html',{'form': form, 
                                                    'msg': msg,
                                                    'color':color})
     else:
@@ -219,7 +224,7 @@ def crearItem(request):
                 mensaje = "Ítem '%s' creado exitosamente" % (inombre)
                 color = green 
 
-                if "Crear" in request.POST:
+                if "Guardar" in request.POST:
                     items = Item.objects.order_by('nombre')
                     return render(request,'inventario.html', {'items': items, 'mensaje': mensaje})
                 else:
