@@ -15,6 +15,9 @@
 {% endblock page_left %}
 {% block page_content %}
 
+{% if mensaje %}
+	<h3 style="color:#009900">{{mensaje}}</h3>
+{% endif %}
 
 <table>
 	<tr><td style="width: 50%"><h5 style = "color: black; font-size: 22px">Cédula: </h5></td>

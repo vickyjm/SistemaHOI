@@ -53,6 +53,8 @@ def verperfil(request):
 
 @login_required
 def perfil_editar(request, _id):
+
+    mensaje = None
     if request.method == "POST":
         form = perfilForm(request.POST)
         if form.is_valid():
@@ -60,15 +62,24 @@ def perfil_editar(request, _id):
             request.user.last_name = form.cleaned_data['apellido']
             request.user.email = form.cleaned_data['correo']
             request.user.save()
-            return HttpResponseRedirect('/verperfil')
+            mensaje = "Perfil editado exitosamente"
+            #return HttpResponseRedirect('/verperfil')
+            if "Guardar" in request.POST:
+                aprobar = Aprueba.objects.filter(id_usuario = request.user)
+                crear = Crea.objects.all()
+                return render(request,'verperfil.html', {'user': request.user, 
+                                                    'aprobar': aprobar,
+                                                    'mensaje': mensaje, 
+                                                    'crear': crear})
     else:
 
         form = perfilForm(initial = {'nombre':request.user.first_name,
                                      'apellido':request.user.last_name,
                                      'correo':request.user.email})
 
-    return render(request, 'perfil_editar.html', {'form':form,
-                                                  'user':request.user})
+    return render(request, 'perfil_editar.html', {'form': form,
+                                                  'mensaje' : mensaje,
+                                                  'user': request.user})
 
 # Vista usada al iniciar el sistema
 

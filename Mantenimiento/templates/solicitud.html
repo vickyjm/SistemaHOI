@@ -22,6 +22,11 @@
 	</table>
 
 	<h2>Solicitudes de retiro de ítems</h2>
+
+	{% if mensaje %}
+		<h3 style="color:#009900; text-align:center">{{mensaje}}</h3>
+	{% endif %} 
+
 	{% if solicitudes %}
 	<table  id="rowspan" cellspacing="0" class="tablesorter" style="width:100%" style="width:100%" >
  		<thead>
