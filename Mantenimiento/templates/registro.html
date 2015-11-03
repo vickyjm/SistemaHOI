@@ -50,6 +50,8 @@
 				{% if user|has_group:"Administradores" %}
 					<input type="submit" class="button" name="GuardarOtro" value="Guardar y registrar otro">
 					<a href="{% url 'adminUsuarios' %}" class="button">Cancelar</a>
+				{% else %}
+					<input type="reset" class="button" value="Cancelar">
 				{% endif %}			
 				</td>
 			</tr>

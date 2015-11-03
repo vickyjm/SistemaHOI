@@ -293,6 +293,7 @@ def item_editar(request, _id):
                                         'categoria': item.id_categoria,
                                         'minimo': item.minimo,
                                         'estado': item.estado})
+
     return render(request, 'item_editar.html', {'form' : form, 
                                                 'nombre' : nombre,
                                                 'mensaje': mensaje,
@@ -627,6 +628,20 @@ def crearSolicitud(request):
                     item.save()
 
                     mensaje = "Solicitud creada exitosamente" 
+
+                    if "Guardar" in request.POST:
+                        solic_creadas = Crea.objects.order_by('-fecha')
+                        # Si es un técnico, solo puede ver sus solicitudes
+                        if not request.user.groups.filter(name = "Almacenistas").exists():
+                            solicitudes = solic_creadas.filter(id_usuario = request.user)
+                        # Si es almacenista o administrador, solo ve las solicitudes de los técnicos
+                        else:
+                            solicitudes = solic_creadas.exclude(id_usuario = request.user)
+
+                        return render(request,'solicitud.html', {'user' : request.user,
+                                                         'mensaje': mensaje,
+                                                         'solicitudes': solicitudes})
+
                     form = solicitudForm(initial={'cantidad': '1'})
     else:
         mensaje = None
@@ -673,7 +688,21 @@ def solicitud_editar(request, _id):
                 solicitud.dpto = sdpto
                 solicitud.save()
 
-                mensaje = "Solicitud editada exitosamente"
+                mensaje = "Solicitud editada exitosamente."
+
+                if "Guardar" in request.POST:
+                    solic_creadas = Crea.objects.order_by('-fecha')
+                    # Si es un técnico, solo puede ver sus solicitudes
+                    if not request.user.groups.filter(name = "Almacenistas").exists():
+                        solicitudes = solic_creadas.filter(id_usuario = request.user)
+                    # Si es almacenista o administrador, solo ve las solicitudes de los técnicos
+                    else:
+                        solicitudes = solic_creadas.exclude(id_usuario = request.user)
+
+                    return render(request,'solicitud.html', {'user' : request.user,
+                                                             'mensaje': mensaje,
+                                                             'solicitudes': solicitudes})
+
     else:
         mensaje = None
         form = solicitudForm(initial = {'cantidad': solicitud.cantidad,
@@ -771,7 +800,12 @@ def editarUsuario(request,_id):
             usuario.is_active = int(form.cleaned_data['estado'])
             usuario.save()
             color = green
-            msg = "El usuario '%s' fue editado exitosamente" % nombre 
+            msg = "El usuario '%s' fue editado exitosamente" % nombre
+
+            if "Guardar" in request.POST:
+                usuarios = User.objects.order_by('first_name')        
+                return render(request,'adminUsuarios.html', {'usuarios': usuarios, 'mensaje': msg}) 
+
     else:
         if (usuario.groups.filter(name="Administradores")):
                 cargo = "administrador"
@@ -782,6 +816,7 @@ def editarUsuario(request,_id):
         form = editarUsuarioForm(initial = {'cedula':usuario.username,'nombre':usuario.first_name,
                                             'apellido':usuario.last_name,'correo':usuario.email,
                                             'tipo':cargo,'estado':str(int(usuario.is_active))})
+
     return render(request,'editarUsuario.html',{'form':form,'nombre':nombre,'color':color,'mensaje':msg})
 
 def adminDptos(request):
