@@ -62,7 +62,7 @@ def perfil_editar(request, _id):
             request.user.last_name = form.cleaned_data['apellido']
             request.user.email = form.cleaned_data['correo']
             request.user.save()
-            mensaje = "Perfil editado exitosamente"
+            mensaje = "Perfil editado exitosamente."
             #return HttpResponseRedirect('/verperfil')
             if "Guardar" in request.POST:
                 aprobar = Aprueba.objects.filter(id_usuario = request.user)
@@ -94,10 +94,10 @@ def inicio_sesion(request):
                     login(request, user)
                     return HttpResponseRedirect('verperfil')
                 else:
-                    msg = "Su usuario se encuentra inactivo. Contacte al administrador"
+                    msg = "Su usuario se encuentra inactivo. Contacte al administrador."
                     return render(request,'inicio_sesion.html',{'form': form, 'msg': msg})
             else:
-                msg = "Usuario o contraseña incorrecta"
+                msg = "Usuario o contraseña incorrecta."
                 return render(request,'inicio_sesion.html',{'form': form, 'msg': msg})
     else:
         form = iniciarSesionForm()
@@ -113,14 +113,14 @@ def registro(request):
         if form.is_valid():
             ci = form.cleaned_data['cedula']
             if User.objects.filter(username=ci).exists():
-                msg = "Esta cédula ya se encuentra registrada"
+                msg = "Esta cédula ya se encuentra registrada."
                 color = red
                 return render(request,'registro.html',{'form' : form, 
                                                        'msg' : msg,
                                                        'color': color})
 
             if (form.cleaned_data['contraseña1']!= form.cleaned_data['contraseña2']):
-                msg = "Las contraseñas no coinciden. Intente de nuevo"
+                msg = "Las contraseñas no coinciden. Intente de nuevo."
                 color = red
                 return render(request,'registro.html',{'form' : form, 
                                                        'msg' : msg,
@@ -146,7 +146,7 @@ def registro(request):
             else:
                 user.is_active = True
             user.save()
-            msg = "El usuario fue registrado exitosamente"
+            msg = "El usuario fue registrado exitosamente."
             color = green
             form = registroForm()
 
@@ -171,15 +171,15 @@ def recuperarContraseña(request):
             ci = form.cleaned_data['cedula']
             if User.objects.filter(username=ci).exists():
                 if (form.cleaned_data['contraseña1']!= form.cleaned_data['contraseña2']):
-                    msg = "Las contraseñas no coinciden. Intente de nuevo"
+                    msg = "Las contraseñas no coinciden. Intente de nuevo."
                     return render(request,'recuperarContrasenia.html',{'form' : form, 'msg' : msg})
                 user = User.objects.get(username=ci)
                 user.set_password(form.cleaned_data['contraseña1'])
                 user.save()
-                msg = "Su contraseña fue cambiada"
+                msg = "Su contraseña fue cambiada."
                 return render(request,'recuperarContrasenia.html',{'form' : form, 'msg' : msg})  
             else:
-                msg = "La cédula ingresada no se encuentra registrada"
+                msg = "La cédula ingresada no se encuentra registrada."
                 return render(request,'recuperarContrasenia.html',{'form' : form, 'msg' : msg})
     else:
         form = recuperarContraseñaForm()
@@ -321,14 +321,14 @@ def categoria(request):
                 cat = Categoria.objects.get(nombre = catnombre)
                 # Verifica si el nombre de la categoria ya existe
                 if Categoria.objects.filter(pk=cat.pk).exists():
-                    mensaje = "Categoría '%s' ya existe" % (catnombre)
+                    mensaje = "La categoría '%s' ya existe." % (catnombre)
                     color = red
             # Si no existe, crea el objeto y lo guarda
             except ObjectDoesNotExist:
                 obj = Categoria(nombre = catnombre,
                                 estado = 1)
                 obj.save()
-                mensaje = "Categoría '%s' creada exitosamente" % (catnombre)
+                mensaje = "Categoría '%s' creada exitosamente." % (catnombre)
                 color = green
                 form = categoriaForm()
         categorias = Categoria.objects.order_by('nombre')
@@ -372,7 +372,7 @@ def categoria_editar(request, _id):
                     #if int(cestado) != int(categoria.estado):
                     categoria.estado = cestado
                     categoria.save()
-                    mensaje = "Categoría '%s'editada exitosamente" % cnombre
+                    mensaje = "Categoría '%s'editada exitosamente." % cnombre
                     color = green
 
                     if "Guardar" in request.POST:
@@ -383,14 +383,14 @@ def categoria_editar(request, _id):
                                                                 'mensaje2': mensaje})
                 # Si la categoria no es la misma a editar
                 else:
-                    mensaje = "La categoría '%s' ya existe" % cnombre
+                    mensaje = "La categoría '%s' ya existe." % cnombre
                     color = red
             # Si no existe una categoria con el nombre introducido
             except:
                 categoria.nombre = cnombre
                 categoria.estado = cestado
                 categoria.save()
-                mensaje = "Categoría '%s'editada exitosamente" % cnombre
+                mensaje = "Categoría '%s'editada exitosamente." % cnombre
                 color = green
 
                 if "Guardar" in request.POST:
@@ -742,7 +742,7 @@ def imprimirReporte(request):
             fechaFin = form.cleaned_data['fechaFin']
             
             if (fechaFin < fechaIni):
-                msg = "Fechas inválidas. Intente de nuevo"
+                msg = "Fechas inválidas. Intente de nuevo."
                 
             else:
                 response = HttpResponse(content_type='application/pdf')
@@ -803,7 +803,7 @@ def editarUsuario(request,_id):
             usuario.is_active = int(form.cleaned_data['estado'])
             usuario.save()
             color = green
-            msg = "El usuario '%s' fue editado exitosamente" % nombre
+            msg = "El usuario '%s' fue editado exitosamente." % nombre
 
             if "Guardar" in request.POST:
                 usuarios = User.objects.order_by('first_name')        
@@ -838,13 +838,13 @@ def adminDptos(request):
             try: 
                 dpto = Departamento.objects.get(nombre = dptonombre)
                 if Departamento.objects.filter(pk=dpto.pk).exists():
-                    msg = "El departamento '%s' ya existe" % (dptonombre)
+                    msg = "El departamento '%s' ya existe." % (dptonombre)
                     color = red
             except ObjectDoesNotExist:
                 obj = Departamento(nombre = dptonombre,
                                 estado = 1)
                 obj.save()
-                msg = "Departamento '%s' creado exitosamente" % (dptonombre)
+                msg = "Departamento '%s' creado exitosamente." % (dptonombre)
                 color = green
                 form = departamentoForm()
         dptos = Departamento.objects.order_by('nombre')
