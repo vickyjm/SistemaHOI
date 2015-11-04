@@ -242,7 +242,7 @@ def item_editar(request, _id):
         raise PermissionDenied
 
     # Obtiene el objeto de item a editar
-    color = "color:#FFFFFF"
+    color = black
     item = Item.objects.get(id = _id)
     nombre = item.nombre
     mensaje = None
@@ -307,7 +307,7 @@ def item_editar(request, _id):
 @login_required
 def categoria(request):
 
-    color = "color:#FFFFFF"
+    color = black
     mensaje = None
 
     if request.method == "POST":
