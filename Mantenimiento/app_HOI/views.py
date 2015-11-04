@@ -349,10 +349,6 @@ def categoria_editar(request, _id):
 
     color = black
     categoria = Categoria.objects.get(id = _id)
-    # Lista de items dentro de la categoria
-    #items = Item.objects.filter(id_categoria = _id)
-    # Cantidad de items dentro de la categoria
-    #cantidad = items.count()
 
     if request.method == "POST":
         
@@ -368,8 +364,29 @@ def categoria_editar(request, _id):
                 cat = Categoria.objects.get(nombre = cnombre)
                 # Si la categoria es la misma a editar
                 if int(cat.pk) == int(_id):
+
                     # Verifica si hay cambio en la categoria
-                    #if int(cestado) != int(categoria.estado):
+                    if (int(cestado) != int(categoria.estado)):
+
+                        items = Item.objects.filter(id_categoria = _id)
+                        cantidad = items.count()
+
+
+                        # Si cambio a activo
+                        if (int(cestado) == 1):
+                            accion = "\n¿Está seguro de que desea activar la categoría %s?" %cnombre
+                            if cantidad != 0:
+                                accion = "Al activar la catergoría %s también se activarán\
+                                      los %i items que le pertenecen" (cnombre, cantidad) + accion
+
+                        # Si cambio a inactivo
+                        elif int(cestado) == 0:
+                            accion = "\nEstá seguro de que desea desactivar la categoría %s?" %cnombre
+
+                            if cantidad != 0:
+                                accion = "Al desactivar la catergoría %s también se desactivarán\
+                                      los %i items que le pertenecen" %(cnombre, cantidad) + accion
+
                     categoria.estado = cestado
                     categoria.save()
                     mensaje = "Categoría '%s'editada exitosamente." % cnombre
@@ -412,7 +429,16 @@ def categoria_editar(request, _id):
                                                     'mensaje': mensaje,
                                                     'color':color})
 
-           
+
+def categoria_estado(request, _id):
+    if not request.user.groups.filter(name = "Administradores").exists():
+        raise PermissionDenied      
+    mensaje = "HOLA"
+    if request.method == "POST":
+        pass
+    else:
+        pass
+    return render(request,'categoria_estado.html', {'mensaje': mensaje})
            
 # Vista utilizada para mostrar los items del inventario
 @login_required

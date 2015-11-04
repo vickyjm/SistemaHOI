@@ -1,0 +1,18 @@
+{% extends "base-col3.html" %}
+
+{% block page_menu %}
+    <script type="text/javascript">
+        window.onload = function WindowLoad(event) {
+            document.getElementById("categorias").setAttribute("class","current-page-item");
+        }  
+    </script>
+{% endblock page_menu%}
+
+{% block page_title %}¿Está seguro de que desea eliminar esta solicitud? Aún no ha sido aprobada.{% endblock page_title %}
+{% block page_left %}
+	<td><a href="{% url 'solicitud' %}" class="button"><i class="fa fa-arrow-left"></i></a></td>
+{% endblock page_left %}
+{% block page_content %}
+
+{% endblock page_content %}
+{% block page_right %}{% endblock page_right %}
