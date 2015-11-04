@@ -31,8 +31,13 @@
 	<tbody>
 	{% for d in dptos %}
 		<tr>
-			<td><h3>{{ d }}</h3></td>
-			<td><h3>{{ d.get_estado_display }}</h3></td>
+			{% if d.estado %}
+				<td><h3 style="color:#000000">{{ d }}</h3></td>
+				<td><h3 style="color:#000000">{{ d.get_estado_display }}</h3></td>
+			{% else %}
+				<td><h3>{{ d }}</h3></td>
+				<td><h3>{{ d.get_estado_display }}</h3></td>
+			{% endif %}
 			<td ><a href="{% url 'editarDpto' d.id %}"><i class="fa fa-pencil-square-o"></i></a></td>
 		</tr>
 	{% endfor %}

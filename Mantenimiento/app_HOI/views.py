@@ -211,7 +211,7 @@ def crearItem(request):
                                             id_categoria = idcat.id).exists()
             # Si el item ya existe
             if itemexiste:
-                mensaje = "Ítem '%s' ya existe en la categoría '%s'" % (inombre,icategoria)
+                mensaje = "Ítem '%s' ya existe en la categoría '%s'." % (inombre,icategoria)
                 color = red
             # Si el item no existe, lo crea
             else:
@@ -221,7 +221,7 @@ def crearItem(request):
                             minimo = form.cleaned_data['minimo']
                             )
                 obj.save()
-                mensaje = "Ítem '%s' creado exitosamente" % (inombre)
+                mensaje = "Ítem '%s' creado exitosamente." % (inombre)
                 color = green 
 
                 if "Guardar" in request.POST:
@@ -266,14 +266,14 @@ def item_editar(request, _id):
                     item.minimo = form.cleaned_data['minimo']
                     item.estado = form.cleaned_data['estado']
                     item.save()
-                    mensaje = "Ítem '%s' editado exitosamente" %nombre
+                    mensaje = "Ítem '%s' editado exitosamente." %nombre
                     color = green
                     
                     if "Guardar" in request.POST:
                         items = Item.objects.order_by('nombre')
                         return render(request,'inventario.html', {'items': items, 'mensaje': mensaje})
                 else:
-                    mensaje = "Ítem '%s' ya existe en la categoría '%s'" %(inombre, idcat)
+                    mensaje = "Ítem '%s' ya existe en la categoría '%s'." %(inombre, idcat)
                     color = red
                     
             except ObjectDoesNotExist:
@@ -284,7 +284,7 @@ def item_editar(request, _id):
                 item.minimo = form.cleaned_data['minimo']
                 item.estado = form.cleaned_data['estado']
                 item.save()
-                mensaje = "Ítem '%s' editado exitosamente" %nombre
+                mensaje = "Ítem '%s' editado exitosamente." %nombre
                 color = green
                 nombre = inombre
 
@@ -446,7 +446,7 @@ def item_ingresar(request, _id):
                           cantidad = icantidad)
             obj.save()
             
-            mensaje = "Cantidad ingresada exitosamente"
+            mensaje = "Cantidad ingresada exitosamente."
             color = green
     else:
         mensaje = None
@@ -473,15 +473,15 @@ def item_retirar(request, _id):
 
             if icantidad > item.cantidad:
                 if item.cantidad == 0:
-                    mensaje = "No se puede retirar. No quedan unidades de este item."
+                    mensaje = "No se puede retirar. No quedan unidades de este ítem."
                 else:
-                    mensaje = "No puede retirar '%d' items. Solo quedan '%d' unidades." % (icantidad,item.cantidad)
+                    mensaje = "No puede retirar '%d' ítems. Solo quedan '%d' unidades." % (icantidad,item.cantidad)
                 color = red
             else:
                 item.cantidad = item.cantidad - icantidad
                 item.save()            
 
-                mensaje = "Cantidad retirada exitosamente"
+                mensaje = "Cantidad retirada exitosamente."
                 color = green
     else:
         mensaje = None
@@ -559,7 +559,7 @@ def crearSolicitud(request):
     items = Item.objects.order_by('nombre') 
     falta_item = None
     falta_categoria = None
-    color = "#009900"   # Color rojo para los errores
+    color = red   # Color rojo para los errores
 
     if request.method == "POST":
         mensaje = None
@@ -593,15 +593,15 @@ def crearSolicitud(request):
                 # Si el técnico pide más items de los disponibles
                 if scantidad > item.cantidad:
                     if item.cantidad == 0:
-                        mensaje = "La solicitud no se puede realizar. No quedan unidades de este item."    
+                        mensaje = "La solicitud no se puede realizar. No quedan unidades de este ítem."    
                     else:
-                        mensaje = "La solicitud no se puede realizar. Solo quedan '%d' unidades de este item." % (item.cantidad)
-                    color = "#CC0000"
+                        mensaje = "La solicitud no se puede realizar. Solo quedan '%d' unidades de este ítem." % (item.cantidad)
+                    color = red
 
                 # Si el técnico pide 0 items
                 elif scantidad == 0:
-                    mensaje = "La cantidad de items a solicitar debe ser mayor a cero."
-                    color = "#CC0000"
+                    mensaje = "La cantidad de ítems a solicitar debe ser mayor a cero."
+                    color = red
 
                 # Si no hay errores
                 else:
@@ -632,7 +632,8 @@ def crearSolicitud(request):
                     item.cantidad = item.cantidad - scantidad
                     item.save()
 
-                    mensaje = "Solicitud creada exitosamente" 
+                    mensaje = "Solicitud creada exitosamente."
+                    color = green
 
                     if "Guardar" in request.POST:
                         solic_creadas = Crea.objects.order_by('-fecha')
@@ -665,7 +666,7 @@ def solicitud_editar(request, _id):
     solicitud = Solicitud.objects.get(pk = obj.id_solicitud.pk)
     item = Item.objects.get(pk = obj.id_item.pk)
     categoria = item.id_categoria.nombre
-    color = "#009900"
+    color = green
 
     if request.method == "POST":
         form = solicitudForm(request.POST)
@@ -677,15 +678,15 @@ def solicitud_editar(request, _id):
             if scantidad > item.cantidad:
                 if item.cantidad == 0:
 
-                    mensaje = "La solicitud no se puede modificar. No quedan unidades de este item."
+                    mensaje = "La solicitud no se puede modificar. No quedan unidades de este ítem."
                 else:
-                    mensaje = "La solicitud no se puede editar. Solo quedan '%d' unidades de este item." % (item.cantidad)
-                    color = "#CC0000"
+                    mensaje = "La solicitud no se puede editar. Solo quedan '%d' unidades de este ítem." % (item.cantidad)
+                    color = red
 
             elif scantidad == 0:
-                mensaje = "La cantidad de items a solicitar debe ser mayor a cero."
+                mensaje = "La cantidad de ítems a solicitar debe ser mayor a cero."
 
-                color = "#CC0000"
+                color = red
 
             # Si no hay errores
             else:
