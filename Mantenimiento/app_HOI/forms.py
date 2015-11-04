@@ -176,6 +176,8 @@ class categoria_editarForm(categoriaForm):
                     label = "Estado",
                     choices=opciones_estado)
 
+#class categoria_estadoForm(categoria_editarForm):
+
 class solicitudForm(forms.Form):
     # categoria = forms.ModelChoiceField(
     #                 label = "Categoría",
