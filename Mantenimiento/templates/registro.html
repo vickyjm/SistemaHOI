@@ -46,9 +46,9 @@
 
 			<tr>
 				<td align="right"><br><br>
-				<input type="submit" class="button" name="Guardar" value="Guardar">
+				<input type="submit" class="button" name="Guardar" value="Registrar">
 				{% if user|has_group:"Administradores" %}
-					<input type="submit" class="button" name="GuardarOtro" value="Guardar y registrar otro">
+					<input type="submit" class="button" name="GuardarOtro" value="Registrar y agregar otro">
 					<a href="{% url 'adminUsuarios' %}" class="button">Cancelar</a>
 				{% else %}
 					<input type="reset" class="button" value="Cancelar">

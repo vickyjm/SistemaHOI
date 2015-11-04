@@ -369,21 +369,18 @@ def categoria_editar(request, _id):
                 # Si la categoria es la misma a editar
                 if int(cat.pk) == int(_id):
                     # Verifica si hay cambio en la categoria
-                    if int(cestado) != int(categoria.estado):
-                        categoria.estado = cestado
-                        categoria.save()
-                        mensaje = "Categoría '%s'editada exitosamente" % cnombre
-                        color = green
+                    #if int(cestado) != int(categoria.estado):
+                    categoria.estado = cestado
+                    categoria.save()
+                    mensaje = "Categoría '%s'editada exitosamente" % cnombre
+                    color = green
 
-                        if "Guardar" in request.POST:
-                            form = categoriaForm
-                            categorias = Categoria.objects.order_by('nombre')
-                            return render(request,'categoria.html', {'form': form, 
-                                                                    'categorias': categorias, 
-                                                                    'mensaje2': mensaje})
-                    # No hubo cambios en la categoria
-                    else: 
-                        mensaje = None
+                    if "Guardar" in request.POST:
+                        form = categoriaForm
+                        categorias = Categoria.objects.order_by('nombre')
+                        return render(request,'categoria.html', {'form': form, 
+                                                                'categorias': categorias, 
+                                                                'mensaje2': mensaje})
                 # Si la categoria no es la misma a editar
                 else:
                     mensaje = "La categoría '%s' ya existe" % cnombre
