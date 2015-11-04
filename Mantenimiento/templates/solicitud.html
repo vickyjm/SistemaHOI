@@ -54,17 +54,18 @@
 			<td><h3>{{ s.id_item.id_categoria.nombre }}</h3></td>
 			<td><h3>{{ s.id_solicitud.get_estado_display }}</h3></td>
             {% if not user|has_group:"Almacenistas" %}
-                <td><a href="./solicitud/{{s.id}}/editar"><i class="fa fa-pencil-square-o"></i></a></td>
+                <td><a href="{% url 'solicitud_editar' s.id %}"><i class="fa fa-pencil-square-o"></i></a></td>
+
 				{% if s.id_solicitud.estado == "E" %}
-					<td><a href="./solicitud/{{s.id}}/eliminar"> <i class="fa fa-trash-o"></i></a></td>
+					<td><a href="{% url 'solicitud_eliminar' s.id %}"> <i class="fa fa-trash-o"></i></a></td>
 				{% else %}
 					<td>-</td>
 				{% endif%}
 			{% else %}
 				<td><h3>{{ s.id_usuario.first_name}} {{ s.id_usuario.last_name}}</h3></td>
 				{% if s.id_solicitud.get_estado_display == "Esperando respuesta" %}
-					<td><a href="./solicitud_estado/{{s.id}}/A"><i class="fa fa-check" style="color:green"></i></a></td>
-					<td><a href="./solicitud_estado/{{s.id}}/R"><i class="fa fa-times" style="color:red"></i></a></td>
+					<td><a href="{% url 'solicitud_estado' s.id 'A' %}"><i class="fa fa-check" style="color:green"></i></a></td>
+					<td><a href="{% url 'solicitud_estado' s.id 'R' %}"><i class="fa fa-times" style="color:red"></i></a></td>
 				{% else %}
 					<td>-</td>
 					<td>-</td>

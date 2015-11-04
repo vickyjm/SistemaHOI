@@ -38,8 +38,8 @@
 
 			<td><h3 style = "color: gray;">{{ s.id_usuario.first_name}} {{ s.id_usuario.last_name}}</h3></td>
 			{% if s.id_solicitud.get_estado_display == "Esperando respuesta" %}
-				<td><a href="../../../solicitud_estado/{{s.id}}/A"><i class="fa fa-check" style="color:green"></i></a></td>
-				<td><a href="../../../solicitud_estado/{{s.id}}/R"><i class="fa fa-times" style="color:red"></i></a></td>
+				<td><a href="{% url 'solicitud_estado' s.id 'A' %}"><i class="fa fa-check" style="color:green"></i></a></td>
+				<td><a href="{% url 'solicitud_estado' s.id 'A' %}"><i class="fa fa-times" style="color:red"></i></a></td>
 			{% else %}
 				<td>-</td>
 				<td>-</td>
