@@ -468,7 +468,7 @@ def categoria_editar(request, _id):
             # Si no existe una categoria con el nombre introducido
             except:
                 pass
-                
+
             # si la categoria tiene items
             if cantidad != 0:
                 # si hubo cambio de estado
@@ -489,13 +489,6 @@ def categoria_editar(request, _id):
                                                                       'categoria': categoria,
                                                                       'nombre': cnombre,
                                                                       'estado': int(cestado)})
-                # si no hubo cambio de estado
-                else:
-                    pass
-
-            # si la categoria no tiene items
-            else: 
-                pass
 
             categoria.nombre = cnombre
             categoria.estado = cestado
@@ -552,10 +545,10 @@ def categoria_estado(request, _id):
                 form = categoriaForm
                 categorias = Categoria.objects.order_by('nombre')
                 return render(request,'categoria.html', {'form': form, 
-                                         'categorias': categorias, 
-                                         'mensaje': None,
-                                         'mensaje2': mensaje,
-                                         'color': color})
+                                      'categorias': categorias, 
+                                      'mensaje': None,
+                                      'mensaje2': mensaje,
+                                      'color': color})
     else:
         pass
     return render(request,'categoria_estado.html', {'mensaje': mensaje, 'categoria': categoria})
