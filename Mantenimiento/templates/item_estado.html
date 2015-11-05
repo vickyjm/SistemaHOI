@@ -1,0 +1,40 @@
+{% extends "base-col3.html" %}
+
+{% block page_menu %}
+    <script type="text/javascript">
+        window.onload = function WindowLoad(event) {
+            document.getElementById("inventario").setAttribute("class","current-page-item");
+        }  
+    </script>
+{% endblock page_menu%}
+
+{% block page_title %}
+{% endblock page_title %}
+{% block page_left %}
+<td><a href="{% url 'item_editar' item.id %}" class="button"><i class="fa fa-arrow-left"></i></a></td>
+{% endblock page_left %}
+{% block page_content %}
+	{% if mensaje %}
+		<h2>{{mensaje}}</h2>	
+	{% endif %}
+
+	<form action="{% url 'item_estado' item.id %}" method="post">
+
+	<table style="width:100%" >
+		<thead>
+		</thead>
+		{% csrf_token %}
+		<tbody>
+			
+		 <tr>
+			<td align="right">
+				<input type="submit" class="button" name="Guardar" value="Editar">
+				<a href="{% url 'item_editar' item.id %}" class="button">Cancelar</a>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+
+</form>
+{% endblock page_content %}
+{% block page_right %}{% endblock page_right %}

@@ -262,9 +262,28 @@ def item_editar(request, _id):
                 itemexiste = Item.objects.get(nombre = inombre, 
                                               id_categoria = idcat.id)
                 if int(itemexiste.id) == int(_id): 
+                    iestado = form.cleaned_data['estado']
+                    
+                    if int(itemexiste.estado) != int(iestado):
+                        # Si cambia a activo
+                        if int(iestado) == 1:
+                            # Si cambia a una categoria activa
+                            if int(idcat.estado) == 1 :
+                                pass
+                            elif int(idcat.estado) == 0:
+                                mensaje = "La categoría %s está inactiva, al cambiar el ítem %s\
+                                           a esta categoría, también será desactivado.\n \
+                                           ¿Está seguro de que desea editar el ítem %s?" %(icategoria,inombre,inombre)
+                                print (mensaje)
+                                return render (request, 'item_estado.html', {'mensaje': mensaje,
+                                                                        'item': itemexiste})
+                        # Si cambia a inactivo
+                        elif int(iestado) == 0:
+                            pass
+
                     item.cantidad = form.cleaned_data['cantidad']
                     item.minimo = form.cleaned_data['minimo']
-                    item.estado = form.cleaned_data['estado']
+                    item.estado = iestado
                     item.save()
                     mensaje = "Ítem '%s' editado exitosamente." %nombre
                     color = green
@@ -303,6 +322,21 @@ def item_editar(request, _id):
                                                 'nombre' : nombre,
                                                 'mensaje': mensaje,
                                                 'color': color})
+
+def item_estado(request, _id):
+    if not request.user.groups.filter(name = "Administradores").exists():
+        raise PermissionDenied
+    mensaje = None
+    item = Item.objects.get(id = _id)
+
+    if request.method == "POST":
+        pass
+    else:
+        pass
+
+    return render(request, 'item_estado.html',{'mensaje':mensaje,
+                                               'item': item})
+
 
 @login_required
 def categoria(request):
