@@ -25,11 +25,11 @@
 		{% csrf_token %}
 		<tbody>
 			<tr>
-				<td><h3><input id="id_nombre" maxlength="100" name="nombre" style="width:100%" type="text" value={{cnombre}}></h3></td>
+				<td><h3><input id="id_nombre" maxlength="100" name="nombre" style="width:100%" type="text" value={{nombre}}></h3></td>
 			</tr>
 			<tr>
 				<td><ul id="id_estado">
-				{% if cestado == 1 %}
+				{% if estado == 1 %}
 					<li><label for="id_estado_1"><input checked="checked" id="id_estado_1" name="estado" style="width:100%; background-color:white" type="radio" value="1"> Activo</label></li>
 					<li><label for="id_estado_0"><input id="id_estado_0" name="estado" style="width:100%; background-color:white" type="radio" value="0">Inactivo</label></li>
 				{% else %}
@@ -41,7 +41,7 @@
 		 <tr>
 			<td align="right">
 				<input type="submit" class="button" name="Guardar" value={{accion}}>
-				<a href="{% url 'categorias' %}" class="button">Cancelar</a>
+				<a href="{% url 'categoria_estado' categoria.id %}" class="button">Cancelar</a>
 			</td>
 		</tr>
 		</tbody>
