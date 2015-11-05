@@ -271,12 +271,21 @@ def item_editar(request, _id):
                             if int(idcat.estado) == 1 :
                                 pass
                             elif int(idcat.estado) == 0:
-                                mensaje = "La categoría %s está inactiva, al cambiar el ítem %s\
-                                           a esta categoría, también será desactivado.\n \
-                                           ¿Está seguro de que desea editar el ítem %s?" %(icategoria,inombre,inombre)
-                                print (mensaje)
-                                return render (request, 'item_estado.html', {'mensaje': mensaje,
-                                                                        'item': itemexiste})
+                                #mensaje = "La categoría %s está inactiva, al cambiar el ítem %s\
+                                #           a esta categoría, también será desactivado.\n \
+                                #           ¿Está seguro de que desea editar el ítem %s?" %(icategoria,inombre,inombre)
+                                #print (mensaje)
+                                #form = item_editarForm(request.POST)
+                                #return render (request, 'item_estado.html', {'mensaje': mensaje,
+                                #                                        'form': form,
+                                #                                       'item': itemexiste})
+                                mensaje = "La categoría %s se encuentra inactiva por lo que no\
+                                           no se puede cambiar el estado del ítem %s a activo." %(icategoria,inombre)
+                                color = red
+                                return render(request, 'item_editar.html', {'form' : form, 
+                                                                            'nombre' : nombre,
+                                                                            'mensaje': mensaje,
+                                                                            'color': color})
                         # Si cambia a inactivo
                         elif int(iestado) == 0:
                             pass
@@ -297,11 +306,41 @@ def item_editar(request, _id):
                     
             except ObjectDoesNotExist:
 
+
+                iestado = form.cleaned_data['estado']
+                
+                #if int(item.estado) != int(iestado):
+                # Si cambia a una categoria activa
+                if int(idcat.estado) == 1 :
+                        pass
+                # Si se cambia a una categoria inactiva
+                elif int(idcat.estado) == 0:
+                    # Si cambia a activo
+                    if int(iestado) == 1:
+                        mensaje = "La categoría %s está inactiva, al cambiar el ítem %s\
+                                   a esta categoría, también será desactivado.\n \
+                                   ¿Está seguro de que desea editar el ítem %s?" %(icategoria,inombre,inombre)
+                        print (mensaje)
+                        cantidad = form.cleaned_data['cantidad']
+                        minimo = form.cleaned_data['minimo']
+                        form = item_editarForm(request.POST)
+
+                        return render (request, 'item_estado.html', {'mensaje': mensaje,
+                                                                'form': form,
+                                                                'item': item,
+                                                                'nombre': inombre,
+                                                                'cantidad': cantidad,
+                                                                'categoria':idcat,
+                                                                'minimo': minimo})
+                    # Si cambia a inactivo
+                    elif int(iestado) == 0:
+                        pass
+
                 item.nombre = inombre
                 item.cantidad = form.cleaned_data['cantidad']
                 item.id_categoria = idcat
                 item.minimo = form.cleaned_data['minimo']
-                item.estado = form.cleaned_data['estado']
+                item.estado = iestado
                 item.save()
                 mensaje = "Ítem '%s' editado exitosamente." %nombre
                 color = green
@@ -330,7 +369,27 @@ def item_estado(request, _id):
     item = Item.objects.get(id = _id)
 
     if request.method == "POST":
-        pass
+        form = item_editarForm(request.POST)
+        if form.is_valid():
+
+            inombre = form.cleaned_data['nombre']
+            inombre = inombre.upper()
+            icategoria = form.cleaned_data['categoria']
+            icategoria = icategoria.nombre.upper()
+            idcat = Categoria.objects.get(nombre = icategoria)
+            item.nombre = inombre
+            item.cantidad = form.cleaned_data['cantidad']
+            item.id_categoria = idcat
+            item.minimo = form.cleaned_data['minimo']
+            item.estado = 0
+            item.save()
+            mensaje = "Ítem '%s' editado exitosamente." %inombre
+            color = green
+
+            items = Item.objects.order_by('nombre')
+            return render (request, 'inventario.html', {'items': items})
+        else:
+            print ("ERROR")
     else:
         pass
 
