@@ -453,14 +453,15 @@ def categoria_editar(request, _id):
             cnombre = form.cleaned_data['nombre']
             cnombre = cnombre.upper()
             cestado = form.cleaned_data['estado']
+            items = Item.objects.filter(id_categoria = _id)
+            cantidad = items.count()
+
             try:
                 # Obtiene la categoria con el nombre del formulario
                 cat = Categoria.objects.get(nombre = cnombre)
                 # Si la categoria es la misma a editar
                 if int(cat.pk) == int(_id):
 
-                    items = Item.objects.filter(id_categoria = _id)
-                    cantidad = items.count()
 
                     # si la categoria tiene items
                     if cantidad != 0:
@@ -486,14 +487,14 @@ def categoria_editar(request, _id):
 
                         # si no hubo cambio de estado
                         else: 
-                            mensaje = "Categoría '%s'editada exitosamente." %cnombre
-                            color = green
+                            pass
                     # Si la categoria no tiene items
                     else:
                         categoria.estado = cestado
                         categoria.save()
-                        mensaje = "Categoría '%s'editada exitosamente." %cnombre
-                        color = green
+
+                    mensaje = "Categoría '%s'editada exitosamente." %cnombre
+                    color = green
 
                     if "Guardar" in request.POST:
                         form = categoriaForm
@@ -511,6 +512,34 @@ def categoria_editar(request, _id):
                     color = red
             # Si no existe una categoria con el nombre introducido
             except:
+                # si la categoria tiene items
+                if cantidad != 0:
+                    # si hubo cambio de estado
+                    if int(categoria.estado) != int(cestado):
+                        # si se activo
+                        if int(cestado) == 1:
+                            accion = "Activar"
+                            mensaje = "Categoría '%s' se activa." % categoria.nombre
+                        # si se desactivo
+                        elif int(cestado) == 0:
+                            accion = "Desactivar"
+                            mensaje = "Categoría '%s' se desactiva." % categoria.nombre
+
+                        form = categoria_editarForm(request.POST)
+                        return render (request, 'categoria_estado.html', {'form': form,
+                                                                          'accion': accion,
+                                                                          'mensaje': mensaje,
+                                                                          'categoria': categoria,
+                                                                          'nombre': cnombre,
+                                                                          'estado': int(cestado)})
+                    # si no hubo cambio de estado
+                    else:
+                        pass
+
+                # si la categoria no tiene items
+                else: 
+                    pass
+
                 categoria.nombre = cnombre
                 categoria.estado = cestado
                 categoria.save()
