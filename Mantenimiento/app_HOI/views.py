@@ -256,8 +256,8 @@ def item_editar(request, _id):
             inombre = inombre.upper()
             icategoria = form.cleaned_data['categoria']
             icategoria = icategoria.nombre.upper()
-            print (icategoria)
             idcat = Categoria.objects.get(nombre = icategoria)
+
             try:
                 itemexiste = Item.objects.get(nombre = inombre, 
                                               id_categoria = idcat.id)
@@ -271,14 +271,7 @@ def item_editar(request, _id):
                             if int(idcat.estado) == 1 :
                                 pass
                             elif int(idcat.estado) == 0:
-                                #mensaje = "La categoría %s está inactiva, al cambiar el ítem %s\
-                                #           a esta categoría, también será desactivado.\n \
-                                #           ¿Está seguro de que desea editar el ítem %s?" %(icategoria,inombre,inombre)
-                                #print (mensaje)
-                                #form = item_editarForm(request.POST)
-                                #return render (request, 'item_estado.html', {'mensaje': mensaje,
-                                #                                        'form': form,
-                                #                                       'item': itemexiste})
+
                                 mensaje = "La categoría %s se encuentra inactiva por lo que no\
                                            no se puede cambiar el estado del ítem %s a activo." %(icategoria,inombre)
                                 color = red
@@ -476,11 +469,17 @@ def categoria_editar(request, _id):
                     # si se activo
                     if int(cestado) == 1:
                         accion = "Activar"
-                        mensaje = "Categoría '%s' se activa." % categoria.nombre
+                        mensaje = "Al activar la categoría '%s' también se \
+                                   activarán todos los ítems (%i) que le pertenecen.\
+                                   ¿Está seguro de que desea activar la categoría %s?" \
+                                   % (categoria.nombre,cantidad,categoria.nombre)
                     # si se desactivo
                     elif int(cestado) == 0:
                         accion = "Desactivar"
-                        mensaje = "Categoría '%s' se desactiva." % categoria.nombre
+                        mensaje = "Al desactivar la categoría '%s' también se \
+                                   desactivarán todos los ítems (%i) que le pertenecen.\
+                                   ¿Está seguro de que desea activar la categoría %s?" \
+                                   % (categoria.nombre,cantidad,categoria.nombre)
 
                     form = categoria_editarForm(request.POST)
                     return render (request, 'categoria_estado.html', {'form': form,
