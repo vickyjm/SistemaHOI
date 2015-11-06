@@ -10,9 +10,14 @@
 {% endblock page_menu%}
 
 {% block page_title %}Editar perfil{% endblock page_title %}
-{% block page_left %}{% endblock page_left %}
+{% block page_left %}
+	<td><a href="{% url 'verperfil' %}" class="button"><i class="fa fa-arrow-left"></i></a></td>
+{% endblock page_left %}
 {% block page_content %}
 
+{% if mensaje %}
+	<h3 style="color:#009900">{{mensaje}}</h3>
+{% endif %}
 
 <table>
 	<tr><td style="width: 50%"><h5 style = "color: black; font-size: 22px">Cédula: </h5></td>
@@ -48,7 +53,11 @@
 			 {% endfor %}
 		 <tr>
 			<td align="right"><br><br>
-			<input type="submit" class="button" value="Guardar"></td>
+			<input type="submit" class="button" name="Guardar" value="Guardar">
+			<input type="submit" class="button" name="GuardarOtro" value="Guardar y seguir editando">
+			<a href="{% url 'verperfil' %}" class="button">Cancelar</a>
+
+			</td>
 		</tr>
 		</tbody>
 	</table>

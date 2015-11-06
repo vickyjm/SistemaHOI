@@ -10,7 +10,9 @@
 {% endblock page_menu%}
 
 {% block page_title %}Crear Solicitud{% endblock page_title %}
-{% block page_left %}{% endblock page_left %}
+{% block page_left %}
+    <td><a href="{% url 'solicitud' %}" class="button"><i class="fa fa-arrow-left"></i></a></td>
+{% endblock page_left %}
 {% block page_content %}
 
 <form action="" method="post">
@@ -20,7 +22,7 @@
 		{% csrf_token %}
 		<tbody>
 			{% if mensaje %}
-				<h3 style="color:{{color}}">{{mensaje}}</h3>
+				<h3 style={{color | safe}}>{{mensaje}}</h3>
 			{% endif %}
 
         
@@ -94,7 +96,9 @@
 			{% endfor %}
 		<tr>
 			<td align="right"><br><br>
-			<input type="submit" class="button" value="Crear solicitud"></td>
+            <input type="submit" class="button" name="Guardar" value="Crear">
+			<input type="submit" class="button" name="GuardaOtro" value="Crear y agregar otra solicitud">
+            <a href="{% url 'solicitud' %}" class="button">Cancelar</a></td>
 		</tr>
 		</tbody>
 	</table>

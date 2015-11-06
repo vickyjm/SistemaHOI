@@ -10,8 +10,7 @@
 
 {% block page_title %}Editar categoría '{{ categoria }}'{% endblock page_title %}
 {% block page_left %}
-	<ul align= "center"> <td><a href="{% url 'categorias' %}" class="button"><i class="fa fa-arrow-left"></i></a></td>
-	</ul>
+	<td><a href="{% url 'categorias' %}" class="button"><i class="fa fa-arrow-left"></i></a></td>
 
 {% endblock page_left %}
 {% block page_content %}
@@ -38,7 +37,8 @@
 			 {% endfor %}
 			<tr>
 				<td align="right"><br><br>
-				<input type="submit" class="button" value="Guardar">
+				<input type="submit" class="button" name="Guardar" value="Guardar">
+				<input type="submit" class="button" name="GuardarOtro" value="Guardar y seguir editando">
 				<a href="{% url 'categorias' %}" class="button">Cancelar</a></td>
 			</tr>
 		</tbody>

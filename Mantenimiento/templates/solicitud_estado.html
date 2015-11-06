@@ -13,11 +13,14 @@
 {% block page_left %}{% endblock page_left %}
 
 {% block page_content %}
-	<h2>Solicitudes de retiro de Items</h2>
+	<h2>Solicitudes de retiro de Ítems</h2>
+		{% if mensaje %}
+			<h3 style="color:#009900; text-align:center">{{mensaje}}</h3>
+		{% endif %}
 	<table style="width:100%" >
  		<thead>
 			<td><h3>Fecha</h3></td>
-			<td><h3>Item</h3></td>
+			<td><h3>Ítem</h3></td>
 			<td><h3>Cantidad</h3></td>
 			<td><h3>Estado</h3></td>
 
@@ -35,8 +38,8 @@
 
 			<td><h3 style = "color: gray;">{{ s.id_usuario.first_name}} {{ s.id_usuario.last_name}}</h3></td>
 			{% if s.id_solicitud.get_estado_display == "Esperando respuesta" %}
-				<td><a href="../../../solicitud_estado/{{s.id}}/A"><i class="fa fa-check" style="color:green"></i></a></td>
-				<td><a href="../../../solicitud_estado/{{s.id}}/R"><i class="fa fa-times" style="color:red"></i></a></td>
+				<td><a href="{% url 'solicitud_estado' s.id 'A' %}"><i class="fa fa-check" style="color:green"></i></a></td>
+				<td><a href="{% url 'solicitud_estado' s.id 'A' %}"><i class="fa fa-times" style="color:red"></i></a></td>
 			{% else %}
 				<td>-</td>
 				<td>-</td>

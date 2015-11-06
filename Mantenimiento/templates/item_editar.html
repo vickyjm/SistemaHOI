@@ -10,8 +10,7 @@
 
 {% block page_title %}Editar ítem '{{ nombre }}'{% endblock page_title %}
 {% block page_left %}
-	<ul align= "center"> <td><a href="{% url 'inventario' %}" class="button"><i class="fa fa-arrow-left"></i></a></td>
-	</ul>
+	<td><a href="{% url 'inventario' %}" class="button"><i class="fa fa-arrow-left"></i></a></td>
 {% endblock page_left %}
 {% block page_content %}
 <form action="" method="post">
@@ -24,6 +23,7 @@
 			{% if mensaje %}
 				<h3 style={{color | safe}}>{{mensaje}}</h3>
 			{% endif %}
+
 			{% for field in form %}
 
 			 <h3>{{field.label_tag}}</h3>
@@ -33,7 +33,8 @@
 			 {% endfor %}
 		 <tr>
 			<td align="right"><br><br>
-			<input type="submit" class="button" value="Guardar ítem">
+			<input type="submit" class="button" name="Guardar" value="Guardar">
+			<input type="submit" class="button" name="GuardarOtro" value="Guardar y seguir editando">
 			<a href="{% url 'inventario' %}" class="button">Cancelar</a>
 			</td>
 		</tr>

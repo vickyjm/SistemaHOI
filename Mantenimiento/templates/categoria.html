@@ -15,8 +15,12 @@
 {% endblock page_left %}
 {% block page_content %}
 
+{% if mensaje2 %}
+	<h3 style="color:#009900; text-align:center">{{mensaje2}}</h3>
+{% endif %}
+
 	{% if categorias %}
-	<table  id="rowspan" cellspacing="0" class="tablesorter" style="width:100%" style="width:100%" >
+	<table  id="rowspan" cellspacing="0" class="tablesorter" style="width:100%" >
 		<thead>
 			<th><h3>Nombre</h3></th>
 			<th><h3>Estado</h3></th>
@@ -25,8 +29,13 @@
 	<tbody>
 	{% for cat in categorias %}
 		<tr>
+		{% if cat.estado %}
+			<td><h3 style="color:#000000">{{ cat }}</h3></td>
+			<td><h3 style="color:#000000">{{ cat.get_estado_display }}</h3></td>
+		{% else %}
 			<td><h3>{{ cat }}</h3></td>
 			<td><h3>{{ cat.get_estado_display }}</h3></td>
+		{% endif %}
 			<td ><a href="{% url 'categoria_editar' cat.id %}"><i class="fa fa-pencil-square-o"></i></a></td>
 		</tr>
 	{% endfor %}

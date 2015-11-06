@@ -21,7 +21,7 @@ from django.template import RequestContext      #For error handling
 from django.core.exceptions import PermissionDenied # Forbiddden
 
 red = "color:#CC0000"
-black = "color:#FFFFFF"
+black = "color:#000000"
 green = "color:#009900"
 
 def page_not_found(request):
@@ -53,6 +53,8 @@ def verperfil(request):
 
 @login_required
 def perfil_editar(request, _id):
+
+    mensaje = None
     if request.method == "POST":
         form = perfilForm(request.POST)
         if form.is_valid():
@@ -60,15 +62,24 @@ def perfil_editar(request, _id):
             request.user.last_name = form.cleaned_data['apellido']
             request.user.email = form.cleaned_data['correo']
             request.user.save()
-            return HttpResponseRedirect('/verperfil')
+            mensaje = "Perfil editado exitosamente."
+            #return HttpResponseRedirect('/verperfil')
+            if "Guardar" in request.POST:
+                aprobar = Aprueba.objects.filter(id_usuario = request.user)
+                crear = Crea.objects.all()
+                return render(request,'verperfil.html', {'user': request.user, 
+                                                    'aprobar': aprobar,
+                                                    'mensaje': mensaje, 
+                                                    'crear': crear})
     else:
 
         form = perfilForm(initial = {'nombre':request.user.first_name,
                                      'apellido':request.user.last_name,
                                      'correo':request.user.email})
 
-    return render(request, 'perfil_editar.html', {'form':form,
-                                                  'user':request.user})
+    return render(request, 'perfil_editar.html', {'form': form,
+                                                  'mensaje' : mensaje,
+                                                  'user': request.user})
 
 # Vista usada al iniciar el sistema
 
@@ -83,10 +94,10 @@ def inicio_sesion(request):
                     login(request, user)
                     return HttpResponseRedirect('verperfil')
                 else:
-                    msg = "Su usuario se encuentra inactivo. Contacte al administrador"
+                    msg = "Su usuario se encuentra inactivo. Contacte al administrador."
                     return render(request,'inicio_sesion.html',{'form': form, 'msg': msg})
             else:
-                msg = "Usuario o contraseña incorrecta"
+                msg = "Usuario o contraseña incorrecta."
                 return render(request,'inicio_sesion.html',{'form': form, 'msg': msg})
     else:
         form = iniciarSesionForm()
@@ -102,14 +113,14 @@ def registro(request):
         if form.is_valid():
             ci = form.cleaned_data['cedula']
             if User.objects.filter(username=ci).exists():
-                msg = "Esta cédula ya se encuentra registrada"
+                msg = "Esta cédula ya se encuentra registrada."
                 color = red
                 return render(request,'registro.html',{'form' : form, 
                                                        'msg' : msg,
                                                        'color': color})
 
             if (form.cleaned_data['contraseña1']!= form.cleaned_data['contraseña2']):
-                msg = "Las contraseñas no coinciden. Intente de nuevo"
+                msg = "Las contraseñas no coinciden. Intente de nuevo."
                 color = red
                 return render(request,'registro.html',{'form' : form, 
                                                        'msg' : msg,
@@ -135,10 +146,15 @@ def registro(request):
             else:
                 user.is_active = True
             user.save()
-            msg = "El usuario fue registrado exitosamente"
+            msg = "El usuario fue registrado exitosamente."
             color = green
             form = registroForm()
-            return render(request,'registro.html',{'form': form, 
+
+            if "Guardar" in request.POST and (request.user.groups.filter(name = "Administradores").exists()):
+                usuarios = User.objects.order_by('first_name')        
+                return render(request,'adminUsuarios.html', {'usuarios': usuarios, 'mensaje': msg})
+            else:
+                return render(request,'registro.html',{'form': form, 
                                                    'msg': msg,
                                                    'color':color})
     else:
@@ -155,15 +171,15 @@ def recuperarContraseña(request):
             ci = form.cleaned_data['cedula']
             if User.objects.filter(username=ci).exists():
                 if (form.cleaned_data['contraseña1']!= form.cleaned_data['contraseña2']):
-                    msg = "Las contraseñas no coinciden. Intente de nuevo"
+                    msg = "Las contraseñas no coinciden. Intente de nuevo."
                     return render(request,'recuperarContrasenia.html',{'form' : form, 'msg' : msg})
                 user = User.objects.get(username=ci)
                 user.set_password(form.cleaned_data['contraseña1'])
                 user.save()
-                msg = "Su contraseña fue cambiada"
+                msg = "Su contraseña fue cambiada."
                 return render(request,'recuperarContrasenia.html',{'form' : form, 'msg' : msg})  
             else:
-                msg = "La cédula ingresada no se encuentra registrada"
+                msg = "La cédula ingresada no se encuentra registrada."
                 return render(request,'recuperarContrasenia.html',{'form' : form, 'msg' : msg})
     else:
         form = recuperarContraseñaForm()
@@ -178,7 +194,7 @@ def crearItem(request):
     if not request.user.groups.filter(name = "Administradores").exists():
         raise PermissionDenied
     
-    color = "color:#FFFFFF"
+    color = black
     mensaje = None
     
     if request.method == "POST":
@@ -195,7 +211,7 @@ def crearItem(request):
                                             id_categoria = idcat.id).exists()
             # Si el item ya existe
             if itemexiste:
-                mensaje = "Ítem '%s' ya existe en la categoría '%s'" % (inombre,icategoria)
+                mensaje = "Ítem '%s' ya existe en la categoría '%s'." % (inombre,icategoria)
                 color = red
             # Si el item no existe, lo crea
             else:
@@ -205,19 +221,178 @@ def crearItem(request):
                             minimo = form.cleaned_data['minimo']
                             )
                 obj.save()
-                mensaje = "Ítem '%s' creado exitosamente" % (inombre)
+                mensaje = "Ítem '%s' creado exitosamente." % (inombre)
                 color = green 
-                form = itemForm(initial={'cantidad': '0', 'minimo': '5'})   
+
+                if "Guardar" in request.POST:
+                    items = Item.objects.order_by('nombre')
+                    return render(request,'inventario.html', {'items': items, 'mensaje': mensaje})
+                else:
+                    form = itemForm(initial={'cantidad': '0', 'minimo': '5'})   
     else:
         form = itemForm(initial={'cantidad': '0', 'minimo': '5'})
 
     return render(request,'crearItem.html', {'form': form, 
                                              'mensaje': mensaje,
                                              'color' : color})
+
+# Vista utilizada para editar un item en el sistema
+def item_editar(request, _id):
+    if not request.user.groups.filter(name = "Administradores").exists():
+        raise PermissionDenied
+
+    # Obtiene el objeto de item a editar
+    color = black
+    item = Item.objects.get(id = _id)
+    nombre = item.nombre
+    mensaje = None
+
+    if request.method == "POST":
+        form = item_editarForm(request.POST)
+
+        if form.is_valid():
+            # Obtiene los datos del formulario
+            inombre = form.cleaned_data['nombre']
+            inombre = inombre.upper()
+            icategoria = form.cleaned_data['categoria']
+            icategoria = icategoria.nombre.upper()
+            idcat = Categoria.objects.get(nombre = icategoria)
+
+            try:
+                itemexiste = Item.objects.get(nombre = inombre, 
+                                              id_categoria = idcat.id)
+                if int(itemexiste.id) == int(_id): 
+                    iestado = form.cleaned_data['estado']
+                    
+                    if int(itemexiste.estado) != int(iestado):
+                        # Si cambia a activo
+                        if int(iestado) == 1:
+                            # Si cambia a una categoria activa
+                            if int(idcat.estado) == 1 :
+                                pass
+                            elif int(idcat.estado) == 0:
+
+                                mensaje = "La categoría %s se encuentra inactiva por lo que no\
+                                           no se puede cambiar el estado del ítem %s a activo." %(icategoria,inombre)
+                                color = red
+                                return render(request, 'item_editar.html', {'form' : form, 
+                                                                            'nombre' : nombre,
+                                                                            'mensaje': mensaje,
+                                                                            'color': color})
+                        # Si cambia a inactivo
+                        elif int(iestado) == 0:
+                            pass
+
+                    item.cantidad = form.cleaned_data['cantidad']
+                    item.minimo = form.cleaned_data['minimo']
+                    item.estado = iestado
+                    item.save()
+                    mensaje = "Ítem '%s' editado exitosamente." %nombre
+                    color = green
+                    
+                    if "Guardar" in request.POST:
+                        items = Item.objects.order_by('nombre')
+                        return render(request,'inventario.html', {'items': items, 'mensaje': mensaje})
+                else:
+                    mensaje = "Ítem '%s' ya existe en la categoría '%s'." %(inombre, idcat)
+                    color = red
+                    
+            except ObjectDoesNotExist:
+
+
+                iestado = form.cleaned_data['estado']
+                
+                #if int(item.estado) != int(iestado):
+                # Si cambia a una categoria activa
+                if int(idcat.estado) == 1 :
+                        pass
+                # Si se cambia a una categoria inactiva
+                elif int(idcat.estado) == 0:
+                    # Si cambia a activo
+                    if int(iestado) == 1:
+                        mensaje = "La categoría %s está inactiva, al cambiar el ítem %s\
+                                   a esta categoría, también será desactivado.\n \
+                                   ¿Está seguro de que desea editar el ítem %s?" %(icategoria,inombre,inombre)
+                        print (mensaje)
+                        cantidad = form.cleaned_data['cantidad']
+                        minimo = form.cleaned_data['minimo']
+                        form = item_editarForm(request.POST)
+
+                        return render (request, 'item_estado.html', {'mensaje': mensaje,
+                                                                'form': form,
+                                                                'item': item,
+                                                                'nombre': inombre,
+                                                                'cantidad': cantidad,
+                                                                'categoria':idcat,
+                                                                'minimo': minimo})
+                    # Si cambia a inactivo
+                    elif int(iestado) == 0:
+                        pass
+
+                item.nombre = inombre
+                item.cantidad = form.cleaned_data['cantidad']
+                item.id_categoria = idcat
+                item.minimo = form.cleaned_data['minimo']
+                item.estado = iestado
+                item.save()
+                mensaje = "Ítem '%s' editado exitosamente." %nombre
+                color = green
+                nombre = inombre
+
+                if "Guardar" in request.POST:
+                    items = Item.objects.order_by('nombre')
+                    return render(request,'inventario.html', {'items': items, 'mensaje': mensaje})
+    else: 
+        # Formulario con los datos del item a editar
+        form = item_editarForm(initial = {'nombre': item.nombre, 
+                                        'cantidad': item.cantidad,
+                                        'categoria': item.id_categoria,
+                                        'minimo': item.minimo,
+                                        'estado': item.estado})
+
+    return render(request, 'item_editar.html', {'form' : form, 
+                                                'nombre' : nombre,
+                                                'mensaje': mensaje,
+                                                'color': color})
+
+def item_estado(request, _id):
+    if not request.user.groups.filter(name = "Administradores").exists():
+        raise PermissionDenied
+    mensaje = None
+    item = Item.objects.get(id = _id)
+
+    if request.method == "POST":
+        form = item_editarForm(request.POST)
+        if form.is_valid():
+
+            inombre = form.cleaned_data['nombre']
+            inombre = inombre.upper()
+            icategoria = form.cleaned_data['categoria']
+            icategoria = icategoria.nombre.upper()
+            idcat = Categoria.objects.get(nombre = icategoria)
+            item.nombre = inombre
+            item.cantidad = form.cleaned_data['cantidad']
+            item.id_categoria = idcat
+            item.minimo = form.cleaned_data['minimo']
+            item.estado = 0
+            item.save()
+            mensaje = "Ítem '%s' editado exitosamente." %inombre
+            color = green
+
+            items = Item.objects.order_by('nombre')
+            return render (request, 'inventario.html', {'items': items})
+
+    else:
+        pass
+
+    return render(request, 'item_estado.html',{'mensaje':mensaje,
+                                               'item': item})
+
+
 @login_required
 def categoria(request):
 
-    color = "color:#FFFFFF"
+    color = black
     mensaje = None
 
     if request.method == "POST":
@@ -231,14 +406,14 @@ def categoria(request):
                 cat = Categoria.objects.get(nombre = catnombre)
                 # Verifica si el nombre de la categoria ya existe
                 if Categoria.objects.filter(pk=cat.pk).exists():
-                    mensaje = "Categoría '%s' ya existe" % (catnombre)
+                    mensaje = "La categoría '%s' ya existe." % (catnombre)
                     color = red
             # Si no existe, crea el objeto y lo guarda
             except ObjectDoesNotExist:
                 obj = Categoria(nombre = catnombre,
                                 estado = 1)
                 obj.save()
-                mensaje = "Categoría '%s' creada exitosamente" % (catnombre)
+                mensaje = "Categoría '%s' creada exitosamente." % (catnombre)
                 color = green
                 form = categoriaForm()
         categorias = Categoria.objects.order_by('nombre')
@@ -259,10 +434,7 @@ def categoria_editar(request, _id):
 
     color = black
     categoria = Categoria.objects.get(id = _id)
-    # Lista de items dentro de la categoria
-    #items = Item.objects.filter(id_categoria = _id)
-    # Cantidad de items dentro de la categoria
-    #cantidad = items.count()
+    mensaje = None
 
     if request.method == "POST":
         
@@ -273,31 +445,64 @@ def categoria_editar(request, _id):
             cnombre = form.cleaned_data['nombre']
             cnombre = cnombre.upper()
             cestado = form.cleaned_data['estado']
+            items = Item.objects.filter(id_categoria = _id)
+            cantidad = items.count()
+
             try:
                 # Obtiene la categoria con el nombre del formulario
                 cat = Categoria.objects.get(nombre = cnombre)
                 # Si la categoria es la misma a editar
                 if int(cat.pk) == int(_id):
-                    # Verifica si hay cambio en la categoria
-                    if int(cestado) != int(categoria.estado):
-                        categoria.estado = cestado
-                        categoria.save()
-                        mensaje = "Categoría editada exitosamente"
-                        color = green
-                    # No hubo cambios en la categoria
-                    else: 
-                        mensaje = None
-                # Si la categoria no es la misma a editar
+                    pass  
+                 # Si la categoria no es la misma a editar
                 else:
-                    mensaje = "La categoría '%s' ya existe" % cnombre
+                    mensaje = "La categoría '%s' ya existe." % cnombre
                     color = red
             # Si no existe una categoria con el nombre introducido
             except:
-                categoria.nombre = cnombre
-                categoria.estado = cestado
-                categoria.save()
-                mensaje = "Categoría editada exitosamente"
-                color = green
+                pass
+
+            # si la categoria tiene items
+            if cantidad != 0:
+                # si hubo cambio de estado
+                if int(categoria.estado) != int(cestado):
+                    # si se activo
+                    if int(cestado) == 1:
+                        accion = "Activar"
+                        mensaje = "Al activar la categoría '%s' también se \
+                                   activarán todos los ítems (%i) que le pertenecen.\
+                                   ¿Está seguro de que desea activar la categoría %s?" \
+                                   % (categoria.nombre,cantidad,categoria.nombre)
+                    # si se desactivo
+                    elif int(cestado) == 0:
+                        accion = "Desactivar"
+                        mensaje = "Al desactivar la categoría '%s' también se \
+                                   desactivarán todos los ítems (%i) que le pertenecen.\
+                                   ¿Está seguro de que desea activar la categoría %s?" \
+                                   % (categoria.nombre,cantidad,categoria.nombre)
+
+                    form = categoria_editarForm(request.POST)
+                    return render (request, 'categoria_estado.html', {'form': form,
+                                                                      'accion': accion,
+                                                                      'mensaje': mensaje,
+                                                                      'categoria': categoria,
+                                                                      'nombre': cnombre,
+                                                                      'estado': int(cestado)})
+
+            categoria.nombre = cnombre
+            categoria.estado = cestado
+            categoria.save()
+            mensaje = "Categoría '%s'editada exitosamente." % cnombre
+            color = green
+
+            if "Guardar" in request.POST:
+                form = categoriaForm
+                categorias = Categoria.objects.order_by('nombre')
+                return render(request,'categoria.html', {'form': form, 
+                                         'categorias': categorias, 
+                                         'mensaje': None,
+                                         'mensaje2': mensaje,
+                                         'color': color})
 
     else:
         # Formulario con los datos a editar
@@ -309,75 +514,54 @@ def categoria_editar(request, _id):
                                                     'mensaje': mensaje,
                                                     'color':color})
 
-# Vista utilizada para editar un item en el sistema
-def item_editar(request, _id):
-    if not request.user.groups.filter(name = "Administradores").exists():
-        raise PermissionDenied
 
-    # Obtiene el objeto de item a editar
-    color = "color:#FFFFFF"
-    item = Item.objects.get(id = _id)
-    nombre = item.nombre
+def categoria_estado(request, _id):
+    if not request.user.groups.filter(name = "Administradores").exists():
+        raise PermissionDenied      
     mensaje = None
+    categoria = Categoria.objects.get(id = _id)
 
     if request.method == "POST":
-        form = item_editarForm(request.POST)
-
+        
+        form = categoria_editarForm(request.POST)
         if form.is_valid():
-            # Obtiene los datos del formulario
-            inombre = form.cleaned_data['nombre']
-            inombre = inombre.upper()
-            icategoria = form.cleaned_data['categoria']
-            icategoria = icategoria.nombre.upper()
-            print (icategoria)
-            idcat = Categoria.objects.get(nombre = icategoria)
-            try:
-                itemexiste = Item.objects.get(nombre = inombre, 
-                                              id_categoria = idcat.id)
-                if int(itemexiste.id) == int(_id): 
-                    item.cantidad = form.cleaned_data['cantidad']
-                    item.minimo = form.cleaned_data['minimo']
-                    item.estado = form.cleaned_data['estado']
-                    item.save()
-                    mensaje = "Ítem '%s' editado exitosamente" %nombre
-                    color = green
-                else:
-                    mensaje = "Ítem '%s' ya existe en la categoría '%s'" %(inombre, idcat)
-                    color = red
-                    
-            except ObjectDoesNotExist:
+            cnombre = form.cleaned_data['nombre']
+            cnombre = cnombre.upper()
+            cestado = form.cleaned_data['estado']
 
-                item.nombre = inombre
-                item.cantidad = form.cleaned_data['cantidad']
-                item.id_categoria = idcat
-                item.minimo = form.cleaned_data['minimo']
-                item.estado = form.cleaned_data['estado']
-                item.save()
-                mensaje = "Ítem '%s' editado exitosamente" %nombre
-                color = green
-                nombre = inombre
-    else: 
-        # Formulario con los datos del item a editar
-        form = item_editarForm(initial = {'nombre': item.nombre, 
-                                        'cantidad': item.cantidad,
-                                        'categoria': item.id_categoria,
-                                        'minimo': item.minimo,
-                                        'estado': item.estado})
-    return render(request, 'item_editar.html', {'form' : form, 
-                                                'nombre' : nombre,
-                                                'mensaje': mensaje,
-                                                'color': color})
-           
+            categoria.nombre = cnombre
+            categoria.estado = cestado
+            categoria.save()
+            mensaje = "Categoría '%s'editada exitosamente." % cnombre
+            color = green
+
+            items = Item.objects.filter(id_categoria = _id)
+            for i in items:
+                i.estado = cestado
+                i.save()
+
+            if "Guardar" in request.POST:
+                form = categoriaForm
+                categorias = Categoria.objects.order_by('nombre')
+                return render(request,'categoria.html', {'form': form, 
+                                      'categorias': categorias, 
+                                      'mensaje': None,
+                                      'mensaje2': mensaje,
+                                      'color': color})
+    else:
+        pass
+    return render(request,'categoria_estado.html', {'mensaje': mensaje, 'categoria': categoria})
            
 # Vista utilizada para mostrar los items del inventario
 @login_required
 def inventario(request):
     items = Item.objects.order_by('nombre')
+    mensaje = None
     if request.method == "POST":
         pass  
     else:
         pass
-    return render(request,'inventario.html', {'items': items})
+    return render(request,'inventario.html', {'items': items, 'mensaje':mensaje})
 
 def item_ingresar(request, _id):
     item = Item.objects.get(pk = _id)
@@ -397,11 +581,11 @@ def item_ingresar(request, _id):
                           cantidad = icantidad)
             obj.save()
             
-            mensaje = "Cantidad ingresada exitosamente"
-            color = "#009900"
+            mensaje = "Cantidad ingresada exitosamente."
+            color = green
     else:
         mensaje = None
-        color = "#000000"
+        color = black
         form = item_cantidadForm(initial={'cantidad': '1'})
 
     accion = "Ingresar"
@@ -424,19 +608,19 @@ def item_retirar(request, _id):
 
             if icantidad > item.cantidad:
                 if item.cantidad == 0:
-                    mensaje = "No se puede retirar. No quedan unidades de este item."
+                    mensaje = "No se puede retirar. No quedan unidades de este ítem."
                 else:
-                    mensaje = "No puede retirar '%d' items. Solo quedan '%d' unidades." % (icantidad,item.cantidad)
-                color = "#CC0000"
+                    mensaje = "No puede retirar '%d' ítems. Solo quedan '%d' unidades." % (icantidad,item.cantidad)
+                color = red
             else:
                 item.cantidad = item.cantidad - icantidad
                 item.save()            
 
-                mensaje = "Cantidad retirada exitosamente"
-                color = "#009900"
+                mensaje = "Cantidad retirada exitosamente."
+                color = green
     else:
         mensaje = None
-        color = "#000000"
+        color = black
         form = item_cantidadForm(initial={'cantidad': '1'})
 
     accion = "Retirar"
@@ -510,7 +694,7 @@ def crearSolicitud(request):
     items = Item.objects.order_by('nombre') 
     falta_item = None
     falta_categoria = None
-    color = "#009900"   # Color rojo para los errores
+    color = red   # Color rojo para los errores
 
     if request.method == "POST":
         mensaje = None
@@ -544,15 +728,15 @@ def crearSolicitud(request):
                 # Si el técnico pide más items de los disponibles
                 if scantidad > item.cantidad:
                     if item.cantidad == 0:
-                        mensaje = "La solicitud no se puede realizar. No quedan unidades de este item."    
+                        mensaje = "La solicitud no se puede realizar. No quedan unidades de este ítem."    
                     else:
-                        mensaje = "La solicitud no se puede realizar. Solo quedan '%d' unidades de este item." % (item.cantidad)
-                    color = "#CC0000"
+                        mensaje = "La solicitud no se puede realizar. Solo quedan '%d' unidades de este ítem." % (item.cantidad)
+                    color = red
 
                 # Si el técnico pide 0 items
                 elif scantidad == 0:
-                    mensaje = "La cantidad de items a solicitar debe ser mayor a cero."
-                    color = "#CC0000"
+                    mensaje = "La cantidad de ítems a solicitar debe ser mayor a cero."
+                    color = red
 
                 # Si no hay errores
                 else:
@@ -583,7 +767,22 @@ def crearSolicitud(request):
                     item.cantidad = item.cantidad - scantidad
                     item.save()
 
-                    mensaje = "Solicitud creada exitosamente" 
+                    mensaje = "Solicitud creada exitosamente."
+                    color = green
+
+                    if "Guardar" in request.POST:
+                        solic_creadas = Crea.objects.order_by('-fecha')
+                        # Si es un técnico, solo puede ver sus solicitudes
+                        if not request.user.groups.filter(name = "Almacenistas").exists():
+                            solicitudes = solic_creadas.filter(id_usuario = request.user)
+                        # Si es almacenista o administrador, solo ve las solicitudes de los técnicos
+                        else:
+                            solicitudes = solic_creadas.exclude(id_usuario = request.user)
+
+                        return render(request,'solicitud.html', {'user' : request.user,
+                                                         'mensaje': mensaje,
+                                                         'solicitudes': solicitudes})
+
                     form = solicitudForm(initial={'cantidad': '1'})
     else:
         mensaje = None
@@ -602,7 +801,7 @@ def solicitud_editar(request, _id):
     solicitud = Solicitud.objects.get(pk = obj.id_solicitud.pk)
     item = Item.objects.get(pk = obj.id_item.pk)
     categoria = item.id_categoria.nombre
-    color = "#009900"
+    color = green
 
     if request.method == "POST":
         form = solicitudForm(request.POST)
@@ -614,15 +813,15 @@ def solicitud_editar(request, _id):
             if scantidad > item.cantidad:
                 if item.cantidad == 0:
 
-                    mensaje = "La solicitud no se puede modificar. No quedan unidades de este item."
+                    mensaje = "La solicitud no se puede modificar. No quedan unidades de este ítem."
                 else:
-                    mensaje = "La solicitud no se puede editar. Solo quedan '%d' unidades de este item." % (item.cantidad)
-                    color = "#CC0000"
+                    mensaje = "La solicitud no se puede editar. Solo quedan '%d' unidades de este ítem." % (item.cantidad)
+                    color = red
 
             elif scantidad == 0:
-                mensaje = "La cantidad de items a solicitar debe ser mayor a cero."
+                mensaje = "La cantidad de ítems a solicitar debe ser mayor a cero."
 
-                color = "#CC0000"
+                color = red
 
             # Si no hay errores
             else:
@@ -630,7 +829,21 @@ def solicitud_editar(request, _id):
                 solicitud.dpto = sdpto
                 solicitud.save()
 
-                mensaje = "Solicitud editada exitosamente"
+                mensaje = "Solicitud editada exitosamente."
+
+                if "Guardar" in request.POST:
+                    solic_creadas = Crea.objects.order_by('-fecha')
+                    # Si es un técnico, solo puede ver sus solicitudes
+                    if not request.user.groups.filter(name = "Almacenistas").exists():
+                        solicitudes = solic_creadas.filter(id_usuario = request.user)
+                    # Si es almacenista o administrador, solo ve las solicitudes de los técnicos
+                    else:
+                        solicitudes = solic_creadas.exclude(id_usuario = request.user)
+
+                    return render(request,'solicitud.html', {'user' : request.user,
+                                                             'mensaje': mensaje,
+                                                             'solicitudes': solicitudes})
+
     else:
         mensaje = None
         form = solicitudForm(initial = {'cantidad': solicitud.cantidad,
@@ -667,7 +880,7 @@ def imprimirReporte(request):
             fechaFin = form.cleaned_data['fechaFin']
             
             if (fechaFin < fechaIni):
-                msg = "Fechas inválidas. Intente de nuevo"
+                msg = "Fechas inválidas. Intente de nuevo."
                 
             else:
                 response = HttpResponse(content_type='application/pdf')
@@ -728,7 +941,12 @@ def editarUsuario(request,_id):
             usuario.is_active = int(form.cleaned_data['estado'])
             usuario.save()
             color = green
-            msg = "El usuario '%s' fue editado exitosamente" % nombre 
+            msg = "El usuario '%s' fue editado exitosamente." % nombre
+
+            if "Guardar" in request.POST:
+                usuarios = User.objects.order_by('first_name')        
+                return render(request,'adminUsuarios.html', {'usuarios': usuarios, 'mensaje': msg}) 
+
     else:
         if (usuario.groups.filter(name="Administradores")):
                 cargo = "administrador"
@@ -739,13 +957,16 @@ def editarUsuario(request,_id):
         form = editarUsuarioForm(initial = {'cedula':usuario.username,'nombre':usuario.first_name,
                                             'apellido':usuario.last_name,'correo':usuario.email,
                                             'tipo':cargo,'estado':str(int(usuario.is_active))})
+
     return render(request,'editarUsuario.html',{'form':form,'nombre':nombre,'color':color,'mensaje':msg})
 
 def adminDptos(request):
+
     if not request.user.groups.filter(name = "Administradores").exists():
         raise PermissionDenied
     color = black
     msg = None
+
     if request.method == 'POST':
         form = departamentoForm(request.POST)
         if form.is_valid():
@@ -755,19 +976,20 @@ def adminDptos(request):
             try: 
                 dpto = Departamento.objects.get(nombre = dptonombre)
                 if Departamento.objects.filter(pk=dpto.pk).exists():
-                    msg = "El departamento '%s' ya existe" % (dptonombre)
+                    msg = "El departamento '%s' ya existe." % (dptonombre)
                     color = red
             except ObjectDoesNotExist:
                 obj = Departamento(nombre = dptonombre,
                                 estado = 1)
                 obj.save()
-                msg = "Departamento '%s' creado exitosamente" % (dptonombre)
+                msg = "Departamento '%s' creado exitosamente." % (dptonombre)
                 color = green
                 form = departamentoForm()
         dptos = Departamento.objects.order_by('nombre')
     else:
         form = departamentoForm()
         dptos = Departamento.objects.order_by('nombre')
+
     return render(request,'adminDptos.html',{'dptos':dptos,'form':form,'color':color,'mensaje':msg})
 
 def editarDpto(request,_id):
@@ -793,7 +1015,17 @@ def editarDpto(request,_id):
             dpto.estado = int(form.cleaned_data['estado'])
             dpto.save()
             color = green
-            msg = "El Departamento '%s' fue editado exitosamente" % dpto.nombre 
+            msg = "El Departamento '%s' fue editado exitosamente." % dpto.nombre 
+
+            if "Guardar" in request.POST:
+                    form = departamentoForm()
+                    dptos = Departamento.objects.order_by('nombre')
+
+                    return render(request,'adminDptos.html',{'dptos':dptos,
+                                                      'form':form,
+                                                      'mensaje2':msg})
+
+
     else:
         form = editarDptoForm(initial = {'nombre':dpto.nombre,'estado':str(dpto.estado)})
         

@@ -1,0 +1,52 @@
+{% extends "base-col3.html" %}
+
+{% block page_menu %}
+    <script type="text/javascript">
+        window.onload = function WindowLoad(event) {
+            document.getElementById("categorias").setAttribute("class","current-page-item");
+        }  
+    </script>
+{% endblock page_menu%}
+
+{% block page_title %}
+{% endblock page_title %}
+{% block page_left %}
+{% endblock page_left %}
+{% block page_content %}
+	{% if mensaje %}
+		<h2>{{mensaje}}</h2>	
+	{% endif %}
+
+	<form action="{% url 'categoria_estado' categoria.id %}" method="post">
+
+	<table style="width:100%" >
+		<thead>
+		</thead>
+		{% csrf_token %}
+		<tbody>
+			<tr>
+				<td><h3><input id="id_nombre" maxlength="100" name="nombre" style="width:100%" type="text" value={{nombre}}></h3></td>
+			</tr>
+			<tr>
+				<td><ul id="id_estado">
+				{% if estado == 1 %}
+					<li><label for="id_estado_1"><input checked="checked" id="id_estado_1" name="estado" style="width:100%; background-color:white" type="radio" value="1"> Activo</label></li>
+					<li><label for="id_estado_0"><input id="id_estado_0" name="estado" style="width:100%; background-color:white" type="radio" value="0">Inactivo</label></li>
+				{% else %}
+					<li><label for="id_estado_1"><input id="id_estado_1" name="estado" style="width:100%; background-color:white" type="radio" value="1"> Activo</label></li>
+					<li><label for="id_estado_0"><input checked="checked" id="id_estado_0" name="estado" style="width:100%; background-color:white" type="radio" value="0">Inactivo</label></li>
+				{% endif %}
+				</ul></td>
+			</tr>
+		 <tr>
+			<td align="right">
+				<input type="submit" class="button" name="Guardar" value={{accion}}>
+				<a href="{% url 'categoria_estado' categoria.id %}" class="button">Cancelar</a>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+
+</form>
+{% endblock page_content %}
+{% block page_right %}{% endblock page_right %}
