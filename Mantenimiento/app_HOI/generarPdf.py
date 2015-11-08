@@ -53,7 +53,7 @@ class MiPDF:
         for item in ingresos:
             if (fechaIni <= item.fecha.date() <= fechaFin):
                 auxIngresos.append([item.id_item.nombre,item.id_item.id_categoria,item.cantidad,
-                          item.id_usuario.get_full_name(),item.fecha.date()])
+                          item.id_usuario.username,item.fecha.date()])
         
         if (len(auxIngresos)==1):
             elements.append(Paragraph('No hay nuevos ingresos de material en este período de tiempo.',styles['df']))
@@ -67,20 +67,25 @@ class MiPDF:
         
         elements.append(Paragraph('Solicitudes',styles['Heading2']))
         
-        auxSolicitud = [["CI Solicitante", "Departamento","Ítem","Cantidad","Aprobado por", 
-                         "Fecha solicitud","Fecha aprobado"]]
+        #auxSolicitud = [["Solicitante", "Departamento","Ítem","Cantidad","Aprobado por", 
+        #                "Solicitado","Aprobado"]]
+        auxSolicitud = [["Solicitante", "Departamento","Ítem","Cantidad","Aprobado por", 
+                         "Aprobado"]]
         solicitudes = Aprueba.objects.all()
         for elem in solicitudes:
             if (fechaIni <= elem.fecha.date() <= fechaFin):
                 autor = Crea.objects.get(pk=elem.id_solicitud.id)
+                #auxSolicitud.append([autor.id_usuario.username,elem.id_solicitud.dpto,autor.id_item.nombre,
+                #              elem.id_solicitud.cantidad, elem.id_usuario.username,autor.fecha.date(),
+                #              elem.fecha.date()])
                 auxSolicitud.append([autor.id_usuario.username,elem.id_solicitud.dpto,autor.id_item.nombre,
-                              elem.id_solicitud.cantidad, elem.id_usuario.username,autor.fecha.date(),
+                              elem.id_solicitud.cantidad, elem.id_usuario.username,
                               elem.fecha.date()])
         if (len(auxSolicitud)==1):
             elements.append(Paragraph('No se realizaron ni aprobaron solicitudes en este período de tiempo.',
                                       styles['df']))
         else:
-            tablaSolicitud = Table(auxSolicitud, colWidths=[doc.width/7.0]*7)
+            tablaSolicitud = Table(auxSolicitud, colWidths=[doc.width/6.0]*6)
             tablaSolicitud.setStyle(TableStyle([('BACKGROUND',(0,0),(-1,0),colors.HexColor(0xD8D8D8)),
                                             ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
                                             ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
