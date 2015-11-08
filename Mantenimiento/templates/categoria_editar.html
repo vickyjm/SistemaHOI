@@ -25,6 +25,7 @@
 			{% endif %}
 			{% for field in form %}
 			<tr>
+			
 			<td><h3>{{field.label_tag}}</h3></td>
 
 			 <h4 style = "color:#CC0000">{{ field.errors}}</h4>
@@ -36,6 +37,7 @@
 
 			 {% endfor %}
 			<tr>
+			
 				<td align="right"><br><br>
 				<input type="submit" class="button" name="Guardar" value="Guardar">
 				<input type="submit" class="button" name="GuardarOtro" value="Guardar y seguir editando">

@@ -272,8 +272,8 @@ def item_editar(request, _id):
                                 pass
                             elif int(idcat.estado) == 0:
 
-                                mensaje = "La categoría %s se encuentra inactiva por lo que no\
-                                           no se puede cambiar el estado del ítem %s a activo." %(icategoria,inombre)
+                                mensaje = "La categoría '%s' se encuentra inactiva por lo que no\
+                                           se puede cambiar el estado del ítem '%s' a activo." %(icategoria,inombre)
                                 color = red
                                 return render(request, 'item_editar.html', {'form' : form, 
                                                                             'nombre' : nombre,
@@ -310,9 +310,9 @@ def item_editar(request, _id):
                 elif int(idcat.estado) == 0:
                     # Si cambia a activo
                     if int(iestado) == 1:
-                        mensaje = "La categoría %s está inactiva, al cambiar el ítem %s\
+                        mensaje = "La categoría '%s' está inactiva, al cambiar el ítem '%s'\
                                    a esta categoría, también será desactivado.\n \
-                                   ¿Está seguro de que desea editar el ítem %s?" %(icategoria,inombre,inombre)
+                                   ¿Está seguro de que desea editar el ítem '%s'?" %(icategoria,inombre,inombre)
                         print (mensaje)
                         cantidad = form.cleaned_data['cantidad']
                         minimo = form.cleaned_data['minimo']
@@ -435,6 +435,8 @@ def categoria_editar(request, _id):
     color = black
     categoria = Categoria.objects.get(id = _id)
     mensaje = None
+    items = Item.objects.filter(id_categoria = _id)
+    cantidad = items.count()
 
     if request.method == "POST":
         
@@ -445,8 +447,6 @@ def categoria_editar(request, _id):
             cnombre = form.cleaned_data['nombre']
             cnombre = cnombre.upper()
             cestado = form.cleaned_data['estado']
-            items = Item.objects.filter(id_categoria = _id)
-            cantidad = items.count()
 
             try:
                 # Obtiene la categoria con el nombre del formulario
@@ -512,6 +512,7 @@ def categoria_editar(request, _id):
     return render(request,'categoria_editar.html', {'categoria': categoria, 
                                                     'form': form,
                                                     'mensaje': mensaje,
+                                                    'cantidad': cantidad,
                                                     'color':color})
 
 

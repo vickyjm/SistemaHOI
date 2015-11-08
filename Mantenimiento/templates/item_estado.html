@@ -26,13 +26,13 @@
 		{% csrf_token %}
 		<tbody>
 
-		<input id="id_nombre" maxlength="100" name="nombre" style="width:100%" type="text" value={{nombre}}>
-		<input id="id_cantidad" max="2147483647" min="0" name="cantidad" style="width:100%" type="number" value={{cantidad}}>
-		<select id="id_categoria" name="categoria" style="width:100%; background-color:white" >
+		<input id="id_nombre" maxlength="100" name="nombre" style="width:100% ;display:none" type="text" value={{nombre}}>
+		<input id="id_cantidad" max="2147483647" min="0" name="cantidad" style="width:100%;display:none" type="number" value={{cantidad}}>
+		<select id="id_categoria" name="categoria" style="width:100%; background-color:white ;display:none" >
 			<option value={{categoria.id}} selected="selected">{{categoria.nombre}}</option>
 		</select>
-		<input id="id_minimo" max="2147483647" min="0" name="minimo" style="width:100%" type="number" value={{minimo}}>
-		<li><label for="id_estado_0"><input id="id_estado_0" name="estado" checked="checked" style="width:100%; background-color:white" type="radio" value="0">Inactivo</label></li>
+		<input id="id_minimo" max="2147483647" min="0" name="minimo" style="width:100%;display:none" type="number" value={{minimo}}>
+		<li><label for="id_estado_0"><input id="id_estado_0" name="estado" checked="checked" style="width:100%; background-color:white ;display:none" type="radio" value="0">Inactivo</label></li>
 
 		 <tr>
 			<td align="right">
