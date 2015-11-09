@@ -41,8 +41,8 @@
 			<td><h3 style="color:#000000">{{ cat.get_estado_display }}</h3></td>
 			{% endif %}
 		{% else %}
-			<td><h3>{{ cat }}</h3></td>
 			{% if user|has_group:"Almacenistas" %}
+			<td><h3>{{ cat }}</h3></td>
 			<td><h3>{{ cat.get_estado_display }}</h3></td>
 			{% endif %}
 		{% endif %}
