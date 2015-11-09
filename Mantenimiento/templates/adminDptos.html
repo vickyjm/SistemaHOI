@@ -48,7 +48,7 @@
 	{% endif %}
 {% endblock page_content %}
 {% block page_right %}
-<form action="{% url 'adminDptos' %}" method="post">
+<form action="{% url 'adminDptos' %}" method="post" id="form">
 
 {% if user|has_group:"Administradores" %}
 <h2>Crear Departamento</h2>
@@ -69,7 +69,9 @@
 				 {% endfor %}
 			 <tr>
 				<td align="right"><br><br>
-				<input type="submit" class="button" value="Crear departamento"></td>
+				<!-- <input type="submit" class="button" value="Crear departamento"> -->
+				<a href="#" onClick=document.getElementById("form").submit() class="button" align = "right"><i class="fa fa-plus-square"></i>     Crear departamento</a>
+				</td>
 			</tr>
 			</tbody>
 		</table>
