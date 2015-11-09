@@ -46,19 +46,15 @@ def verperfil(request):
         request.user.groups.add(Group.objects.get(name='Almacenistas'))
         request.user.groups.add(Group.objects.get(name='Técnicos'))
 
-    crear = Crea.objects.all().order_by('-fecha')
+    crear = Crea.objects.filter(id_usuario = request.user).order_by('-fecha')
+    #crear = Crea.objects.all().order_by('-fecha')
     aprobar = Aprueba.objects.filter(id_usuario = request.user).order_by('-fecha')
     ingresar = Ingresa.objects.filter(id_usuario = request.user).order_by('-fecha')
-
-    # Si es un técnico, solo puede ver sus solicitudes
-    #if not request.user.groups.filter(name = "Almacenistas").exists():
-    solicitudes = crear.filter(id_usuario = request.user)
     latest =  list(crear) + list(aprobar) + list(ingresar)
     latest_sorted = sorted(latest, key=lambda x: x.fecha, reverse=True)
+
     return render(request, 'verperfil.html',{'user': request.user,
-                                             'aprobar': aprobar,
                                              'crear':crear,
-                                             'solicitudes':solicitudes,
                                              'latest': latest_sorted})
 
 @login_required
