@@ -26,6 +26,8 @@
 		<th><h3>Nombre</h3></th>
 		{% if user|has_group:"Almacenistas" %}
 		<th><h3>Estado</h3></th>
+		{% endif %}
+		{% if user|has_group:"Administradores" %}
 		<td><h3>Editar</h3></td>
 		{% endif %}
 	</thead>
@@ -44,7 +46,7 @@
 			<td><h3>{{ cat.get_estado_display }}</h3></td>
 			{% endif %}
 		{% endif %}
-			{% if user|has_group:"Almacenistas" %}
+			{% if user|has_group:"Administradores" %}
 			<td ><a href="{% url 'categoria_editar' cat.id %}"><i class="fa fa-pencil-square-o"></i></a></td>
 			{% endif %}
 		</tr>
