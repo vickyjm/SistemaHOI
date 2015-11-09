@@ -18,59 +18,47 @@
 
 	{% if latest %}
 		<table id="rowspan" cellspacing="0" class="tablesorter" style="width:100%" style="width:100%" >
-			<thead>
-				<td><h3>Fecha</h3></td>
-				<td><h3>Acción</h3></td>
-				<td><h3>Nombre ítem</h3></td>
-			</thead>
+		<thead>
+			<td><h3>Fecha</h3></td>
+			<td><h3>Acción</h3></td>
+			<td><h3>Nombre ítem</h3></td>
+		</thead>
+		
 		<tbody>
-
 		{% for a in latest%}
+			{% if a.id_usuario == user %}
 			<tr>
 				<td ><h3 style="color:#000000">{{ a.fecha|date:"d-m-Y, H:i" }}</h3></td>
-
-				{%if a|class_name == "Aprueba" %}
-					<td><h3 style="color:#000000">APROBÓ solicitud de retiro de item</h3></td>
-					{% for c in crear %}
-						{% if c.id_solicitud == a.id_solicitud %}
-							<td><h3 style="color:#000000">{{ c.id_item.nombre }}</h3></td>
-						{% endif %}
-					{% endfor %}
-				{%elif a|class_name == "Crea" %}
+				
+				{%if a|class_name == "Crea" %}
 					<td><h3 style="color:#000000">CREÓ solicitud de retiro de item</h3></td>
-					{% for c in crear %}
+					{% for c in crear_todos %}
 						{% if c.id_solicitud == a.id_solicitud %}
 							<td><h3 style="color:#000000">{{ c.id_item.nombre }}</h3></td>
 						{% endif %}
 					{% endfor %}
+
+				{%elif a|class_name == "Aprueba" %}
+					<td><h3 style="color:#000000">APROBÓ solicitud de retiro de item</h3></td>
+					{% for c in crear_todos %}
+						{% if c.id_solicitud == a.id_solicitud %}
+							<td><h3 style="color:#000000">{{ c.id_item.nombre }}</h3></td>
+						{% endif %}
+					{% endfor %}
+
 				{%else%}
 					<td><h3 style="color:#000000">INGRESÓ {{a.cantidad}} item(s) al inventario</h3></td>
 					<td><h3 style="color:#000000">{{ a.id_item.nombre }}</h3></td>
 				{%endif%}
 			</tr>
+			{% endif %}
 		{% endfor %}
+		</tbody>
+		</table>
 	{% else %}
 		<h3>No hay movimientos registrados.</h3>
 	{% endif %}
-<!--div>
-	{% for i in items %}
-		<tr>
-			<td style = "width:33%"><h3 style = "color: gray;">{{ i.fecha_accion|date:"d-m-Y, H:i" }}</h3></td>
-			<td style = "width:33%"><h3 style = "color: gray;">Item {{ i.get_accion_display }}</h3></td>
-			<td style = "width:34%"><h3 style = "color: gray;">{{ i.nombre }}</h3></td>
-		</tr>
-	{% endfor %}
 
-	{% for c in categorias %}
-		<tr>
-			<td style = "width:33%"><h3 style = "color: gray;">{{ c.fecha_accion|date:"d-m-Y, H:i" }}</h3></td>
-			<td style = "width:33%"><h3 style = "color: gray;">Categoria {{ c.get_accion_display }}</h3></td>
-			<td style = "width:34%"><h3 style = "color: gray;">{{ c.nombre }}</h3></td>
-		</tr>
-	{% endfor %}
-</div-->
-	</tbody>
-	</table>
 {% endblock page_content %}
 
 

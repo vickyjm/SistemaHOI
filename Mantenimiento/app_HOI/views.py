@@ -47,7 +47,7 @@ def verperfil(request):
         request.user.groups.add(Group.objects.get(name='Técnicos'))
 
     crear = Crea.objects.filter(id_usuario = request.user).order_by('-fecha')
-    #crear = Crea.objects.all().order_by('-fecha')
+    crear_todos = Crea.objects.all()
     aprobar = Aprueba.objects.filter(id_usuario = request.user).order_by('-fecha')
     ingresar = Ingresa.objects.filter(id_usuario = request.user).order_by('-fecha')
     latest =  list(crear) + list(aprobar) + list(ingresar)
@@ -55,6 +55,7 @@ def verperfil(request):
 
     return render(request, 'verperfil.html',{'user': request.user,
                                              'crear':crear,
+                                             'crear_todos': crear_todos,
                                              'latest': latest_sorted})
 
 @login_required
@@ -640,12 +641,12 @@ def solicitud(request):
     solic_creadas = Crea.objects.order_by('-fecha')
 
     # Si es un técnico, solo puede ver sus solicitudes
-    #if not request.user.groups.filter(name = "Almacenistas").exists():
-    #    solicitudes = solic_creadas.filter(id_usuario = request.user)
+    if not request.user.groups.filter(name = "Almacenistas").exists():
+        solicitudes = solic_creadas.filter(id_usuario = request.user)
     # Si es almacenista o administrador, solo ve las solicitudes de los técnicos
-    #else:
+    else:
     #    solicitudes = solic_creadas.exclude(id_usuario = request.user)
-    solicitudes = solic_creadas.all()
+        solicitudes = solic_creadas.all()
     if request.method == "POST":
         pass  
     else:
