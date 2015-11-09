@@ -46,10 +46,20 @@ def verperfil(request):
         request.user.groups.add(Group.objects.get(name='Almacenistas'))
         request.user.groups.add(Group.objects.get(name='Técnicos'))
 
-    aprobar = Aprueba.objects.filter(id_usuario = request.user)
-    crear = Crea.objects.all()
+    crear = Crea.objects.all().order_by('-fecha')
+    aprobar = Aprueba.objects.filter(id_usuario = request.user).order_by('-fecha')
+    ingresar = Ingresa.objects.filter(id_usuario = request.user).order_by('-fecha')
 
-    return render(request, 'verperfil.html',{'user': request.user, 'aprobar': aprobar, 'crear':crear})
+    # Si es un técnico, solo puede ver sus solicitudes
+    #if not request.user.groups.filter(name = "Almacenistas").exists():
+    solicitudes = crear.filter(id_usuario = request.user)
+    latest =  list(crear) + list(aprobar) + list(ingresar)
+    latest_sorted = sorted(latest, key=lambda x: x.fecha, reverse=True)
+    return render(request, 'verperfil.html',{'user': request.user,
+                                             'aprobar': aprobar,
+                                             'crear':crear,
+                                             'solicitudes':solicitudes,
+                                             'latest': latest_sorted})
 
 @login_required
 def perfil_editar(request, _id):
@@ -478,7 +488,7 @@ def categoria_editar(request, _id):
                         accion = "Desactivar"
                         mensaje = "Al desactivar la categoría '%s' también se \
                                    desactivarán todos los ítems (%i) que le pertenecen.\
-                                   ¿Está seguro de que desea activar la categoría %s?" \
+                                   ¿Está seguro de que desea desactivar la categoría %s?" \
                                    % (categoria.nombre,cantidad,categoria.nombre)
 
                     form = categoria_editarForm(request.POST)
@@ -596,7 +606,6 @@ def item_ingresar(request, _id):
                                                          'mensaje': mensaje,
                                                          'color': color})
 
-##### ESTE CONCEPTO ESTA MAL... CAMBIARLO
 def item_retirar(request, _id):
     item = Item.objects.get(pk = _id)
 
@@ -635,12 +644,12 @@ def solicitud(request):
     solic_creadas = Crea.objects.order_by('-fecha')
 
     # Si es un técnico, solo puede ver sus solicitudes
-    if not request.user.groups.filter(name = "Almacenistas").exists():
-        solicitudes = solic_creadas.filter(id_usuario = request.user)
+    #if not request.user.groups.filter(name = "Almacenistas").exists():
+    #    solicitudes = solic_creadas.filter(id_usuario = request.user)
     # Si es almacenista o administrador, solo ve las solicitudes de los técnicos
-    else:
-        solicitudes = solic_creadas.exclude(id_usuario = request.user)
-    
+    #else:
+    #    solicitudes = solic_creadas.exclude(id_usuario = request.user)
+    solicitudes = solic_creadas.all()
     if request.method == "POST":
         pass  
     else:

@@ -104,15 +104,15 @@ nav li a.current-page-item {
 
 /* Cerrar sesión */
 
-nav li:last-child {
+nav li.last {
 	float: right;
 }
 
-nav li:last-child a {
+nav li.last a {
 	border-right:none;
 	border-left:none;
 }
 
-nav li:last-child:hover {
+nav li.last:hover {
 	border-radius: 0 10px 10px 0;
 }

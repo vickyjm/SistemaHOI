@@ -9,24 +9,22 @@
 	</script>
 {% endblock page_menu%}
 
-{% block page_title %}Últimos movimientos{% endblock page_title %}
+{% block page_title %}Últimos movimientos de inventario{% endblock page_title %}
+
 {% block page_left %}
 {% endblock page_left %}
 
 {% block page_content %}
 
-
-	<a href="{% url 'cerrarSesion' %}">Cerrar sesión</a>
-	<table style="width:100%" >
+	<table id="rowspan" cellspacing="0" class="tablesorter" style="width:100%" style="width:100%" >
 		<thead>
 			<td><h3>Fecha</h3></td>
 			<td><h3>Acción</h3></td>
-			<td><h3>Nombre referencia</h3></td>
+			<td><h3>Nombre ítem</h3></td>
 		</thead>
 	<tbody>
 
-
-	{% for a in aprobar %}
+<!-- 	{% for a in aprobar %}
 		<tr>
 			<td style = "width:33%"><h3 style = "color: gray;">{{ a.fecha|date:"d-m-Y, H:i" }}</h3></td>
 			<td style = "width:33%"><h3 style = "color: gray;">Retiro de item {{ a.id_solicitud.get_estado_display }}</h3></td>
@@ -36,8 +34,31 @@
 				{% endif %}
 			{% endfor %}
 		</tr>
-	{% endfor %}
+	{% endfor %} -->
+	{% for a in latest%}
+		<tr>
+			<td ><h3 style="color:#000000">{{ a.fecha|date:"d-m-Y, H:i" }}</h3></td>
 
+			{%if a|class_name == "Aprueba" %}
+				<td><h3 style="color:#000000">APROBÓ solicitud de retiro de item</h3></td>
+				{% for c in crear %}
+					{% if c.id_solicitud == a.id_solicitud %}
+						<td><h3 style="color:#000000">{{ c.id_item.nombre }}</h3></td>
+					{% endif %}
+				{% endfor %}
+			{%elif a|class_name == "Crea" %}
+				<td><h3 style="color:#000000">CREÓ solicitud de retiro de item</h3></td>
+				{% for c in crear %}
+					{% if c.id_solicitud == a.id_solicitud %}
+						<td><h3 style="color:#000000">{{ c.id_item.nombre }}</h3></td>
+					{% endif %}
+				{% endfor %}
+			{%else%}
+				<td><h3 style="color:#000000">INGRESÓ {{a.cantidad}} item(s) al inventario</h3></td>
+				<td><h3 style="color:#000000">{{ a.id_item.nombre }}</h3></td>
+			{%endif%}
+		</tr>
+	{% endfor %}
 <!--div>
 	{% for i in items %}
 		<tr>
