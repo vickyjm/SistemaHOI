@@ -134,7 +134,7 @@ class itemForm(forms.Form):
                     widget=forms.NumberInput(attrs={'style': 'width:100%'}))
     categoria = forms.ModelChoiceField(label = "Categoría",
         widget=forms.Select(attrs={'style':'width:100%; background-color:white'}), 
-        queryset=Categoria.objects.order_by('nombre'))
+        queryset=Categoria.objects.filter(estado=1).order_by('nombre'))
     minimo = forms.IntegerField(max_value = 2147483647, 
                     min_value = 0, 
                     required = True, 
