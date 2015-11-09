@@ -97,12 +97,12 @@
 			<td style="width: 60%"><h4 style = "color: gray;"> {{ user.date_joined|date:"d-m-Y" }}</h4></td></tr>	
 	</table>
 
-<!--div>
+<div>
 	<br>
 	<table style="width:100%" >
 		<thead>
-			<td><h2>Contraseña</h2></td>
-			<td><a href="./perfil/{{user.id}}/editar"><i class="fa fa-pencil-square-o"></i></a></td>
+			<td><h2>Cambiar contraseña</h2></td>
+			<td><a href="{% url 'cambiarContraseña' %}"><i class="fa fa-pencil-square-o"></i></a></td>
 		</thead>
-	</table> </div-->
+	</table> </div>
 {% endblock page_right %}

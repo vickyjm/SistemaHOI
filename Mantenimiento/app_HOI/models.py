@@ -9,23 +9,13 @@ import datetime
 @receiver(post_migrate)
 def init_groups(sender, **kwargs):
     group, created = Group.objects.get_or_create(name='Técnicos')
-    if created:
-        pass
-    else:
+    if not created:
         group.save()
     group, created = Group.objects.get_or_create(name='Almacenistas')
-    if created:
-        pass
-    #    group.permissions.add(aprobar_solicitud)
-    #    group.permissions.add(ingresar_item)
-    else: group.save()
+    if not created:
+        group.save()
     group, created = Group.objects.get_or_create(name='Administradores')
-    if created:
-        pass
-#        group.permissions.add(aprobar_solicitud)
-#        group.permissions.add(ingresar_item)
-#        group.permissions.add(crear_item)
-    else:
+    if not created:
         group.save()
 
 class Categoria(models.Model):

@@ -89,7 +89,6 @@ def perfil_editar(request, _id):
                                                   'user': request.user})
 
 # Vista usada al iniciar el sistema
-
 def inicio_sesion(request):
     if request.method == 'POST':
         form = iniciarSesionForm(request.POST)
@@ -171,6 +170,30 @@ def registro(request):
             form = registroForm()
     return render(request,'registro.html', {'form': form})
    
+@login_required
+def cambiarContraseña(request):
+    if request.method == "POST":
+        form = cambiarContraseñaForm(request.POST)
+        if form.is_valid():
+            actual = form.cleaned_data['contraseñaActual']
+            
+            if request.user.check_password(actual):
+                if (form.cleaned_data['contraseña1']!= form.cleaned_data['contraseña2']):
+                    msg = "Las nuevas contraseñas no coinciden. Intente de nuevo."
+                    return render(request,'contrasenia_cambiar.html',{'form' : form, 'msg' : msg})
+                request.user.set_password(form.cleaned_data['contraseña1'])
+                request.user.save()
+                msg = "Su contraseña fue cambiada exitosamente."
+                logout(request)
+                return HttpResponseRedirect('/')
+                return render(request,'contrasenia_cambiar.html',{'form' : form, 'msg' : msg})  
+            else:
+                msg = "La contraseña actual no coincide."
+                return render(request,'contrasenia_cambiar.html',{'form' : form, 'msg' : msg})
+    else:
+        form = cambiarContraseñaForm()
+    return render(request,'contrasenia_cambiar.html',{'form': form})
+
 def recuperarContraseña(request):
     if request.method == "POST":
         form = recuperarContraseñaForm(request.POST)

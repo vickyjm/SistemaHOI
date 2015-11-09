@@ -100,6 +100,21 @@ class recuperarContraseñaForm(forms.Form):
                      label = "Confirmar contraseña", 
                      widget=forms.PasswordInput(attrs={'style': 'width:100%'}))
 
+class cambiarContraseñaForm(forms.Form):
+    contraseñaActual = forms.CharField(
+                     max_length = 25,
+                     required = True,
+                     label = "Contraseña actual", 
+                     widget=forms.PasswordInput(attrs={'style': 'width:100%'}))
+    contraseña1 = forms.CharField(max_length = 25,
+                     required = True,
+                     label = "Contraseña nueva", 
+                     widget=forms.PasswordInput(attrs={'style': 'width:100%'}))
+    contraseña2 = forms.CharField(max_length = 25,
+                     required = True,
+                     label = "Confirmar contraseña", 
+                     widget=forms.PasswordInput(attrs={'style': 'width:100%'}))
+
 class perfilForm(forms.Form):
     nombre = forms.CharField(max_length = 30, 
                     required = True, 
