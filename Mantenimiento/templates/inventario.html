@@ -40,7 +40,6 @@
 			<td><h3>Ingresar</h3></td>
 		{% endif %}
 		{% if user|has_group:"Administradores" %}
-			<td><h3>Retirar</h3></td>
 			<td><h3>Editar</h3></td>
 		{% endif %}
 		</tr>
@@ -69,7 +68,6 @@
 				<td><h3><a href="{% url 'item_ingresar' i.id %}"><i class="fa fa-plus" style="color:green"></i></a></h3></td>
 			{% endif %}
 			{% if user|has_group:"Administradores" %}
-				<td><h3><a href="{% url 'item_retirar' i.id %}"><i class="fa fa-minus" style="color:red"></i></a></h3></td>
 				<td><h3><a href="{% url 'item_editar' i.id %}"><i class="fa fa-pencil-square-o"></i></a></h3></td>
 			{% endif %}
 		</tr>

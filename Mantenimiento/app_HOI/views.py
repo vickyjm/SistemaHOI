@@ -595,6 +595,8 @@ def inventario(request):
     return render(request,'inventario.html', {'items': items, 'mensaje':mensaje})
 
 def item_ingresar(request, _id):
+    if not request.user.groups.filter(name = "Almacenistas").exists():
+        raise PermissionDenied
     item = Item.objects.get(pk = _id)
     
     if request.method == "POST":
@@ -619,46 +621,11 @@ def item_ingresar(request, _id):
         color = black
         form = item_cantidadForm(initial={'cantidad': '1'})
 
-    accion = "Ingresar"
-    return render(request,'item_ingresar_retirar.html', {'form': form, 
-                                                         'accion': accion,
-                                                         'item': item,
-                                                         'mensaje': mensaje,
-                                                         'color': color})
+    return render(request,'item_ingresar.html', {'form': form, 
+                                                 'item': item,
+                                                 'mensaje': mensaje,
+                                                 'color': color})
 
-def item_retirar(request, _id):
-    item = Item.objects.get(pk = _id)
-
-    if request.method == "POST":
-        form = item_cantidadForm(request.POST)
-        
-        if form.is_valid():
-            fecha = datetime.datetime.now()
-            icantidad = form.cleaned_data['cantidad']
-
-            if icantidad > item.cantidad:
-                if item.cantidad == 0:
-                    mensaje = "No se puede retirar. No quedan unidades de este ítem."
-                else:
-                    mensaje = "No puede retirar '%d' ítems. Solo quedan '%d' unidades." % (icantidad,item.cantidad)
-                color = red
-            else:
-                item.cantidad = item.cantidad - icantidad
-                item.save()            
-
-                mensaje = "Cantidad retirada exitosamente."
-                color = green
-    else:
-        mensaje = None
-        color = black
-        form = item_cantidadForm(initial={'cantidad': '1'})
-
-    accion = "Retirar"
-    return render(request,'item_ingresar_retirar.html', {'form': form, 
-                                                         'accion': accion,
-                                                         'item': item,
-                                                         'mensaje': mensaje,
-                                                         'color': color})
 @login_required
 def solicitud(request):
     solic_creadas = Crea.objects.order_by('-fecha')
