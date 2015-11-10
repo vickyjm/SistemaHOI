@@ -24,20 +24,57 @@
 				<h3 style={{color | safe}}>{{mensaje}}</h3>
 			{% endif %}
 			{% for field in form %}
-			<tr>
 			
-			<td><h3>{{field.label_tag}}</h3></td>
+				{% if field.name != "estado" %}
+					<tr>
+					<td><h3>{{field.label_tag}}</h3></td>
+					</tr>
+			 		<h4 style = "color:#CC0000">{{ field.errors}}</h4>
+					<tr>
+					<td><h3>{{field}}</h3></td>
+					</tr>
+				{% else %}
+					<table>
+					<tr>
+						<td style ="width:50%"><h3>Cantidad de ítems:   </h3></td>
+						<td><h3 style="width:30%;text-align:center;color:#999999">   {{cantidad}}</h3></td>
+					</tr>
+					</table>
+					<table> 
+						<h3>Estado:</h3>						
+						<h4 style = "color:#CC0000">{{ field.errors}}</h4>
+						{% if categoria.estado == 1 %}
+							<tr>
+								<td><input checked="checked" id="id_estado_1" name="estado" style="background-color:white" type="radio" value="1"></td>
+								<td><h4><label for="id_estado_1">Activo</label></h4></td>
+							</tr>
+							<tr>
+								<td><h3><input id="id_estado_0" name="estado" style="background-color:white" type="radio" value="0"><h3></td>
+								<td><h4><label for="id_estado_0">Inactivo</label></h4></td>
+							</tr>
+						{% else %}
+							<tr>
+								<td><input id="id_estado_1" name="estado" style="background-color:white" type="radio" value="1"></td>
+								<td><h4><label for="id_estado_1">Activo</label></h4></td>
+							</tr>
+							<tr>
+								<td><h3><input checked="checked" id="id_estado_0" name="estado" style="background-color:white" type="radio" value="0"><h4></td>
+								<td><h4><label for="id_estado_0">Inactivo</label></h4></td>
+							</tr>
+						{% endif %}
 
-			 <h4 style = "color:#CC0000">{{ field.errors}}</h4>
+					</table>
+				{% endif %}
 
-			</tr>
-			<tr>
-				<td><h3>{{field}}</h3></td>
-			</tr>
+
 
 			 {% endfor %}
 			<tr>
 			
+						
+					
+
+
 				<td align="right"><br><br>
 				<input type="submit" class="button" name="Guardar" value="Guardar">
 				<input type="submit" class="button" name="GuardarOtro" value="Guardar y seguir editando">

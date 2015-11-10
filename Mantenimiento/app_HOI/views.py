@@ -537,7 +537,8 @@ def categoria_editar(request, _id):
 
     else:
         # Formulario con los datos a editar
-        form = categoria_editarForm(initial={'nombre': categoria.nombre, 
+        form = categoria_editarForm(initial={'nombre': categoria.nombre,
+                                             'cantidad': cantidad, 
                                              'estado': categoria.estado})
         mensaje = None
     return render(request,'categoria_editar.html', {'categoria': categoria, 
