@@ -216,7 +216,7 @@ class solicitudForm(forms.Form):
                  ('2', 'Dpto 3'))
     dpto = forms.ModelChoiceField(label = "Departamento que lo solicita",
         widget=forms.Select(attrs={'style':'width:100%; background-color:white'}), 
-        queryset=Departamento.objects.order_by('nombre'),
+        queryset=Departamento.objects.filter(estado=1).order_by('nombre'),
         required = True)
 
 class reportesForm(forms.Form):

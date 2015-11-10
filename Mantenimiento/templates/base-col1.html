@@ -12,13 +12,13 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<!--[if lte IE 8]><script src="/{{ STATIC_URL }}js/ie/html5shiv.js"></script><![endif]-->
-		<link rel="stylesheet" href="/{{ STATIC_URL }}css/main.css" />
-		<link rel="stylesheet" href="/{{ STATIC_URL }}css/navbar.css" />
+		<link rel="stylesheet" href="{{ STATIC_URL }}css/main.css" />
+		<link rel="stylesheet" href="{{ STATIC_URL }}css/navbar.css" />
 		<!--[if lte IE 9]><link rel="stylesheet" href="/{{ STATIC_URL }}css/ie9.css" /><![endif]-->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-		<link rel="stylesheet" href="/{{ STATIC_URL }}tablesorter/themes/blue/style.css" type="text/css" id="" media="print, projection, screen" />
-		<script type="text/javascript" src="/{{ STATIC_URL }}tablesorter/jquery-latest.js"></script>
-		<script type="text/javascript" src="/{{ STATIC_URL }}tablesorter/jquery.tablesorter.js"></script>
+		<link rel="stylesheet" href="{{ STATIC_URL }}tablesorter/themes/blue/style.css" type="text/css" id="" media="print, projection, screen" />
+		<script type="text/javascript" src="{{ STATIC_URL }}tablesorter/jquery-latest.js"></script>
+		<script type="text/javascript" src="{{ STATIC_URL }}tablesorter/jquery.tablesorter.js"></script>
 		<script type="text/javascript">
 			$(function() {
 				$("table").tablesorter({debug: true});
@@ -67,10 +67,7 @@
 
 			{% endblock page_menu%}
 
-
 			</nav>
-
-
 						</div>
 					</div>
 				</div>
@@ -81,11 +78,9 @@
 						<div class="12u">
 
 							<section>
-								<h2>{% block page_title %} Plantilla sin barras laterales{% endblock page_title %}</h2>
+								<h2>{% block page_title %}
+									{% endblock page_title %}</h2>
 								{% block page_content %}
-								<p>Texto 1.</p>
-								<p>Texto 2.</p>
-								<p>Texto 3.</p>
 								{% endblock page_content %}
 							</section>
 
@@ -95,56 +90,6 @@
 			</div>
 			<div id="footer-wrapper">
 				<div class="container">
-					<!--div class="row">
-						<div class="8u 12u(mobile)">
-
-							<section>
-								<h2>How about a truckload of links?</h2>
-								<div>
-									<div class="row">
-										<div class="3u 12u(mobile)">
-											<ul class="link-list">
-												<li><a href="#">Sed neque nisi consequat</a></li>
-												<li><a href="#">Dapibus sed mattis blandit</a></li>
-											</ul>
-										</div>
-										<div class="3u 12u(mobile)">
-											<ul class="link-list">
-												<li><a href="#">Quis accumsan lorem</a></li>
-												<li><a href="#">Sed neque nisi consequat</a></li>
-											</ul>
-										</div>
-										<div class="3u 12u(mobile)">
-											<ul class="link-list">
-												<li><a href="#">Sed neque nisi consequat</a></li>
-												<li><a href="#">Dapibus sed mattis blandit</a></li>
-											</ul>
-										</div>
-										<div class="3u 12u(mobile)">
-											<ul class="link-list">
-												<li><a href="#">Quis accumsan lorem</a></li>
-												<li><a href="#">Sed neque nisi consequat</a></li>
-											</ul>
-										</div>
-									</div>
-								</div>
-							</section>
-
-						</div>
-						<div class="4u 12u(mobile)">
-
-							<section>
-								<h2>Something of interest</h2>
-								<p>Duis neque nisi, dapibus sed mattis quis, rutrum accumsan sed.
-								Suspendisse eu varius nibh. Suspendisse vitae magna eget odio amet
-								mollis justo facilisis quis.</p>
-								<footer class="controls">
-									<a href="#" class="button">Oh, please continue ....</a>
-								</footer>
-							</section>
-
-						</div>
-					</div-->
 					<div class="row">
 						<div class="12u">
 
@@ -160,11 +105,11 @@
 
 		<!-- Scripts -->
 			<!--<script src="/{{ STATIC_URL }}js/jquery.min.js"></script>-->
-			<script src="/{{ STATIC_URL }}js/skel.min.js"></script>
-			<script src="/{{ STATIC_URL }}js/skel-viewport.min.js"></script>
-			<script src="/{{ STATIC_URL }}js/util.js"></script>
+			<script src="{{ STATIC_URL }}js/skel.min.js"></script>
+			<script src="{{ STATIC_URL }}js/skel-viewport.min.js"></script>
+			<script src="{{ STATIC_URL }}js/util.js"></script>
 			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
-			<script src="/{{ STATIC_URL }}js/main.js"></script>
+			<script src="{{ STATIC_URL }}js/main.js"></script>
 			
 	</body>
 </html>
