@@ -308,9 +308,10 @@ def item_editar(request, _id):
                             elif int(idcat.estado) == 0:
 
                                 mensaje = "La categoría '%s' se encuentra inactiva por lo que no\
-                                           se puede cambiar el estado del ítem '%s' a activo." %(icategoria,inombre)
+                                           se puede cambiar el estado del ítem '%s' a activo." %(icategoria,nombre)
                                 color = red
                                 return render(request, 'item_editar.html', {'form' : form, 
+                                                                            'item' : item,
                                                                             'nombre' : nombre,
                                                                             'mensaje': mensaje,
                                                                             'color': color})
@@ -322,7 +323,7 @@ def item_editar(request, _id):
                     item.minimo = form.cleaned_data['minimo']
                     item.estado = iestado
                     item.save()
-                    mensaje = "Ítem '%s' editado exitosamente." %nombre
+                    mensaje = "Ítem '%s' editado exitosamente." % nombre
                     color = green
                     
                     if "Guardar" in request.POST:
@@ -347,7 +348,7 @@ def item_editar(request, _id):
                     if int(iestado) == 1:
                         mensaje = "La categoría '%s' está inactiva, al cambiar el ítem '%s'\
                                    a esta categoría, también será desactivado.\n \
-                                   ¿Está seguro de que desea editar el ítem '%s'?" %(icategoria,inombre,inombre)
+                                   ¿Está seguro de que desea editar el ítem '%s'?" %(icategoria,nombre,nombre)
                         print (mensaje)
                         cantidad = form.cleaned_data['cantidad']
                         minimo = form.cleaned_data['minimo']
@@ -386,6 +387,7 @@ def item_editar(request, _id):
                                         'estado': item.estado})
 
     return render(request, 'item_editar.html', {'form' : form, 
+                                                'item' : item,
                                                 'nombre' : nombre,
                                                 'mensaje': mensaje,
                                                 'color': color})
@@ -469,6 +471,7 @@ def categoria_editar(request, _id):
 
     color = black
     categoria = Categoria.objects.get(id = _id)
+    nombre = categoria.nombre
     mensaje = None
     items = Item.objects.filter(id_categoria = _id)
     cantidad = items.count()
@@ -527,7 +530,7 @@ def categoria_editar(request, _id):
             categoria.nombre = cnombre
             categoria.estado = cestado
             categoria.save()
-            mensaje = "Categoría '%s'editada exitosamente." % cnombre
+            mensaje = "Categoría '%s'editada exitosamente." % nombre
             color = green
 
             if "Guardar" in request.POST:
@@ -541,7 +544,8 @@ def categoria_editar(request, _id):
 
     else:
         # Formulario con los datos a editar
-        form = categoria_editarForm(initial={'nombre': categoria.nombre, 
+        form = categoria_editarForm(initial={'nombre': categoria.nombre,
+                                             'cantidad': cantidad, 
                                              'estado': categoria.estado})
         mensaje = None
     return render(request,'categoria_editar.html', {'categoria': categoria, 
@@ -923,8 +927,11 @@ def editarUsuario(request,_id):
                     ciNueva = User.objects.get(username=form.cleaned_data['cedula'])
                     msg = "La cédula ingresada ya existe. Intente de nuevo."
                     color = red
-                    return render(request,'editarUsuario.html',{'form':form,'nombre':nombre,
-                                                                'mensaje':msg,'color':color})
+                    return render(request,'editarUsuario.html',{'form':form,
+                                                                'usuario': usuario,
+                                                                'nombre':nombre,
+                                                                'mensaje':msg,
+                                                                'color':color})
                 except User.DoesNotExist:
                     usuario.username = form.cleaned_data['cedula']
             usuario.first_name = form.cleaned_data['nombre']
@@ -960,7 +967,11 @@ def editarUsuario(request,_id):
                                             'apellido':usuario.last_name,'correo':usuario.email,
                                             'tipo':cargo,'estado':str(int(usuario.is_active))})
 
-    return render(request,'editarUsuario.html',{'form':form,'nombre':nombre,'color':color,'mensaje':msg})
+    return render(request,'editarUsuario.html',{'form':form,
+                                                'usuario': usuario,
+                                                'nombre':nombre,
+                                                'color':color,
+                                                'mensaje':msg})
 
 def adminDptos(request):
 
