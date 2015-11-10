@@ -148,7 +148,7 @@ def registro(request):
             print(user.groups.values('name'))
             print(user.groups.values_list('name',flat=True))
             if (request.user.groups.filter(name = "Administradores").exists()):
-                user.is_active = form.cleaned_data['estado']
+                user.is_active = int(form.cleaned_data['estado'])
             else:
                 user.is_active = True
             user.save()
@@ -165,7 +165,7 @@ def registro(request):
                                                    'color':color})
     else:
         if (request.user.groups.filter(name = "Administradores").exists()):
-            form = registroAdminForm()
+            form = registroAdminForm(initial = {'estado':'1'})
         else:
             form = registroForm()
     return render(request,'registro.html', {'form': form})
