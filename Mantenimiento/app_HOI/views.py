@@ -306,6 +306,7 @@ def item_editar(request, _id):
                                            se puede cambiar el estado del ítem '%s' a activo." %(icategoria,nombre)
                                 color = red
                                 return render(request, 'item_editar.html', {'form' : form, 
+                                                                            'item' : item,
                                                                             'nombre' : nombre,
                                                                             'mensaje': mensaje,
                                                                             'color': color})
@@ -381,6 +382,7 @@ def item_editar(request, _id):
                                         'estado': item.estado})
 
     return render(request, 'item_editar.html', {'form' : form, 
+                                                'item' : item,
                                                 'nombre' : nombre,
                                                 'mensaje': mensaje,
                                                 'color': color})
@@ -953,8 +955,11 @@ def editarUsuario(request,_id):
                     ciNueva = User.objects.get(username=form.cleaned_data['cedula'])
                     msg = "La cédula ingresada ya existe. Intente de nuevo."
                     color = red
-                    return render(request,'editarUsuario.html',{'form':form,'nombre':nombre,
-                                                                'mensaje':msg,'color':color})
+                    return render(request,'editarUsuario.html',{'form':form,
+                                                                'usuario': usuario,
+                                                                'nombre':nombre,
+                                                                'mensaje':msg,
+                                                                'color':color})
                 except User.DoesNotExist:
                     usuario.username = form.cleaned_data['cedula']
             usuario.first_name = form.cleaned_data['nombre']
@@ -990,7 +995,11 @@ def editarUsuario(request,_id):
                                             'apellido':usuario.last_name,'correo':usuario.email,
                                             'tipo':cargo,'estado':str(int(usuario.is_active))})
 
-    return render(request,'editarUsuario.html',{'form':form,'nombre':nombre,'color':color,'mensaje':msg})
+    return render(request,'editarUsuario.html',{'form':form,
+                                                'usuario': usuario,
+                                                'nombre':nombre,
+                                                'color':color,
+                                                'mensaje':msg})
 
 def adminDptos(request):
 
