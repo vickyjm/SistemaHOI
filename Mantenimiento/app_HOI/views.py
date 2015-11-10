@@ -179,17 +179,22 @@ def cambiarContraseña(request):
             
             if request.user.check_password(actual):
                 if (form.cleaned_data['contraseña1']!= form.cleaned_data['contraseña2']):
-                    msg = "Las nuevas contraseñas no coinciden. Intente de nuevo."
-                    return render(request,'contrasenia_cambiar.html',{'form' : form, 'msg' : msg})
+                    mensaje = "Las nuevas contraseñas no coinciden. Intente de nuevo."
+                    return render(request,'contrasenia_cambiar.html',{'form' : form, 'mensaje' : mensaje})
+
                 request.user.set_password(form.cleaned_data['contraseña1'])
                 request.user.save()
-                msg = "Su contraseña fue cambiada exitosamente."
-                logout(request)
-                return HttpResponseRedirect('/')
-                return render(request,'contrasenia_cambiar.html',{'form' : form, 'msg' : msg})  
+                mensaje = "Contraseña cambiada exitosamente."
+                if "Guardar" in request.POST:
+                    aprobar = Aprueba.objects.filter(id_usuario = request.user)
+                    crear = Crea.objects.all()
+                    return render(request,'verperfil.html', {'user': request.user, 
+                                                             'aprobar': aprobar,
+                                                             'mensaje': mensaje, 
+                                                             'crear': crear})
             else:
-                msg = "La contraseña actual no coincide."
-                return render(request,'contrasenia_cambiar.html',{'form' : form, 'msg' : msg})
+                mensaje = "La contraseña actual no coincide."
+                return render(request,'contrasenia_cambiar.html',{'form' : form, 'mensaje' : mensaje})
     else:
         form = cambiarContraseñaForm()
     return render(request,'contrasenia_cambiar.html',{'form': form})
