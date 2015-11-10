@@ -39,7 +39,7 @@ class MiPDF:
                                           imageSide = 'left'))
         
         tablaHeader = [["Nombre: "+usuario.first_name, "Apellido: "+usuario.last_name], 
-                  ["Fecha inicial: "+str(fechaIni), "Fecha final: "+str(fechaFin)]]
+                  ["Fecha inicial: "+str(fechaIni.strftime('%d/%m/%Y')), "Fecha final: "+str(fechaFin.strftime('%d/%m/%Y'))]]
         
         header = Table(tablaHeader, colWidths=[doc.width/2.0]*2)
         header.setStyle(TableStyle([('INNERGRID', (0, 0), (-1, -1), 0.25, colors.white),
@@ -48,12 +48,15 @@ class MiPDF:
 
         elements.append(Paragraph('Ingresos',styles['Heading2']))
         
-        auxIngresos = [["Nombre", "Categoría", "Cantidad", "Ingresado por","Fecha"]]
+        auxIngresos = [["Nombre", "Categoría", "Cantidad", "Ingresado por","Fecha ingreso"]]
         ingresos = Ingresa.objects.all()
         for item in ingresos:
             if (fechaIni <= item.fecha.date() <= fechaFin):
-                auxIngresos.append([item.id_item.nombre,item.id_item.id_categoria,item.cantidad,
-                          item.id_usuario.username,item.fecha.date()])
+                auxIngresos.append([Paragraph(str(item.id_item.nombre),styles['Normal']),
+                                    Paragraph(str(item.id_item.id_categoria),styles['Normal']),
+                                    Paragraph(str(item.cantidad),styles['Normal']),
+                                    Paragraph(str(item.id_usuario.get_full_name()),styles['Normal']),
+                                   Paragraph(str(item.fecha.date().strftime('%d/%m/%Y')),styles['Normal'])])
         
         if (len(auxIngresos)==1):
             elements.append(Paragraph('No hay nuevos ingresos de material en este período de tiempo.',styles['df']))
@@ -70,7 +73,7 @@ class MiPDF:
         #auxSolicitud = [["Solicitante", "Departamento","Ítem","Cantidad","Aprobado por", 
         #                "Solicitado","Aprobado"]]
         auxSolicitud = [["Solicitante", "Departamento","Ítem","Cantidad","Aprobado por", 
-                         "Aprobado"]]
+                         "Fecha aprobación"]]
         solicitudes = Aprueba.objects.all()
         for elem in solicitudes:
             if (fechaIni <= elem.fecha.date() <= fechaFin):
@@ -78,9 +81,12 @@ class MiPDF:
                 #auxSolicitud.append([autor.id_usuario.username,elem.id_solicitud.dpto,autor.id_item.nombre,
                 #              elem.id_solicitud.cantidad, elem.id_usuario.username,autor.fecha.date(),
                 #              elem.fecha.date()])
-                auxSolicitud.append([autor.id_usuario.username,elem.id_solicitud.dpto,autor.id_item.nombre,
-                              elem.id_solicitud.cantidad, elem.id_usuario.username,
-                              elem.fecha.date()])
+                auxSolicitud.append([Paragraph(str(autor.id_usuario.get_full_name()),styles['Normal']),
+                                     Paragraph(str(elem.id_solicitud.dpto),styles['Normal']),
+                                     Paragraph(str(autor.id_item.nombre),styles['Normal']),
+                                     Paragraph(str(elem.id_solicitud.cantidad),styles['Normal']),
+                                     Paragraph(str(elem.id_usuario.get_full_name()),styles['Normal']),
+                                     Paragraph(str(elem.fecha.date().strftime('%d/%m/%Y')),styles['Normal'])])
         if (len(auxSolicitud)==1):
             elements.append(Paragraph('No se realizaron ni aprobaron solicitudes en este período de tiempo.',
                                       styles['df']))
