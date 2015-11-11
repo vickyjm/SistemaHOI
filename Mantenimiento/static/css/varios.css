@@ -1,16 +1,17 @@
-/*Tablas*/
+/***Tablas***/
 
-#rowspan thead, tbody {
+table.tablesorter thead, table.tablesorter tbody {
 	display: block;
 }
 
-#rowspan tbody {	
+table.tablesorter tbody {	
 	height: 400px;
 	overflow-y: scroll;
 }
 
 table.movimientos tbody tr:hover td {
 	background-color: #f1f1f1;
+	/*background-color: #e4e4e4;*/
 } 
 
 table.movimientos tbody tr td:first-child {
@@ -23,6 +24,40 @@ table.movimientos tbody tr td:nth-child(2) {
 
 table.movimientos tbody tr td:last-child {
 	width: 200px;
+} 
+
+
+/* Solicitudes */
+table.solicitudes tbody tr td:first-child {
+	width: 150px;
+} 
+
+table.solicitudes tbody tr td:nth-child(2) {
+	width: 200px;
+} 
+
+table.solicitudes tbody tr td:nth-child(3) {
+	width: 80px;
+} 
+
+table.solicitudes tbody tr td:nth-child(4) {
+	width: 200px;
+}
+
+table.solicitudes tbody tr td:nth-child(5) {
+	width: 102px;
+} 
+
+table.solicitudes tbody tr td:nth-child(6) {
+	width: 330px;
+} 
+
+table.solicitudes tbody tr td:nth-child(7) {
+	width: 60px;
+} 
+
+table.solicitudes tbody tr td:last-child {
+	width: 60px;
 } 
 
 /*Colores*/
