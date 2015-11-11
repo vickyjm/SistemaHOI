@@ -530,7 +530,7 @@ def categoria_editar(request, _id):
             categoria.nombre = cnombre
             categoria.estado = cestado
             categoria.save()
-            mensaje = "Categoría '%s'editada exitosamente." % nombre
+            mensaje = "Categoría '%s' editada exitosamente." % nombre
             color = green
 
             if "Guardar" in request.POST:

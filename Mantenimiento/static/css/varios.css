@@ -1,0 +1,29 @@
+/*Tablas*/
+
+/*#rowspan thead, tbody {
+	display: block;
+}
+
+#rowspan tbody {	
+	height: 400px;
+	overflow-y: scroll;
+}*/
+
+
+/*Colores*/
+
+.exito {
+	color: #009900;
+}
+
+.error {
+	color: #CC0000;
+}
+
+.activo {
+	color: #000000;
+}
+
+.inactivo {
+	color: gray;	/*Cambiarlo*/
+}
