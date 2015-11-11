@@ -14,7 +14,7 @@ table.movimientos tbody tr:hover td {
 	/*background-color: #e4e4e4;*/
 } 
 
-table.movimientos tbody tr td:first-child {
+table.movimientos td:first-child {
 	width: 200px;
 } 
 
@@ -59,6 +59,22 @@ table.solicitudes tbody tr td:nth-child(7) {
 table.solicitudes tbody tr td:last-child {
 	width: 60px;
 } 
+
+/* Categorias */
+
+table.categorias tbody tr td:first-child {
+	width: 553px;
+	max-width: 100%;
+} 
+
+table.categorias tbody tr td:nth-child(2) {
+	width: 100px;
+} 
+
+table.categorias tbody tr td:last-child {
+	width: 100px;
+} 
+
 
 /*Colores*/
 
