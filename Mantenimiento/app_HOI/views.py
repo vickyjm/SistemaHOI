@@ -260,6 +260,7 @@ def crearItem(request):
         if form.is_valid():
             inombre = form.cleaned_data['nombre']
             inombre = inombre.upper()
+            icantidad = form.cleaned_data['cantidad']
             icategoria = form.cleaned_data['categoria']
             icategoria = icategoria.nombre.upper()
             idcat = Categoria.objects.get(nombre = icategoria)
@@ -272,14 +273,23 @@ def crearItem(request):
                 color = red
             # Si el item no existe, lo crea
             else:
+                fecha = datetime.datetime.now()
+
                 obj = Item(nombre = inombre,
-                            cantidad = form.cleaned_data['cantidad'],
-                            id_categoria = idcat,
-                            minimo = form.cleaned_data['minimo']
-                            )
+                           cantidad = icantidad,
+                           id_categoria = idcat,
+                           minimo = form.cleaned_data['minimo']
+                          )
                 obj.save()
+
+                if icantidad > 0:
+                    ingresar = Ingresa(id_usuario = request.user,
+                                       id_item = Item.objects.get(pk = obj.pk),
+                                       fecha = fecha,
+                                       cantidad = icantidad)
+                    ingresar.save()
+
                 mensaje = "Ítem '%s' creado exitosamente." % (inombre)
-                color = green 
 
                 if "Guardar" in request.POST:
                     items = Item.objects.order_by('nombre')
@@ -628,6 +638,7 @@ def inventario(request):
 def item_ingresar(request, _id):
     if not request.user.groups.filter(name = "Almacenistas").exists():
         raise PermissionDenied
+
     item = Item.objects.get(pk = _id)
     
     if request.method == "POST":
@@ -635,18 +646,29 @@ def item_ingresar(request, _id):
         
         if form.is_valid():
             fecha = datetime.datetime.now()
-            icantidad = form.cleaned_data['cantidad']            
-            item.cantidad = item.cantidad + icantidad
-            item.save()
-            
-            obj = Ingresa(id_usuario = request.user,
-                          id_item = item,
-                          fecha = fecha,
-                          cantidad = icantidad)
-            obj.save()
-            
-            mensaje = "Cantidad ingresada exitosamente."
-            color = green
+            icantidad = form.cleaned_data['cantidad']
+
+            if icantidad > 0:
+                item.cantidad = item.cantidad + icantidad
+                item.save()
+                
+                obj = Ingresa(id_usuario = request.user,
+                              id_item = item,
+                              fecha = fecha,
+                              cantidad = icantidad)
+                obj.save()
+                
+                if icantidad > 1:
+                    mensaje = "'%d' unidades ingresadas al ítem '%s' exitosamente." % (icantidad, item.nombre)
+                else:
+                    mensaje = "'%d' unidad ingresada al ítem '%s' exitosamente." % (icantidad, item.nombre)
+
+                if "Guardar" in request.POST:
+                    items = Item.objects.order_by('nombre')
+                    return render(request,'inventario.html', {'items': items, 'mensaje': mensaje})
+            else:
+                mensaje = "Debe ingresar al menos 1 ítem."
+                color = red
     else:
         mensaje = None
         color = black
@@ -668,7 +690,7 @@ def solicitud(request):
         solicitudes = crear.filter(id_usuario = request.user)
     # Si es almacenista o administrador, puede ver las solicitudes de todos (incluyéndose)
     else:
-        solicitudes = crear
+        solicitudes = crear.all()
     
     if request.method == "POST":
         pass  
@@ -681,14 +703,15 @@ def solicitud(request):
 def solicitud_estado(request, _id, _nuevo_estado):
     if not request.user.groups.filter(name = "Almacenistas").exists():
         raise PermissionDenied    
-    solic_creadas = Crea.objects.order_by('-fecha')
+    
+    crear = Crea.objects.order_by('-fecha')
 
     # Si es un técnico, solo puede ver sus solicitudes
     if not request.user.groups.filter(name = "Almacenistas").exists():
-        solicitudes = solic_creadas.filter(id_usuario = request.user)
-    # Si es almacenista o administrador, solo ve las solicitudes de los técnicos
+        solicitudes = crear.filter(id_usuario = request.user)
+    # Si es almacenista o administrador, puede ver las solicitudes de todos (incluyéndose)
     else:
-        solicitudes = solic_creadas.exclude(id_usuario = request.user)
+        solicitudes = crear.all()
 
     if request.method == "GET":
         obj = Crea.objects.get(pk=_id)

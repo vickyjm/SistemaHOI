@@ -27,15 +27,15 @@
 
 			{% for field in form %}
 			 	<h3>{{field.label_tag}}</h3>
-				<h4 style = "color:#CC0000">{{ field.errors}}</h4>
+				<h4 class="error">{{ field.errors}}</h4>
 				{{field}}<br><br>
 			{% endfor %}
 
 		 	<tr>
 				<td align="right"><br><br>
-				<input type="submit" class="button" name="Guardar" value="Crear">
-				<input type="submit" class="button" name="GuardarOtro" value="Crear y agregar otro ítem">
-				<a href="{% url 'inventario' %}" class="button">Cancelar</a>
+					<input type="submit" class="button" name="Guardar" value="Crear">
+					<input type="submit" class="button" name="GuardarOtro" value="Crear y agregar otro ítem">
+					<a href="{% url 'inventario' %}" class="button">Cancelar</a>
 				</td>
 			</tr>
 		</tbody>
