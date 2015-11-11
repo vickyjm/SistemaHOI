@@ -1,7 +1,7 @@
 {% extends "base-col3.html" %}
 
 {% block page_menu %}
-	<script type="text/javascript">
+	<script>
 		window.onload = function WindowLoad(event) {
 	    	document.getElementById("inventario").setAttribute("class","current-page-item");
 		}	
@@ -9,14 +9,13 @@
 {% endblock page_menu%}
 
 {% block page_title %}Crear ítem{% endblock page_title %}
+
 {% block page_left %}
-
     <table style="width:100%"><tr><td style="text-align: left;"><a href="{% url 'inventario' %}" class="button"><i class="fa fa-arrow-left"></i></a></td></tr></table>
-
 {% endblock page_left %}
+
 {% block page_content %}
 <form action="" method="post">
-
 	<table style="width:100%" >
 		<thead>
 		</thead>
@@ -25,25 +24,23 @@
 			{% if mensaje %}
 				<h3 style={{color | safe}}>{{mensaje}}</h3>
 			{% endif %}
+
 			{% for field in form %}
+			 	<h3>{{field.label_tag}}</h3>
+				<h4 style = "color:#CC0000">{{ field.errors}}</h4>
+				{{field}}<br><br>
+			{% endfor %}
 
-		 	<h3>{{field.label_tag}}</h3>
-
-			 <h4 style = "color:#CC0000">{{ field.errors}}</h4>
-
-			 {{field}}<br><br>
-
-			 {% endfor %}
-		 <tr>
-			<td align="right"><br><br>
-			<input type="submit" class="button" name="Guardar" value="Crear">
-			<input type="submit" class="button" name="GuardarOtro" value="Crear y agregar otro ítem">
-			<a href="{% url 'inventario' %}" class="button">Cancelar</a>
-			</td>
-
-		</tr>
+		 	<tr>
+				<td align="right"><br><br>
+				<input type="submit" class="button" name="Guardar" value="Crear">
+				<input type="submit" class="button" name="GuardarOtro" value="Crear y agregar otro ítem">
+				<a href="{% url 'inventario' %}" class="button">Cancelar</a>
+				</td>
+			</tr>
 		</tbody>
 	</table>
 </form>
 {% endblock page_content %}
+
 {% block page_right %}{% endblock page_right %}

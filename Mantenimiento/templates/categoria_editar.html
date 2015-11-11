@@ -1,7 +1,7 @@
 {% extends "base-col3.html" %}
 
 {% block page_menu %}
-	<script type="text/javascript">
+	<script>
 		window.onload = function WindowLoad(event) {
 	    	document.getElementById("categorias").setAttribute("class","current-page-item");
 		}	
@@ -9,13 +9,14 @@
 {% endblock page_menu%}
 
 {% block page_title %}Editar categoría '{{ categoria }}'{% endblock page_title %}
+
 {% block page_left %}
 	<td><a href="{% url 'categorias' %}" class="button"><i class="fa fa-arrow-left"></i></a></td>
-
 {% endblock page_left %}
+
 {% block page_content %}
 <form action="" method="post">
-<table style="width:100%" >
+	<table style="width:100%" >
 		<thead>
 		</thead>
 		{% csrf_token %}
@@ -27,22 +28,22 @@
 			
 				{% if field.name != "estado" %}
 					<tr>
-					<td><h3>{{field.label_tag}}</h3></td>
+						<td><h3>{{field.label_tag}}</h3></td>
 					</tr>
-			 		<h4 style = "color:#CC0000">{{ field.errors}}</h4>
+			 		<h4 class="error">{{ field.errors}}</h4>
 					<tr>
-					<td><h3>{{field}}</h3></td>
+						<td><h3>{{field}}</h3></td>
 					</tr>
 				{% else %}
 					<table>
 					<tr>
-						<td style ="width:50%"><h3>Cantidad de ítems:   </h3></td>
-						<td><h3 style="width:30%;text-align:center;color:#999999">   {{cantidad}}</h3></td>
+						<td style ="width:50%"><h3>Cantidad de ítems:</h3></td>
+						<td><h3 style="width:30%;text-align:center;color:#999999">{{cantidad}}</h3></td>
 					</tr>
 					</table>
 					<table> 
 						<h3>Estado:</h3>						
-						<h4 style = "color:#CC0000">{{ field.errors}}</h4>
+						<h4 class="error">{{ field.errors}}</h4>
 						{% if categoria.estado == 1 %}
 							<tr>
 								<td><input checked="checked" id="id_estado_1" name="estado" style="background-color:white" type="radio" value="1"></td>
@@ -66,15 +67,8 @@
 					</table>
 				{% endif %}
 
-
-
-			 {% endfor %}
-			<tr>
-			
-						
-					
-
-
+			{% endfor %}
+			<tr>			
 				<td align="right"><br><br>
 				<input type="submit" class="button" name="Guardar" value="Guardar">
 				<input type="submit" class="button" name="GuardarOtro" value="Guardar y seguir editando">

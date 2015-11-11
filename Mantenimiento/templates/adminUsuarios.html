@@ -2,7 +2,7 @@
 {% load templatetags %}
 
 {% block page_menu %}
-    <script type="text/javascript">
+    <script>
         window.onload = function WindowLoad(event) {
             document.getElementById("administracion").setAttribute("class","current-page-item");
             document.getElementById("adminUsuarios").setAttribute("class","current-page-item");
@@ -11,61 +11,66 @@
 {% endblock page_menu%}
 
 {% block page_title %}{% endblock page_title %}
-{% block page_content %}
-<table style="width:100%">
-	<tr align="right">
-		<td><a href="{% url 'crearUsuario' %}" class="button" align = "right"><i class="fa fa-plus-square"></i>  Crear usuario</a></td>
-	</tr>
-</table>
 
-<h2>Administración de Usuarios</h2>
+{% block page_content %}
+	<table style="width:100%">
+		<tr align="right">
+			<td><a href="{% url 'crearUsuario' %}" class="button" align = "right"><i class="fa fa-plus-square"></i>  Crear usuario</a></td>
+		</tr>
+	</table>
+
+	<h2>Administración de Usuarios</h2>
 
 	{% if mensaje %}
-		<h3 style="color:#009900; text-align:center">{{mensaje}}</h3>
+		<h3 class="exito" style="text-align:center">{{mensaje}}</h3>
 	{% endif %}
 
-<table  id="rowspan" cellspacing="0" class="tablesorter" >
-	<thead >
-		<tr>
-			<th><h3>Nombre</h3></th>
-			<th><h3>Apellido</h3></th>
-			<th><h3>Cédula</h3></th>
-			<th><h3>Cargo</h3></th>
-			<th><h3>Estado</h3></th>
-			<td><h3>Editar</h3></td>  <!-- Está como td para que no le salga flechita-->
-		</tr>
-	</thead>
-	<tbody>
-		{% for u in usuarios %}
-		<tr>
-			{% if u.is_active %}
-				<td><h3 style="color:#000000">{{ u.first_name }}</h3></td>
-				<td><h3 style="color:#000000">{{ u.last_name }}</h3></td>
-				<td><h3 style="color:#000000">{{ u.username }}</h3></td>
-				{% if u|has_group:"Administradores" %}
-					<td><h3 style="color:#000000">Administrador</h3></td>
-				{% elif u|has_group:"Almacenistas" %}
-					<td><h3 style="color:#000000">Almacenista</h3></td>
+	<table  id="rowspan" cellspacing="0" class="tablesorter" >
+		<thead>
+			<tr>
+				<th><h3>Nombre</h3></th>
+				<th><h3>Apellido</h3></th>
+				<th><h3>Cédula</h3></th>
+				<th><h3>Cargo</h3></th>
+				<th><h3>Estado</h3></th>
+				<td><h3>Editar</h3></td>  <!-- Está como td para que no le salga flechita-->
+			</tr>
+		</thead>
+		<tbody>
+			{% for u in usuarios %}
+			<tr>
+				{% if u.is_active %}
+					<td><h3 class="activo">{{ u.first_name }}</h3></td>
+					<td><h3 class="activo">{{ u.last_name }}</h3></td>
+					<td><h3 class="activo">{{ u.username }}</h3></td>
+					<td><h3 class="activo">
+						{% if u|has_group:"Administradores" %}
+							Administrador
+						{% elif u|has_group:"Almacenistas" %}
+							Almacenista
+						{% else %}
+							Técnico
+						{% endif %}			
+					</h3></td>	
+					<td><h3 class="activo">Activo</h3></td>
 				{% else %}
-					<td><h3 style="color:#000000">Técnico</h3></td>
-				{% endif %}				
-				<td><h3 style="color:#000000">Activo</h3></td>
-			{% else %}
-				<td><h3>{{ u.first_name }}</h3></td>
-				<td><h3>{{ u.last_name }}</h3></td>
-				<td><h3>{{ u.username }}</h3></td>
-				{% if u|has_group:"Administradores" %}
-					<td><h3>Administrador</h3></td>
-				{% elif u|has_group:"Almacenistas" %}
-					<td><h3>Almacenista</h3></td>
-				{% else %}
-					<td><h3>Técnico</h3></td>
+					<td><h3 class="inactivo">{{ u.first_name }}</h3></td>
+					<td><h3 class="inactivo">{{ u.last_name }}</h3></td>
+					<td><h3 class="inactivo">{{ u.username }}</h3></td>
+					<td><h3 class="inactivo">
+						{% if u|has_group:"Administradores" %}
+							Administrador
+						{% elif u|has_group:"Almacenistas" %}
+							Almacenista
+						{% else %}
+							Técnico
+						{% endif %}
+					</h3></td>
+					<td><h3 class="inactivo">Inactivo</h3></td>
 				{% endif %}
-				<td><h3>Inactivo</h3></td>
-			{% endif %}
-			<td><h3><a href="{% url 'editarUsuario' u.id %}"><i class="fa fa-pencil-square-o"></i></a></h3></td>
-		</tr>
-		{% endfor %}
-	</tbody>
-</table>
+				<td><h3><a href="{% url 'editarUsuario' u.id %}"><i class="fa fa-pencil-square-o"></i></a></h3></td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
 {% endblock page_content %}

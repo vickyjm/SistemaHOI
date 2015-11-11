@@ -25,5 +25,10 @@
 }
 
 .inactivo {
-	color: gray;	/*Cambiarlo*/
+	color: #808080;
 }
+
+
+/*Logo*/
+
+#logoimagen{ float: right; }

@@ -24,69 +24,19 @@ red = "color:#CC0000"
 black = "color:#000000"
 green = "color:#009900"
 
+
+########## ERROR HANDLING ##########
+
 def page_not_found(request):
-    response = render_to_response('404.html',
-                                    context_instance=RequestContext(request)
-    )
+    response = render_to_response('404.html', context_instance=RequestContext(request))
     response.status_code = 404
     return response
 
 def permission_denied(request):
-    response = render_to_response('403.html',
-                                    context_instance=RequestContext(request)
-    )
+    response = render_to_response('403.html', context_instance=RequestContext(request))
     response.status_code = 403
     return response
 
-@login_required
-def verperfil(request):
-    grupo = request.user.groups.values('name')
-    if (not grupo) and request.user.is_superuser:
-        request.user.groups.add(Group.objects.get(name='Administradores'))
-        request.user.groups.add(Group.objects.get(name='Almacenistas'))
-        request.user.groups.add(Group.objects.get(name='Técnicos'))
-
-    crear = Crea.objects.filter(id_usuario = request.user).order_by('-fecha')
-    crear_todos = Crea.objects.all()
-    aprobar = Aprueba.objects.filter(id_usuario = request.user).order_by('-fecha')
-    ingresar = Ingresa.objects.filter(id_usuario = request.user).order_by('-fecha')
-    latest =  list(crear) + list(aprobar) + list(ingresar)
-    latest_sorted = sorted(latest, key=lambda x: x.fecha, reverse=True)
-
-    return render(request, 'verperfil.html',{'user': request.user,
-                                             'crear':crear,
-                                             'crear_todos': crear_todos,
-                                             'latest': latest_sorted})
-
-@login_required
-def perfil_editar(request, _id):
-
-    mensaje = None
-    if request.method == "POST":
-        form = perfilForm(request.POST)
-        if form.is_valid():
-            request.user.first_name = form.cleaned_data['nombre']
-            request.user.last_name = form.cleaned_data['apellido']
-            request.user.email = form.cleaned_data['correo']
-            request.user.save()
-            mensaje = "Perfil editado exitosamente."
-            #return HttpResponseRedirect('/verperfil')
-            if "Guardar" in request.POST:
-                aprobar = Aprueba.objects.filter(id_usuario = request.user)
-                crear = Crea.objects.all()
-                return render(request,'verperfil.html', {'user': request.user, 
-                                                    'aprobar': aprobar,
-                                                    'mensaje': mensaje, 
-                                                    'crear': crear})
-    else:
-
-        form = perfilForm(initial = {'nombre':request.user.first_name,
-                                     'apellido':request.user.last_name,
-                                     'correo':request.user.email})
-
-    return render(request, 'perfil_editar.html', {'form': form,
-                                                  'mensaje' : mensaje,
-                                                  'user': request.user})
 
 # Vista usada al iniciar el sistema
 def inicio_sesion(request):
@@ -169,9 +119,95 @@ def registro(request):
         else:
             form = registroForm()
     return render(request,'registro.html', {'form': form})
-   
+
+def recuperarContraseña(request):
+    if request.method == "POST":
+        form = recuperarContraseñaForm(request.POST)
+        if form.is_valid():
+            ci = form.cleaned_data['cedula']
+            if User.objects.filter(username=ci).exists():
+                if (form.cleaned_data['contraseña1']!= form.cleaned_data['contraseña2']):
+                    mensaje = "Las contraseñas no coinciden. Intente de nuevo."
+                    color = red
+                    return render(request,'recuperarContrasenia.html',{'form': form, 
+                                                                       'mensaje': mensaje,
+                                                                       'color': color})
+                user = User.objects.get(username=ci)
+                user.set_password(form.cleaned_data['contraseña1'])
+                user.save()
+                mensaje = "Su contraseña fue cambiada exitosamente."
+                color = green
+                return render(request,'recuperarContrasenia.html',{'form': form, 
+                                                                   'mensaje': mensaje,
+                                                                   'color': color})  
+            else:
+                mensaje = "La cédula ingresada no se encuentra registrada."
+                color = red
+                return render(request,'recuperarContrasenia.html',{'form': form, 
+                                                                   'mensaje': mensaje,
+                                                                   'color': color})
+    else:
+        form = recuperarContraseñaForm()
+
+    return render(request,'recuperarContrasenia.html',{'form': form})
+
+
+########## VISTAS DEL PERFIL DEL USUARIO ##########
+
+@login_required
+def verperfil(request):
+    grupo = request.user.groups.values('name')
+    if (not grupo) and request.user.is_superuser:
+        request.user.groups.add(Group.objects.get(name='Administradores'))
+        request.user.groups.add(Group.objects.get(name='Almacenistas'))
+        request.user.groups.add(Group.objects.get(name='Técnicos'))
+
+    crear = Crea.objects.filter(id_usuario = request.user).order_by('-fecha')
+    crear_todos = Crea.objects.all()
+    aprobar = Aprueba.objects.filter(id_usuario = request.user).order_by('-fecha')
+    ingresar = Ingresa.objects.filter(id_usuario = request.user).order_by('-fecha')
+    latest =  list(crear) + list(aprobar) + list(ingresar)
+    latest_sorted = sorted(latest, key=lambda x: x.fecha, reverse=True)
+
+    return render(request, 'verperfil.html',{'user': request.user,
+                                             'crear':crear,
+                                             'crear_todos': crear_todos,
+                                             'latest': latest_sorted})
+
+@login_required
+def perfil_editar(request, _id):
+
+    mensaje = None
+    if request.method == "POST":
+        form = perfilForm(request.POST)
+        if form.is_valid():
+            request.user.first_name = form.cleaned_data['nombre']
+            request.user.last_name = form.cleaned_data['apellido']
+            request.user.email = form.cleaned_data['correo']
+            request.user.save()
+            mensaje = "Perfil editado exitosamente."
+            #return HttpResponseRedirect('/verperfil')
+            if "Guardar" in request.POST:
+                aprobar = Aprueba.objects.filter(id_usuario = request.user)
+                crear = Crea.objects.all()
+                return render(request,'verperfil.html', {'user': request.user, 
+                                                    'aprobar': aprobar,
+                                                    'mensaje': mensaje, 
+                                                    'crear': crear})
+    else:
+        form = perfilForm(initial = {'nombre':request.user.first_name,
+                                     'apellido':request.user.last_name,
+                                     'correo':request.user.email})
+
+    return render(request, 'perfil_editar.html', {'form': form,
+                                                  'mensaje' : mensaje,
+                                                  'user': request.user})
+
 @login_required
 def cambiarContraseña(request):
+    mensaje = None
+    color = black
+
     if request.method == "POST":
         form = cambiarContraseñaForm(request.POST)
         if form.is_valid():
@@ -179,12 +215,16 @@ def cambiarContraseña(request):
             
             if request.user.check_password(actual):
                 if (form.cleaned_data['contraseña1']!= form.cleaned_data['contraseña2']):
-                    mensaje = "Las nuevas contraseñas no coinciden. Intente de nuevo."
-                    return render(request,'contrasenia_cambiar.html',{'form' : form, 'mensaje' : mensaje})
+                    mensaje = "Las nuevas contraseñas no coinciden."
+                    color = red
+                    return render(request,'cambiarContrasenia.html',{'form' : form, 
+                                                                     'mensaje' : mensaje,
+                                                                     'color': color})
 
                 request.user.set_password(form.cleaned_data['contraseña1'])
                 request.user.save()
                 mensaje = "Contraseña cambiada exitosamente."
+
                 if "Guardar" in request.POST:
                     aprobar = Aprueba.objects.filter(id_usuario = request.user)
                     crear = Crea.objects.all()
@@ -194,43 +234,25 @@ def cambiarContraseña(request):
                                                              'crear': crear})
             else:
                 mensaje = "La contraseña actual no coincide."
-                return render(request,'contrasenia_cambiar.html',{'form' : form, 'mensaje' : mensaje})
+                color = red
+                return render(request,'cambiarContrasenia.html',{'form': form, 
+                                                                 'mensaje': mensaje,
+                                                                 'color': color})
     else:
         form = cambiarContraseñaForm()
-    return render(request,'contrasenia_cambiar.html',{'form': form})
 
-def recuperarContraseña(request):
-    if request.method == "POST":
-        form = recuperarContraseñaForm(request.POST)
-        if form.is_valid():
-            ci = form.cleaned_data['cedula']
-            if User.objects.filter(username=ci).exists():
-                if (form.cleaned_data['contraseña1']!= form.cleaned_data['contraseña2']):
-                    msg = "Las contraseñas no coinciden. Intente de nuevo."
-                    return render(request,'recuperarContrasenia.html',{'form' : form, 'msg' : msg})
-                user = User.objects.get(username=ci)
-                user.set_password(form.cleaned_data['contraseña1'])
-                user.save()
-                msg = "Su contraseña fue cambiada."
-                return render(request,'recuperarContrasenia.html',{'form' : form, 'msg' : msg})  
-            else:
-                msg = "La cédula ingresada no se encuentra registrada."
-                return render(request,'recuperarContrasenia.html',{'form' : form, 'msg' : msg})
-    else:
-        form = recuperarContraseñaForm()
-    return render(request,'recuperarContrasenia.html',{'form': form})
+    return render(request,'cambiarContrasenia.html',{'form': form})
 
 def cerrarSesion(request):
     logout(request)
     return HttpResponseRedirect('/')
 
-@login_required
 def crearItem(request):
     if not request.user.groups.filter(name = "Administradores").exists():
         raise PermissionDenied
     
-    color = black
     mensaje = None
+    color = black
     
     if request.method == "POST":
         form = itemForm(request.POST)
@@ -572,7 +594,7 @@ def categoria_estado(request, _id):
             categoria.nombre = cnombre
             categoria.estado = cestado
             categoria.save()
-            mensaje = "Categoría '%s'editada exitosamente." % cnombre
+            mensaje = "Categoría '%s' editada exitosamente." % cnombre
             color = green
 
             items = Item.objects.filter(id_categoria = _id)
@@ -635,17 +657,19 @@ def item_ingresar(request, _id):
                                                  'mensaje': mensaje,
                                                  'color': color})
 
+########## GESTIÓN DE SOLICITUDES ##########
+
 @login_required
 def solicitud(request):
-    solic_creadas = Crea.objects.order_by('-fecha')
+    crear = Crea.objects.order_by('-fecha')
 
     # Si es un técnico, solo puede ver sus solicitudes
     if not request.user.groups.filter(name = "Almacenistas").exists():
-        solicitudes = solic_creadas.filter(id_usuario = request.user)
-    # Si es almacenista o administrador, solo ve las solicitudes de los técnicos
+        solicitudes = crear.filter(id_usuario = request.user)
+    # Si es almacenista o administrador, puede ver las solicitudes de todos (incluyéndose)
     else:
-    #    solicitudes = solic_creadas.exclude(id_usuario = request.user)
-        solicitudes = solic_creadas.all()
+        solicitudes = crear
+    
     if request.method == "POST":
         pass  
     else:
