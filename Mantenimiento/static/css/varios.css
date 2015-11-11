@@ -1,14 +1,29 @@
 /*Tablas*/
 
-/*#rowspan thead, tbody {
+#rowspan thead, tbody {
 	display: block;
 }
 
 #rowspan tbody {	
 	height: 400px;
 	overflow-y: scroll;
-}*/
+}
 
+table.movimientos tbody tr:hover td {
+	background-color: #f1f1f1;
+} 
+
+table.movimientos tbody tr td:first-child {
+	width: 200px;
+} 
+
+table.movimientos tbody tr td:nth-child(2) {
+	width: 353px;
+} 
+
+table.movimientos tbody tr td:last-child {
+	width: 200px;
+} 
 
 /*Colores*/
 

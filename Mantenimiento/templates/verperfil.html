@@ -17,7 +17,7 @@
 {% block page_content %}
 
 	{% if latest %}
-		<table id="rowspan" cellspacing="0" class="tablesorter" style="width:100%">
+		<table id="rowspan" cellspacing="0" class="tablesorter movimientos" style="width:100%">
 		<thead>
 			<th><h3>Fecha</h3></th>
 			<th><h3>Acción</h3></th>
@@ -55,6 +55,27 @@
 		{% endfor %}
 		</tbody>
 		</table>
+
+	<script>
+			// Change the selector if needed
+	var $table = $('table.tablesorter'),
+	    $bodyCells = $table.find('tbody tr:first').children(),
+	    colWidth;
+
+	// Adjust the width of thead cells when window resizes
+	$(window).resize(function() {
+	    // Get the tbody columns width array
+	    colWidth = $bodyCells.map(function() {
+	        return $(this).width();
+	    }).get();
+	    
+	    // Set the width of thead columns
+	    $table.find('thead tr').children().each(function(i, v) {
+	        $(v).width(colWidth[i]+10);
+	    });    
+	}).resize(); // Trigger resize handler
+	</script>
+
 	{% else %}
 		<h3>No hay movimientos registrados.</h3>
 	{% endif %}
