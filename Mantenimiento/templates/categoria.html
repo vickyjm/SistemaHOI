@@ -22,12 +22,12 @@
 	{% if categorias %}
 		<table  id="rowspan" cellspacing="0" class="tablesorter categorias" style="width:100%">
 			<thead>
-				<th><h3>Nombre</h3></th>
+				<th id="head1"><h3>Nombre</h3></th>
 				{% if user|has_group:"Almacenistas" %}
-				<th><h3>Estado</h3></th>
+				<th id="head2"><h3>Estado</h3></th>
 				{% endif %}
 				{% if user|has_group:"Administradores" %}
-				<td><h3>Editar</h3></td>
+				<td class="head3"><h3>Editar</h3></td>
 				{% endif %}
 			</thead>
 
@@ -52,7 +52,7 @@
 				{% endfor %}
 			</tbody>
 		</table>
-
+		<script src="{{ STATIC_URL }}js/setHeaderWidth.js"></script>
 		<script>
 			var totals = new Array();
 
@@ -68,19 +68,49 @@
 					cellCount = totals[i];
 				}
 			}
-			if (cellCount == 1) {
-/*		    	document.getElementById("col1").style.background = "blue";*/
+			var head1 = document.getElementById('head1');			
+			var head2 = document.getElementById('head2');
+			var head3 = document.getElementById('head3');
+			var tdsCol1 = document.getElementsByClassName('col1');
+			var tdsCol2 = document.getElementsByClassName('col2');
+			var tdsCol3 = document.getElementsByClassName('col3');
+			var i;
 
-				var x = document.getElementsByTagName('td');
-				var i;
-				for (i = 0; i < x.length; i++){
-/*					x[i].style.backgroundColor= "red";*/
-					x[i].style.width = "753px";
+			if (cellCount == 1) {
+				head1.style.width = "735px";
+				for (i = 0; tdsCol1.length; i++){
+					tdsCol1[i].style.width = "735px";
+				}
+		    } else if (cellCount == 2) {
+				head1.style.width = "535px";
+				head2.style.width = "200px";
+				for (i = 0; tdsCol1.length; i++){
+					tdsCol1[i].style.width = "535px";
+					tdsCol2[i].style.width = "200px";
+				}
+		    } else {
+		    	head1.style.width = "535px";
+				head2.style.width = "100px";
+				head3.style.width = "100px";
+		    	for (i = 0; tdsCol1.length; i++){
+					tdsCol1[i].style.width = "535px";
+					tdsCol2[i].style.width = "100px";
+					tdsCol2[i].style.width = "100px";
 				}
 		    }
+		    var $table = $('table.tablesorter'),
+		    $bodyCells = $table.find('tbody tr:first').children(),
+		    colWidth;
+		    colWidth = $bodyCells.map(function() {
+		        return $(this).width();
+		    }).get();
+		    
+		    $table.find('thead tr').children().each(function(i, v) {
+		        $(v).width(colWidth[i]+10);
+		    });    
 		</script>
 
-		<script src="{{ STATIC_URL }}js/setHeaderWidth.js"></script>
+
 
 	{% else %}
 		<h3>No hay categorías registradas.</h3>
