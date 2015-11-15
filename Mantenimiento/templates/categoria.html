@@ -24,10 +24,10 @@
 			<thead>
 				<th id="head1"><h3>Nombre</h3></th>
 				{% if user|has_group:"Almacenistas" %}
-				<th id="head2"><h3>Estado</h3></th>
+				<th><h3>Estado</h3></th>
 				{% endif %}
 				{% if user|has_group:"Administradores" %}
-				<td id="head3"><h3>Editar</h3></td>
+				<td><h3>Editar</h3></td>
 				{% endif %}
 			</thead>
 
@@ -35,18 +35,18 @@
 				{% for cat in categorias %}
 				<tr>
 				{% if cat.estado %}
-					<td class="col1"><h3 class="activo">{{ cat }}</h3></td>
+					<td><h3 class="activo">{{ cat }}</h3></td>
 					{% if user|has_group:"Almacenistas" %}
-					<td class="col2"><h3 class="activo">{{ cat.get_estado_display }}</h3></td>
+					<td><h3 class="activo">{{ cat.get_estado_display }}</h3></td>
 					{% endif %}
 				{% else %}
 					{% if user|has_group:"Almacenistas" %}
-					<td class="col1"><h3 class="inactivo">{{ cat }}</h3></td>
-					<td class="col2"><h3 class="inactivo">{{ cat.get_estado_display }}</h3></td>
+					<td><h3 class="inactivo">{{ cat }}</h3></td>
+					<td><h3 class="inactivo">{{ cat.get_estado_display }}</h3></td>
 					{% endif %}
 				{% endif %}
 					{% if user|has_group:"Administradores" %}
-					<td class="col3"><a href="{% url 'categoria_editar' cat.id %}"><i class="fa fa-pencil-square-o"></i></a></td>
+					<td><a href="{% url 'categoria_editar' cat.id %}"><i class="fa fa-pencil-square-o"></i></a></td>
 					{% endif %}
 				</tr>
 				{% endfor %}
@@ -55,7 +55,6 @@
 		<script src="{{ STATIC_URL }}js/setHeaderWidth.js"></script>
 		<script>
 			var totals = new Array();
-
 			var table = document.getElementById("rowspan");
 			var rows = table.getElementsByTagName('tr');
 			for (var i = 0 ; i < rows.length ; i++){
@@ -68,35 +67,9 @@
 					cellCount = totals[i];
 				}
 			}
-			var head1 = document.getElementById('head1');			
-			var head2 = document.getElementById('head2');
-			var head3 = document.getElementById('head3');
-			var tdsCol1 = document.getElementsByClassName('col1');
-			var tdsCol2 = document.getElementsByClassName('col2');
-			var tdsCol3 = document.getElementsByClassName('col3');
-			var i;
-
+			var head1 = document.getElementById('head1');
 			if (cellCount == 1) {
 				head1.style.width = "735px";
-				for (i = 0; tdsCol1.length; i++){
-					tdsCol1[i].style.width = "735px";
-				}
-		    } else if (cellCount == 2) {
-				head1.style.width = "535px";
-				head2.style.width = "200px";
-				for (i = 0; tdsCol1.length; i++){
-					tdsCol1[i].style.width = "535px";
-					tdsCol2[i].style.width = "200px";
-				}
-		    } else {
-		    	head1.style.width = "535px";
-				head2.style.width = "100px";
-				head3.style.width = "100px";
-		    	for (i = 0; tdsCol1.length; i++){
-					tdsCol1[i].style.width = "535px";
-					tdsCol2[i].style.width = "100px";
-					tdsCol2[i].style.width = "100px";
-				}
 		    }
 
 		</script>
