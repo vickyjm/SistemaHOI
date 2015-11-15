@@ -2,7 +2,7 @@
 {% load templatetags %}
 
 {% block page_menu %}
-    <script type="text/javascript">
+    <script>
         window.onload = function WindowLoad(event) {
             document.getElementById("solicitud").setAttribute("class","current-page-item");
         }  
@@ -24,58 +24,60 @@
 	<h2>Solicitudes de retiro de ítems</h2>
 
 	{% if mensaje %}
-		<h3 style="color:#009900; text-align:center">{{mensaje}}</h3>
+		<h3 class="exito" style="text-align:center">{{mensaje}}</h3>
 	{% endif %} 
 
 	{% if solicitudes %}
-	<table  id="rowspan" cellspacing="0" class="tablesorter" style="width:100%" style="width:100%" >
+	<table  id="rowspan" cellspacing="0" class="tablesorter solicitudes" style="width:100%" style="width:100%">
  		<thead>
-			<th><h3>Fecha</h3></th>
-			<th><h3>Item</h3></th>
-			<th><h3>Cantidad</h3></th>
-			<th><h3>Categoría</h3></th>
-			<th><h3>Estado</h3></th>
+			<th id="head1"><h3>Fecha</h3></th>
+			<th id="head2"><h3>Item</h3></th>
+			<th id="head3"><h3>Cantidad</h3></th>
+			<th id="head4"><h3>Categoría</h3></th>
+			<th id="head5"><h3>Estado</h3></th>
 
 			{% if not user|has_group:"Almacenistas" %}
-				<td><h3>Editar</h3></td>
-				<td><h3>Eliminar</h3></td>
+				<td id="head6"><h3>Editar</h3></td>
+				<td id="head7"><h3>Eliminar</h3></td>
 			{% else %}
-				<th><h3>Usuario</h3></th>
-				<td><h3>Aprobar</h3></td>
-				<td><h3>Rechazar</h3></td>
+				<th id="head8"><h3>Usuario</h3></th>
+				<td id="head9"><h3>Aprobar</h3></td>
+				<td id="head10"><h3>Rechazar</h3></td>
 			{% endif %}
 		</thead>
-	<tbody>
-	{% for s in solicitudes %}
-		<tr>
-			<td><h3 style="color:#000000">{{ s.fecha|date:"d-m-Y, H:i" }}</td>
-			<td><h3 style="color:#000000">{{ s.id_item.nombre }}</h3></td>
-			<td><h3 style="color:#000000">{{ s.id_solicitud.cantidad }}</h3></td>
-			<td><h3 style="color:#000000">{{ s.id_item.id_categoria.nombre }}</h3></td>
-			<td><h3 style="color:#000000">{{ s.id_solicitud.get_estado_display }}</h3></td>
-            {% if not user|has_group:"Almacenistas" %}
-                <td><a href="{% url 'solicitud_editar' s.id %}"><i class="fa fa-pencil-square-o"></i></a></td>
+		<tbody>
+		{% for s in solicitudes %}
+			<tr>
+				<td><h3>{{ s.fecha|date:"d-m-Y, H:i" }}</td>
+				<td><h3>{{ s.id_item.nombre }}</h3></td>
+				<td><h3>{{ s.id_solicitud.cantidad }}</h3></td>
+				<td><h3>{{ s.id_item.id_categoria.nombre }}</h3></td>
+				<td><h3>{{ s.id_solicitud.get_estado_display }}</h3></td>
+	            
+	            {% if not user|has_group:"Almacenistas" %}
+	                <td><a href="{% url 'solicitud_editar' s.id %}"><i class="fa fa-pencil-square-o"></i></a></td>
 
-				{% if s.id_solicitud.estado == "E" %}
-					<td><a href="{% url 'solicitud_eliminar' s.id %}"> <i class="fa fa-trash-o"></i></a></td>
+					{% if s.id_solicitud.estado == "E" %}
+						<td><a href="{% url 'solicitud_eliminar' s.id %}"> <i class="fa fa-trash-o"></i></a></td>
+					{% else %}
+						<td>-</td>
+					{% endif%}
 				{% else %}
-					<td>-</td>
-				{% endif%}
-			{% else %}
-				<td><h3 style="color:#000000">{{ s.id_usuario.first_name}} {{ s.id_usuario.last_name}}</h3></td>
-				{% if s.id_solicitud.get_estado_display == "Esperando respuesta" %}
-					<td><a href="{% url 'solicitud_estado' s.id 'A' %}"><i class="fa fa-check" style="color:green"></i></a></td>
-					<td><a href="{% url 'solicitud_estado' s.id 'R' %}"><i class="fa fa-times" style="color:red"></i></a></td>
-				{% else %}
-					<td>-</td>
-					<td>-</td>
+					<td><h3>{{ s.id_usuario.first_name}} {{ s.id_usuario.last_name}}</h3></td>
+					{% if s.id_solicitud.get_estado_display == "Esperando respuesta" %}
+						<td><a href="{% url 'solicitud_estado' s.id 'A' %}"><i class="fa fa-check" style="color:green"></i></a></td>
+						<td><a href="{% url 'solicitud_estado' s.id 'R' %}"><i class="fa fa-times" style="color:red"></i></a></td>
+					{% else %}
+						<td>-</td>
+						<td>-</td>
+					{% endif %}
 				{% endif %}
-			{% endif %}
-		
-		</tr>
-	{% endfor %}
-	</tbody>
+			
+			</tr>
+		{% endfor %}
+		</tbody>
 	</table>
+	
 	{% else %}
 		<h3>No hay solicitudes registradas.</h3>
 	{% endif %}

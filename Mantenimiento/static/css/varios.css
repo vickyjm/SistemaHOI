@@ -1,34 +1,34 @@
-/*Tablas*/
+/* Tablas */
 
-/*#rowspan thead, tbody {
-	display: block;
+table.tablesorter {
+    display: flex;
+    flex-flow: column;
+    height: 400px;
+    width: 100%;
 }
 
-#rowspan tbody {	
-	height: 400px;
-	overflow-y: scroll;
-}*/
+table.tablesorter tbody {
+    /* body takes all the remaining available space */
+    flex: 1 1 auto;
+    display: block;
+    overflow-y: scroll;
+}
+
+table.tablesorter tbody tr {
+    width: 100%;
+}
+
+table.tablesorter thead,
+table.tablesorter tbody tr {
+    display: table;
+    table-layout: fixed;
+}
 
 
 /*Colores*/
 
-.exito {
-	color: #009900;
-}
+.exito { color: #009900; }
+.error { color: #CC0000; }
+.activo { color: #000000; }
+.inactivo { color: #808080; }
 
-.error {
-	color: #CC0000;
-}
-
-.activo {
-	color: #000000;
-}
-
-.inactivo {
-	color: #808080;
-}
-
-
-/*Logo*/
-
-#logoimagen{ float: right; }

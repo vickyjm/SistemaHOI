@@ -1,7 +1,7 @@
 {% extends "base-col3.html" %}
 
 {% block page_menu %}
-    <script type="text/javascript">
+    <script>
         window.onload = function WindowLoad(event) {
             document.getElementById("administracion").setAttribute("class","current-page-item");
             document.getElementById("adminDptos").setAttribute("class","current-page-item");
@@ -10,14 +10,14 @@
 {% endblock page_menu%}
 
 {% block page_title %}Editar Departamento '{{ nombre }}'{% endblock page_title %}
+
 {% block page_left %}
 	<td><a href="{% url 'adminDptos' %}" class="button"><i class="fa fa-arrow-left"></i></a></td>
-	
-
 {% endblock page_left %}
+
 {% block page_content %}
 <form action="" method="post">
-<table style="width:100%" >
+	<table style="width:100%">
 		<thead>
 		</thead>
 		{% csrf_token %}
@@ -27,21 +27,16 @@
 			{% endif %}
 			{% for field in form %}
 				{% if field.name != "estado" %}
-					<tr>
-					<td><h3>{{field.label_tag}}</h3></td>
 
-					 <h4 style = "color:#CC0000">{{ field.errors}}</h4>
-
-					</tr>
-					<tr>
-						<td><h3>{{field}}</h3></td>
-					</tr>
-
+					<h3>{{field.label_tag}}</h3>
+					<h4 class="error">{{ field.errors}}</h4>
+					<h3>{{field}}</h3>
+				
 				{% else %}
 
 					<table> 
 						<h3>Estado:</h3>						
-						<h4 style = "color:#CC0000">{{ field.errors}}</h4>
+						<h4 class="error">{{ field.errors}}</h4>
 						{% if item.estado == 1 %}
 							<tr>
 								<td><input checked="checked" id="id_estado_1" name="estado" style="background-color:white" type="radio" value="1"></td>
@@ -62,20 +57,20 @@
 								<td><h4><label for="id_estado_0">Inactivo</label></h4></td>
 							</tr>
 						{% endif %}
-
 					</table>
-				{% endif %}
 
-			 {% endfor %}
+				{% endif %}
+			{% endfor %}
 			<tr>
 				<td align="right"><br><br>
-				<input type="submit" class="button" name="Guardar" value="Guardar">
-				<input type="submit" class="button" name="GuardarOtro" value="Guardar y seguir editando">
-				<a href="{% url 'adminDptos' %}" class="button">Cancelar</a></td>
+					<input type="submit" class="button" name="Guardar" value="Guardar">
+					<input type="submit" class="button" name="GuardarOtro" value="Guardar y seguir editando">
+					<a href="{% url 'adminDptos' %}" class="button">Cancelar</a>
+				</td>
 			</tr>
 		</tbody>
 	</table>
-
 </form>
 {% endblock page_content %}
+
 {% block page_right %}{% endblock page_right %}

@@ -21,7 +21,7 @@
 	{% endif %}
 
 	{% if dptos %}
-	<table  id="rowspan" cellspacing="0" class="tablesorter" style="width:100%" >
+	<table  id="rowspan" cellspacing="0" class="tablesorter adminDptos" style="width:100%">
 		<thead>
 			<tr>
 				<th><h3>Nombre</h3></th>
@@ -55,7 +55,7 @@
 
 {% if user|has_group:"Administradores" %}
 	<h2>Crear Departamento</h2>
-	<table style="width:100%" >
+	<table style="width:100%">
 		<thead>
 		</thead>
 		{% csrf_token %}

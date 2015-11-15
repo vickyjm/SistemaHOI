@@ -25,24 +25,6 @@
 			$(function() {
 				$("table").tablesorter({debug: true});
 			});
-
-			// Change the selector if needed
-			var $table = $('table'),
-			    $bodyCells = $table.find('tbody tr:first').children(),
-			    colWidth;
-
-			// Adjust the width of thead cells when window resizes
-			$(window).resize(function() {
-			    // Get the tbody columns width array
-			    colWidth = $bodyCells.map(function() {
-			        return $(this).width();
-			    }).get();
-			    
-			    // Set the width of thead columns
-			    $table.find('thead tr').children().each(function(i, v) {
-			        $(v).width(colWidth[i]);
-			    });    
-			}).resize(); // Trigger resize handler
 		</script>	
 	</head>
 	<body>
@@ -52,7 +34,6 @@
 					<div class="row">
 						<div class="12u">
 												
-
 							<header id="header">
 								<h1><a href="#" id="logo">Departamento de Mantenimiento</a></h1>
 								<img id="logoimagen" src="{{ STATIC_URL }}images/logo.jpg" width="300px" height="100%" alt="Logo HOI" style="float:right;"/>
@@ -104,6 +85,8 @@
 									{% endblock page_title %}</h2>
 								{% block page_content %}
 								{% endblock page_content %}
+								
+								<script src="{{ STATIC_URL }}js/setHeaderWidth.js"></script>
 							</section>
 
 						</div>
