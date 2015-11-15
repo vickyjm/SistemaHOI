@@ -1,98 +1,36 @@
-/***Tablas***/
+/*** Tablas ***/
 
-table.tablesorter thead, table.tablesorter tbody {
-	display: block;
+table.tablesorter {
+    display: flex;
+    flex-flow: column;
+    height: 400px;
+    width: 100%;
 }
 
-table.tablesorter tbody {	
-	height: 400px;
-	overflow-y: scroll;
+table.tablesorter tbody {
+    /* body takes all the remaining available space */
+    flex: 1 1 auto;
+    display: block;
+    overflow-y: scroll;
 }
 
-table.movimientos tbody tr:hover td {
-	background-color: #f1f1f1;
-	/*background-color: #e4e4e4;*/
-} 
-
-table.movimientos td:first-child {
-	width: 200px;
-} 
-
-table.movimientos tbody tr td:nth-child(2) {
-	width: 353px;
-} 
-
-table.movimientos tbody tr td:last-child {
-	width: 200px;
-} 
-
-
-/* Solicitudes */
-table.solicitudes tbody tr td:first-child {
-	width: 150px;
-} 
-
-table.solicitudes tbody tr td:nth-child(2) {
-	width: 200px;
-} 
-
-table.solicitudes tbody tr td:nth-child(3) {
-	width: 80px;
-} 
-
-table.solicitudes tbody tr td:nth-child(4) {
-	width: 200px;
+table.tablesorter tbody tr {
+    width: 100%;
 }
 
-table.solicitudes tbody tr td:nth-child(5) {
-	width: 102px;
-} 
-
-table.solicitudes tbody tr td:nth-child(6) {
-	width: 330px;
-} 
-
-table.solicitudes tbody tr td:nth-child(7) {
-	width: 60px;
-} 
-
-table.solicitudes tbody tr td:last-child {
-	width: 60px;
-} 
-
-/* Categorias */
-
-table.categorias tbody tr td:first-child {
-	width: 553px;
-	max-width: 100%;
-} 
-
-table.categorias tbody tr td:nth-child(2) {
-	width: 100px;
-} 
-
-table.categorias tbody tr td:last-child {
-	width: 100px;
-} 
+table.tablesorter thead,
+table.tablesorter tbody tr {
+    display: table;
+    table-layout: fixed;
+}
 
 
 /*Colores*/
 
-.exito {
-	color: #009900;
-}
-
-.error {
-	color: #CC0000;
-}
-
-.activo {
-	color: #000000;
-}
-
-.inactivo {
-	color: #808080;
-}
+.exito { color: #009900; }
+.error { color: #CC0000; }
+.activo { color: #000000; }
+.inactivo { color: #808080; }
 
 
 /*Logo*/

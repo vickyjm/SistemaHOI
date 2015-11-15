@@ -683,14 +683,14 @@ def item_ingresar(request, _id):
 
 @login_required
 def solicitud(request):
-    crear = Crea.objects.order_by('-fecha')
+    solic_creadas = Crea.objects.order_by('-fecha')
 
     # Si es un técnico, solo puede ver sus solicitudes
     if not request.user.groups.filter(name = "Almacenistas").exists():
-        solicitudes = crear.filter(id_usuario = request.user)
+        solicitudes = solic_creadas.filter(id_usuario = request.user)
     # Si es almacenista o administrador, puede ver las solicitudes de todos (incluyéndose)
     else:
-        solicitudes = crear.all()
+        solicitudes = solic_creadas.all()
     
     if request.method == "POST":
         pass  
@@ -704,14 +704,14 @@ def solicitud_estado(request, _id, _nuevo_estado):
     if not request.user.groups.filter(name = "Almacenistas").exists():
         raise PermissionDenied    
     
-    crear = Crea.objects.order_by('-fecha')
+    solic_creadas = Crea.objects.order_by('-fecha')
 
     # Si es un técnico, solo puede ver sus solicitudes
     if not request.user.groups.filter(name = "Almacenistas").exists():
-        solicitudes = crear.filter(id_usuario = request.user)
+        solicitudes = solic_creadas.filter(id_usuario = request.user)
     # Si es almacenista o administrador, puede ver las solicitudes de todos (incluyéndose)
     else:
-        solicitudes = crear.all()
+        solicitudes = solic_creadas.all()
 
     if request.method == "GET":
         obj = Crea.objects.get(pk=_id)
@@ -747,7 +747,7 @@ def crearSolicitud(request):
     items = Item.objects.order_by('nombre') 
     falta_item = None
     falta_categoria = None
-    color = red   # Color rojo para los errores
+    color = red
 
     if request.method == "POST":
         mensaje = None

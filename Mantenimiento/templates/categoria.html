@@ -27,7 +27,7 @@
 				<th id="head2"><h3>Estado</h3></th>
 				{% endif %}
 				{% if user|has_group:"Administradores" %}
-				<td class="head3"><h3>Editar</h3></td>
+				<td id="head3"><h3>Editar</h3></td>
 				{% endif %}
 			</thead>
 
@@ -98,16 +98,7 @@
 					tdsCol2[i].style.width = "100px";
 				}
 		    }
-		    var $table = $('table.tablesorter'),
-		    $bodyCells = $table.find('tbody tr:first').children(),
-		    colWidth;
-		    colWidth = $bodyCells.map(function() {
-		        return $(this).width();
-		    }).get();
-		    
-		    $table.find('thead tr').children().each(function(i, v) {
-		        $(v).width(colWidth[i]+10);
-		    });    
+
 		</script>
 
 
