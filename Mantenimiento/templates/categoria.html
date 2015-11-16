@@ -2,7 +2,7 @@
 {% load templatetags %}
 
 {% block page_menu %}
-	<script type="text/javascript">
+	<script>
 		window.onload = function WindowLoad(event) {
 	    	document.getElementById("categorias").setAttribute("class","current-page-item");
 		}	/*No puedo poner el id en <li> porque class esta en <a>*/
@@ -15,44 +15,67 @@
 {% endblock page_left %}
 
 {% block page_content %}
-
 	{% if mensaje2 %}
-		<h3 style="color:#009900; text-align:center">{{mensaje2}}</h3>
+		<h3 class="exito" style="text-align:center">{{mensaje2}}</h3>
 	{% endif %}
 
 	{% if categorias %}
-	<table  id="rowspan" cellspacing="0" class="tablesorter categoria" style="width:100%" >
-	<thead>
-		<th><h3>Nombre</h3></th>
-		{% if user|has_group:"Almacenistas" %}
-		<th><h3>Estado</h3></th>
-		{% endif %}
-		{% if user|has_group:"Administradores" %}
-		<td><h3>Editar</h3></td>
-		{% endif %}
-	</thead>
+		<table  id="rowspan" cellspacing="0" class="tablesorter categorias" style="width:100%">
+			<thead>
+				<th id="head1"><h3>Nombre</h3></th>
+				{% if user|has_group:"Almacenistas" %}
+				<th><h3>Estado</h3></th>
+				{% endif %}
+				{% if user|has_group:"Administradores" %}
+				<td><h3>Editar</h3></td>
+				{% endif %}
+			</thead>
 
-	<tbody>
-		{% for cat in categorias %}
-		<tr>
-		{% if cat.estado %}
-			<td><h3 style="color:#000000">{{ cat }}</h3></td>
-			{% if user|has_group:"Almacenistas" %}
-			<td><h3 style="color:#000000">{{ cat.get_estado_display }}</h3></td>
-			{% endif %}
-		{% else %}
-			{% if user|has_group:"Almacenistas" %}
-			<td><h3>{{ cat }}</h3></td>
-			<td><h3>{{ cat.get_estado_display }}</h3></td>
-			{% endif %}
-		{% endif %}
-			{% if user|has_group:"Administradores" %}
-			<td ><a href="{% url 'categoria_editar' cat.id %}"><i class="fa fa-pencil-square-o"></i></a></td>
-			{% endif %}
-		</tr>
-		{% endfor %}
-	</tbody>
-	</table>
+			<tbody>
+				{% for cat in categorias %}
+				<tr>
+				{% if cat.estado %}
+					<td><h3 class="activo">{{ cat }}</h3></td>
+					{% if user|has_group:"Almacenistas" %}
+					<td><h3 class="activo">{{ cat.get_estado_display }}</h3></td>
+					{% endif %}
+				{% else %}
+					{% if user|has_group:"Almacenistas" %}
+					<td><h3 class="inactivo">{{ cat }}</h3></td>
+					<td><h3 class="inactivo">{{ cat.get_estado_display }}</h3></td>
+					{% endif %}
+				{% endif %}
+					{% if user|has_group:"Administradores" %}
+					<td><a href="{% url 'categoria_editar' cat.id %}"><i class="fa fa-pencil-square-o"></i></a></td>
+					{% endif %}
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		<script src="{{ STATIC_URL }}js/setHeaderWidth.js"></script>
+		<script>
+			var totals = new Array();
+			var table = document.getElementById("rowspan");
+			var rows = table.getElementsByTagName('tr');
+			for (var i = 0 ; i < rows.length ; i++){
+				totals.push(rows[i].getElementsByTagName('td').length);
+			}
+
+			cellCount = 0;
+			for (var i = 0 ; i < totals.length ; i++) {
+				if (totals[i] > 0){
+					cellCount = totals[i];
+				}
+			}
+			var head1 = document.getElementById('head1');
+			if (cellCount == 1) {
+				head1.style.width = "735px";
+		    }
+
+		</script>
+
+
+
 	{% else %}
 		<h3>No hay categorías registradas.</h3>
 	{% endif %}
@@ -62,7 +85,7 @@
 <form action="{% url 'categorias' %}" method="post" id="form">
 
 {% if user|has_group:"Administradores" %}
-<h2>Crear categoría</h2>
+	<h2>Crear categoría</h2>
 	<table style="width:100%" >
 		<thead>
 		</thead>
@@ -71,21 +94,21 @@
 			{% if mensaje %}
 				<h3 style={{color | safe}}>{{mensaje}}</h3>
 			{% endif %}
-			 {% for field in form %}
+			
+			{% for field in form %}
+				<h3>{{field.label_tag}}</h3>
+				<h4 class="error">{{ field.errors}}</h4>
+				{{field}}<br><br>
+			{% endfor %}
 
-				 <h3>{{field.label_tag}}</h3>
-				 <h4 style = "color:#CC0000">{{ field.errors}}</h4>
-				 {{field}}<br><br>
-
-				 {% endfor %}
-			 <tr>
+			<tr>
 				<td align="right"><br><br>
 				<!-- <input type="submit" class="button" value="Crear categoría"> -->
 				<a href="#" onClick=document.getElementById("form").submit() class="button" align = "right"><i class="fa fa-plus-square"></i>     Crear categoría</a>
 				</td>
 			</tr>
-			</tbody>
-		</table>
+		</tbody>
+	</table>
 {% endif %}
 
 </form>

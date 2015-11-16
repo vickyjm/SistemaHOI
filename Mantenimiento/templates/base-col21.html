@@ -14,35 +14,18 @@
 		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
 		<link rel="stylesheet" href="{{ STATIC_URL }}css/main.css" />
 		<link rel="stylesheet" href="{{ STATIC_URL }}css/navbar.css" />
-	
+
 		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 		<link rel="stylesheet" href="{{ STATIC_URL }}tablesorter/themes/blue/style.css" type="text/css" id="" media="print, projection, screen" />
 		<script type="text/javascript" src="{{ STATIC_URL }}tablesorter/jquery-latest.js"></script>
 		<script type="text/javascript" src="{{ STATIC_URL }}tablesorter/jquery.tablesorter.js"></script>
+		<link rel="stylesheet" href="{{ STATIC_URL }}css/varios.css" />	
 		<script type="text/javascript">
 			$(function() {
 				$("table").tablesorter({debug: true});
 			});
-
-			// Change the selector if needed
-			var $table = $('table'),
-			    $bodyCells = $table.find('tbody tr:first').children(),
-			    colWidth;
-
-			// Adjust the width of thead cells when window resizes
-			$(window).resize(function() {
-			    // Get the tbody columns width array
-			    colWidth = $bodyCells.map(function() {
-			        return $(this).width();
-			    }).get();
-			    
-			    // Set the width of thead columns
-			    $table.find('thead tr').children().each(function(i, v) {
-			        $(v).width(colWidth[i]);
-			    });    
-			}).resize(); // Trigger resize handler
-		</script>		
+		</script>	
 	</head>
 	<body>
 		<div id="page-wrapper">
@@ -50,7 +33,7 @@
 				<div class="container">
 					<div class="row">
 						<div class="12u">
-							
+												
 							<header id="header">
 								<h1><a href="#" id="logo">Departamento de Mantenimiento</a></h1>
 							</header>
@@ -101,6 +84,8 @@
 									{% endblock page_title %}</h2>
 								{% block page_content %}
 								{% endblock page_content %}
+								
+								<script src="{{ STATIC_URL }}js/setHeaderWidth.js"></script>
 							</section>
 
 						</div>

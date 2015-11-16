@@ -2,7 +2,7 @@
 {% load templatetags %}
 
 {% block page_menu %}
-    <script type="text/javascript">
+    <script>
         window.onload = function WindowLoad(event) {
             document.getElementById("administracion").setAttribute("class","current-page-item");
             document.getElementById("adminDptos").setAttribute("class","current-page-item");
@@ -11,48 +11,51 @@
 {% endblock page_menu%}
 
 {% block page_title %}Departamentos{% endblock page_title %}
+
 {% block page_left %}
 {% endblock page_left %}
-{% block page_content %}
 
-{% if mensaje2 %}
-	<h3 style="color:#009900; text-align:center">{{mensaje2}}</h3>
-{% endif %}
+{% block page_content %}
+	{% if mensaje2 %}
+		<h3 class="exito" style="text-align:center">{{mensaje2}}</h3>
+	{% endif %}
 
 	{% if dptos %}
-	<table  id="rowspan" cellspacing="0" class="tablesorter" style="width:100%" >
+	<table  id="rowspan" cellspacing="0" class="tablesorter adminDptos" style="width:100%">
 		<thead>
 			<tr>
-			<th><h3>Nombre</h3></th>
-			<th><h3>Estado</h3></th>
-			<td><h3>Editar</h3></td>
+				<th><h3>Nombre</h3></th>
+				<th><h3>Estado</h3></th>
+				<td><h3>Editar</h3></td>
 			</tr>
 		</thead>
-	<tbody>
-	{% for d in dptos %}
-		<tr>
-			{% if d.estado %}
-				<td><h3 style="color:#000000">{{ d }}</h3></td>
-				<td><h3 style="color:#000000">{{ d.get_estado_display }}</h3></td>
-			{% else %}
-				<td><h3>{{ d }}</h3></td>
-				<td><h3>{{ d.get_estado_display }}</h3></td>
-			{% endif %}
-			<td ><a href="{% url 'editarDpto' d.id %}"><i class="fa fa-pencil-square-o"></i></a></td>
-		</tr>
-	{% endfor %}
-	</tbody>
+		
+		<tbody>
+		{% for d in dptos %}
+			<tr>
+				{% if d.estado %}
+					<td><h3 class="activo">{{ d }}</h3></td>
+					<td><h3 class="activo">{{ d.get_estado_display }}</h3></td>
+				{% else %}
+					<td><h3 class="inactivo">{{ d }}</h3></td>
+					<td><h3 class="inactivo">{{ d.get_estado_display }}</h3></td>
+				{% endif %}
+				<td><a href="{% url 'editarDpto' d.id %}"><i class="fa fa-pencil-square-o"></i></a></td>
+			</tr>
+		{% endfor %}
+		</tbody>
 	</table>
 	{% else %}
 		<h3>No hay departamentos registrados.</h3>
 	{% endif %}
 {% endblock page_content %}
+
 {% block page_right %}
 <form action="{% url 'adminDptos' %}" method="post" id="form">
 
 {% if user|has_group:"Administradores" %}
-<h2>Crear Departamento</h2>
-	<table style="width:100%" >
+	<h2>Crear Departamento</h2>
+	<table style="width:100%">
 		<thead>
 		</thead>
 		{% csrf_token %}
@@ -60,21 +63,21 @@
 			{% if mensaje %}
 				<h3 style={{color | safe}}>{{mensaje}}</h3>
 			{% endif %}
-			 {% for field in form %}
 
-				 <h3>{{field.label_tag}}</h3>
-				 <h4 style = "color:#CC0000">{{ field.errors}}</h4>
-				 {{field}}<br><br>
-
-				 {% endfor %}
-			 <tr>
+			{% for field in form %}
+				<h3>{{field.label_tag}}</h3>
+				<h4 class="error">{{ field.errors}}</h4>
+				{{field}}<br><br>
+			{% endfor %}
+			
+			<tr>
 				<td align="right"><br><br>
 				<!-- <input type="submit" class="button" value="Crear departamento"> -->
 				<a href="#" onClick=document.getElementById("form").submit() class="button" align = "right"><i class="fa fa-plus-square"></i>     Crear departamento</a>
 				</td>
 			</tr>
-			</tbody>
-		</table>
+		</tbody>
+	</table>
 {% endif %}
 
 </form>

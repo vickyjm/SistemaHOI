@@ -1,30 +1,36 @@
 {% extends "base-col3.html" %}
 
 {% block page_menu %}
-	<a href="{% url 'inicio_sesion' %}">Iniciar sesión</a>
-	<a href="{% url 'registrar' %}">Registro</a>
+	<script>
+		window.onload = function WindowLoad(event) {
+	    	document.getElementById("inicio_sesion").setAttribute("class","current-page-item");
+		}	
+	</script>
 {% endblock page_menu%}
 
 {% block page_title %}Recuperar contraseña{% endblock page_title %}
-{% block page_left %}{% endblock page_left %}
+
+{% block page_left %}
+	<td><a href="{% url 'inicio_sesion' %}" class="button"><i class="fa fa-arrow-left"></i></a></td>
+{% endblock page_left %}
+
 {% block page_content %}
 <form action="{% url 'recuperarContraseña' %}" method="post">
-	<table style="width:100%" >
+	<table style="width:100%">
 		<thead>
 		</thead>
 		{% csrf_token %}
 		<tbody>
-			{% if msg %}
-			 	{{ msg }}<br><br>
+			{% if mensaje %}
+			 	<h3 style={{color | safe}}>{{mensaje}}</h3>
 			{% endif %}
+
 			{% for field in form %}
-
-			 <h3>{{field.label_tag}}</h3>
-
-			 {{ field.errors}}
-			 	{{field}}<br><br>
-
-			 {% endfor %}
+				<h3>{{field.label_tag}}</h3>
+				<h4 class="error">{{ field.errors}}</h4>
+				{{field}}
+				<br><br>
+			{% endfor %}
 
 			<tr>
 				<td align="right"><br><br>
@@ -32,9 +38,6 @@
 			</tr>
 		</tbody>
 	</table>
-
 </form>
-
-	
 {% endblock page_content %}
 {% block page_right %}{% endblock page_right %}

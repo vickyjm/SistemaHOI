@@ -3,14 +3,14 @@
 
 {% block page_menu %}
 	{% if user|has_group:"Administradores" %}
-	    <script type="text/javascript">
+	    <script>
 	        window.onload = function WindowLoad(event) {
 	            document.getElementById("administracion").setAttribute("class","current-page-item");
 	            document.getElementById("adminUsuarios").setAttribute("class","current-page-item");
 	        }  
 	    </script>
 	{% else %}
-		<script type="text/javascript">
+		<script>
 			window.onload = function WindowLoad(event) {
 		    	document.getElementById("registrar").setAttribute("class","current-page-item");
 			}	
@@ -19,15 +19,16 @@
 {% endblock page_menu%}
 
 {% block page_title %}Registro{% endblock page_title %}
+
 {% block page_left %}
 	{% if user|has_group:"Administradores" %}
 		<td><a href="{% url 'adminUsuarios' %}" class="button"><i class="fa fa-arrow-left"></i></a></td>
-		</ul>
 	{% endif %}
 {% endblock page_left %}
+
 {% block page_content %}
 <form action="{% url 'registrar' %}" method="post">
-	<table style="width:100%" >
+	<table style="width:100%">
 		<thead>
 		</thead>
 		{% csrf_token %}
@@ -35,14 +36,12 @@
 			{% if msg %}
 				<h3 style={{color | safe}}>{{msg}}</h3>
 			{% endif %}
+			
 			{% for field in form %}
-
-			 <h3>{{field.label_tag}}</h3>
-
-			 <h4 style = "color:#CC0000">{{ field.errors}}</h4>
-			 	{{field}}<br><br>
-
-			 {% endfor %}
+				<h3>{{field.label_tag}}</h3>
+				<h4 class="error">{{ field.errors}}</h4>
+				{{field}}<br><br>
+			{% endfor %}
 
 			<tr>
 				<td align="right"><br><br>
@@ -57,9 +56,7 @@
 			</tr>
 		</tbody>
 	</table>
-
 </form>
-
-	
 {% endblock page_content %}
+
 {% block page_right %}{% endblock page_right %}

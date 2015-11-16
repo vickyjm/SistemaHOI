@@ -17,7 +17,7 @@
 {% block page_content %}
 
 	{% if latest %}
-		<table id="rowspan" cellspacing="0" class="tablesorter" style="width:100%">
+	<table id="rowspan" cellspacing="0" class="tablesorter movimientos" style="width:100%">
 		<thead>
 			<th><h3>Fecha</h3></th>
 			<th><h3>Acción</h3></th>
@@ -54,7 +54,10 @@
 			{% endif %}
 		{% endfor %}
 		</tbody>
-		</table>
+	</table>
+
+
+
 	{% else %}
 		<h3>No hay movimientos registrados.</h3>
 	{% endif %}

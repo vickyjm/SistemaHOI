@@ -2,7 +2,7 @@
 {% load templatetags %}
 
 {% block page_menu %}
-    <script type="text/javascript">
+    <script>
         window.onload = function WindowLoad(event) {
             document.getElementById("solicitud").setAttribute("class","current-page-item");
         }  
@@ -10,13 +10,14 @@
 {% endblock page_menu%}
 
 {% block page_title %}Crear Solicitud{% endblock page_title %}
+
 {% block page_left %}
     <td><a href="{% url 'solicitud' %}" class="button"><i class="fa fa-arrow-left"></i></a></td>
 {% endblock page_left %}
-{% block page_content %}
 
+{% block page_content %}
 <form action="" method="post">
-	<table style="width:100%" >
+	<table style="width:100%">
 		<thead>
 		</thead>
 		{% csrf_token %}
@@ -25,9 +26,8 @@
 				<h3 style={{color | safe}}>{{mensaje}}</h3>
 			{% endif %}
 
-        
             {% if falta_categoria %}
-                <h4 style = "color:#CC0000">{{falta_categoria}}</h4>
+                <h4 class="error">{{falta_categoria}}</h4>
             {% endif %}
             <h3>Categoría:</h3>
                  <div class="field">
@@ -43,13 +43,13 @@
             <br>
 
             {% if falta_item %}
-                <h4 style = "color:#CC0000">{{falta_item}}</h4>
+                <h4 class="error">{{falta_item}}</h4>
             {% endif %}
             <h3>Item:</h3>
                 <div id="noitem">
                     <select id="roleSel2" class="cbx" name="blank" style="width: 100%;background-color:white">
                         <option value="">---------</option>
-                     </select>
+                    </select>
                 </div>
 
                 {% for cat in categorias %}
@@ -64,44 +64,44 @@
                          </select>
                     </div>
                 {% endfor %}
-            
-
-                <style type="text/css">
-                    .hidden { display: none; }
-                </style>
-
-                <script>
-                    var ids = {{categorias|safe}};
-                    var dropDown = document.getElementById("roleSel");
-
-                    dropDown.onchange = function(){
-                        for (var x = 0; x < ids.length; x++) {
-                            document.getElementById(ids[x]).style.display="none";
-                            if (this.value == ""){
-                                document.getElementById("noitem").style.display = "block";         
-                            } else {
-                                document.getElementById("noitem").style.display = "none";   
-                            }
-                        }
-                        document.getElementById(this.value).style.display = "block";
-                    }
-                </script>
             <br>
+
+            <style>
+                .hidden { display: none; }
+            </style>
+
+            <script> /* Dropdowns dependientes */
+                var ids = {{categorias|safe}};
+                var dropDown = document.getElementById("roleSel");
+
+                dropDown.onchange = function(){
+                    for (var x = 0; x < ids.length; x++) {
+                        document.getElementById(ids[x]).style.display="none";
+                        if (this.value == ""){
+                            document.getElementById("noitem").style.display = "block";         
+                        } else {
+                            document.getElementById("noitem").style.display = "none";   
+                        }
+                    }
+                    document.getElementById(this.value).style.display = "block";
+                }
+            </script>
 
             {% for field in form %}
                 <h3>{{field.label_tag}}</h3>
-                <h4 style = "color:#CC0000">{{ field.errors}}</h4>
-                {{field}}
-                 <br><br>
+                <h4 class="error">{{ field.errors}}</h4>
+                {{field}}<br><br>
 			{% endfor %}
-		<tr>
-			<td align="right"><br><br>
-            <input type="submit" class="button" name="Guardar" value="Crear">
-			<input type="submit" class="button" name="GuardaOtro" value="Crear y agregar otra solicitud">
-            <a href="{% url 'solicitud' %}" class="button">Cancelar</a></td>
-		</tr>
+
+    		<tr>
+    			<td align="right"><br><br>
+                <input type="submit" class="button" name="Guardar" value="Crear">
+    			<input type="submit" class="button" name="GuardaOtro" value="Crear y agregar otra solicitud">
+                <a href="{% url 'solicitud' %}" class="button">Cancelar</a></td>
+    		</tr>
 		</tbody>
 	</table>
 </form>
 {% endblock page_content %}
+
 {% block page_right %}{% endblock page_right %}
