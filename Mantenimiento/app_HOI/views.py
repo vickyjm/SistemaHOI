@@ -381,7 +381,6 @@ def item_editar(request, _id):
                         mensaje = "La categoría '%s' está inactiva, al cambiar el ítem '%s'\
                                    a esta categoría, también será desactivado.\n \
                                    ¿Está seguro de que desea editar el ítem '%s'?" %(icategoria,nombre,nombre)
-                        print (mensaje)
                         cantidad = form.cleaned_data['cantidad']
                         minimo = form.cleaned_data['minimo']
                         form = item_editarForm(request.POST)
@@ -498,7 +497,6 @@ def categoria(request):
         for i in categorias:
             item = Item.objects.filter(id_categoria = i.id)
             cantidad[i.nombre] = item.count()
-            print (cantidad)
 
     return render(request,'categoria.html', {'form': form, 
                                              'categorias': categorias, 
