@@ -825,12 +825,12 @@ def crearSolicitud(request):
 
                     if "Guardar" in request.POST:
                         solic_creadas = Crea.objects.order_by('-fecha')
-                        # Si es un técnico, solo puede ver sus solicitudes
+
                         if not request.user.groups.filter(name = "Almacenistas").exists():
                             solicitudes = solic_creadas.filter(id_usuario = request.user)
-                        # Si es almacenista o administrador, solo ve las solicitudes de los técnicos
+                            # Si es almacenista o administrador, puede ver las solicitudes de todos (incluyéndose)
                         else:
-                            solicitudes = solic_creadas.exclude(id_usuario = request.user)
+                            solicitudes = solic_creadas.all()
 
                         return render(request,'solicitud.html', {'user' : request.user,
                                                          'mensaje': mensaje,
@@ -889,9 +889,9 @@ def solicitud_editar(request, _id):
                     # Si es un técnico, solo puede ver sus solicitudes
                     if not request.user.groups.filter(name = "Almacenistas").exists():
                         solicitudes = solic_creadas.filter(id_usuario = request.user)
-                    # Si es almacenista o administrador, solo ve las solicitudes de los técnicos
+                    # Si es almacenista o administrador, puede ver las solicitudes de todos (incluyéndose)
                     else:
-                        solicitudes = solic_creadas.exclude(id_usuario = request.user)
+                        solicitudes = solic_creadas.all()
 
                     return render(request,'solicitud.html', {'user' : request.user,
                                                              'mensaje': mensaje,
