@@ -9,16 +9,18 @@
 {% endblock page_menu%}
 
 {% block page_title %}Cambiar contraseña{% endblock page_title %}
+
 {% block page_left %}{% endblock page_left %}
+
 {% block page_content %}
-<form action="{% url 'cambiarContraseña' %}" method="post">
+<form action="" method="post">
 	<table style="width:100%" >
 		<thead>
 		</thead>
 		{% csrf_token %}
 		<tbody>
-			{% if msg %}
-			 	{{ msg }}<br><br>
+			{% if mensaje %}
+			 	{{ mensaje }}<br><br>
 			{% endif %}
 			{% for field in form %}
 
@@ -31,7 +33,9 @@
 
 			<tr>
 				<td align="right"><br><br>
-				<input type="submit" class="button" value="Enviar"></td>
+					<input type="submit" class="button" name="Guardar" value="Guardar">
+					<a href="{% url 'verperfil' %}" class="button">Cancelar</a>
+				</td>
 			</tr>
 		</tbody>
 	</table>

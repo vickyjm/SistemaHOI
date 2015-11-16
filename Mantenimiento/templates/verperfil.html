@@ -63,17 +63,17 @@
 
 
 {% block page_right %}
-	<table style="width:100%" >
+	{% if mensaje %}
+		<h3 style="color:#009900">{{mensaje}}</h3>
+	{% endif %}
+	
+	<table style="width:100%">
 		<thead>
 			<td><h2>Información de usuario</h2></td>
-
-			
 			<td><a href="{% url 'perfil_editar' user.id %}"><i class="fa fa-pencil-square-o"></i></a></td>
 		</thead>
 	</table>
-{% if mensaje %}
-	<h3 style="color:#009900">{{mensaje}}</h3>
-{% endif %}
+
 	<table>
 		<tr><td style="width: 40%"><h4 style = "color: black;">Cédula: </h4></td>
 			<td style="width: 60%"><h4 style = "color: gray;"> {{ user.username }}</h4></td></tr>
@@ -97,12 +97,14 @@
 			<td style="width: 60%"><h4 style = "color: gray;"> {{ user.date_joined|date:"d-m-Y" }}</h4></td></tr>	
 	</table>
 
-<div>
 	<br>
-	<table style="width:100%" >
-		<thead>
-			<td><h2>Cambiar contraseña</h2></td>
-			<td><a href="{% url 'cambiarContraseña' %}"><i class="fa fa-pencil-square-o"></i></a></td>
-		</thead>
-	</table> </div>
+
+	<div>	
+		<table style="width:100%">
+			<thead>
+				<td><h2>Cambiar contraseña</h2></td>
+				<td><a href="{% url 'cambiarContraseña' %}"><i class="fa fa-pencil-square-o"></i></a></td>
+			</thead>
+		</table>
+	</div>
 {% endblock page_right %}

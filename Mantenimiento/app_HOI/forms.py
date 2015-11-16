@@ -287,7 +287,7 @@ class registroAdminForm(registroForm):
                     choices = tipoEmpleado, 
                     widget = forms.Select(attrs={'style': 'width:100%; background-color:white'}), 
                     label = "Cargo")
-    opciones_estado = ((False, 'Inactivo',), (True, 'Activo'))
+    opciones_estado = (('0', 'Inactivo',), ('1', 'Activo'))
     estado = forms.ChoiceField(required = True,
                     widget=forms.RadioSelect(attrs={'style': 'width:100%; background-color:white'}), 
                     label = "Estado",
