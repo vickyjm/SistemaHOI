@@ -23,6 +23,7 @@
 		<table  id="rowspan" cellspacing="0" class="tablesorter categorias" style="width:100%">
 			<thead>
 				<th id="head1"><h3>Nombre</h3></th>
+				<th><h3>Cantidad de ítems</h3></th>
 				{% if user|has_group:"Almacenistas" %}
 				<th><h3>Estado</h3></th>
 				{% endif %}
@@ -36,12 +37,14 @@
 				<tr>
 				{% if cat.estado %}
 					<td><h3 class="activo">{{ cat }}</h3></td>
+					<td><h3 class="activo">{% for key,value in cantidad.items %}{%ifequal key cat.nombre%} {{value}}{%endifequal%}{% endfor%}</h3></td>
 					{% if user|has_group:"Almacenistas" %}
 					<td><h3 class="activo">{{ cat.get_estado_display }}</h3></td>
 					{% endif %}
 				{% else %}
 					{% if user|has_group:"Almacenistas" %}
 					<td><h3 class="inactivo">{{ cat }}</h3></td>
+					<td><h3 class="inactivo">{% for key,value in cantidad.items %}{%ifequal key cat.nombre%} {{value}}{%endifequal%}{% endfor%}</h3></td>
 					<td><h3 class="inactivo">{{ cat.get_estado_display }}</h3></td>
 					{% endif %}
 				{% endif %}

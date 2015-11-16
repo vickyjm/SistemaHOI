@@ -486,14 +486,24 @@ def categoria(request):
                 color = green
                 form = categoriaForm()
         categorias = Categoria.objects.order_by('nombre')
+        cantidad= {}
+        for i in categorias:
+            item = Item.objects.filter(id_categoria = i.id)
+            cantidad[i.nombre] = item.count()
 
     else:
         form = categoriaForm()
         categorias = Categoria.objects.order_by('nombre')
+        cantidad = {}
+        for i in categorias:
+            item = Item.objects.filter(id_categoria = i.id)
+            cantidad[i.nombre] = item.count()
+            print (cantidad)
 
     return render(request,'categoria.html', {'form': form, 
                                              'categorias': categorias, 
                                              'mensaje': mensaje,
+                                             'cantidad': cantidad,
                                              'color': color})
 
 # Vista creada para editar una categoria en el sistema
@@ -541,20 +551,26 @@ def categoria_editar(request, _id):
                         accion = "Activar"
                         mensaje = "Al activar la categoría '%s' también se \
                                    activarán todos los ítems (%i) que le pertenecen.\
-                                   ¿Está seguro de que desea activar la categoría %s?" \
+                                   \n¿Está seguro de que desea activar la categoría %s?" \
                                    % (categoria.nombre,cantidad,categoria.nombre)
                     # si se desactivo
                     elif int(cestado) == 0:
                         accion = "Desactivar"
                         mensaje = "Al desactivar la categoría '%s' también se \
                                    desactivarán todos los ítems (%i) que le pertenecen.\
-                                   ¿Está seguro de que desea desactivar la categoría %s?" \
+                                   \n¿Está seguro de que desea desactivar la categoría %s?" \
                                    % (categoria.nombre,cantidad,categoria.nombre)
 
                     form = categoria_editarForm(request.POST)
+                    categorias = Categoria.objects.order_by('nombre')
+                    cantidad = {}
+                    for i in categorias:
+                        item = Item.objects.filter(id_categoria = i.id)
+                        cantidad[i.nombre] = item.count()
                     return render (request, 'categoria_estado.html', {'form': form,
                                                                       'accion': accion,
                                                                       'mensaje': mensaje,
+                                                                      'cantidad': cantidad,
                                                                       'categoria': categoria,
                                                                       'nombre': cnombre,
                                                                       'estado': int(cestado)})
@@ -568,8 +584,13 @@ def categoria_editar(request, _id):
             if "Guardar" in request.POST:
                 form = categoriaForm
                 categorias = Categoria.objects.order_by('nombre')
+                cantidad = {}
+                for i in categorias:
+                    item = Item.objects.filter(id_categoria = i.id)
+                    cantidad[i.nombre] = item.count()
                 return render(request,'categoria.html', {'form': form, 
-                                         'categorias': categorias, 
+                                         'categorias': categorias,
+                                         'cantidad':cantidad, 
                                          'mensaje': None,
                                          'mensaje2': mensaje,
                                          'color': color})
@@ -615,9 +636,14 @@ def categoria_estado(request, _id):
             if "Guardar" in request.POST:
                 form = categoriaForm
                 categorias = Categoria.objects.order_by('nombre')
+                cantidad = {}
+                for i in categorias:
+                    item = Item.objects.filter(id_categoria = i.id)
+                    cantidad[i.nombre] = item.count()
                 return render(request,'categoria.html', {'form': form, 
                                       'categorias': categorias, 
                                       'mensaje': None,
+                                      'cantidad':cantidad,
                                       'mensaje2': mensaje,
                                       'color': color})
     else:
