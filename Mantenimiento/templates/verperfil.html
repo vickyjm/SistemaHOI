@@ -9,7 +9,7 @@
 	</script>
 {% endblock page_menu%}
 
-{% block page_title %}Mis últimos movimientos de inventario{% endblock page_title %}
+{% block page_title %}Últimos movimientos de inventario{% endblock page_title %}
 
 {% block page_left %}
 {% endblock page_left %}
@@ -21,7 +21,7 @@
 		<thead>
 			<th><h3>Fecha</h3></th>
 			<th><h3>Acción</h3></th>
-			<th><h3>Nombre ítem</h3></th>
+			<th><h3>Nombre del ítem</h3></th>
 		</thead>
 		
 		<tbody>
@@ -30,28 +30,31 @@
 			<tr>
 				
 				{%if a|class_name == "Crea" %}
-					<td ><h3 style="color:#000000">{{ a.fecha|date:"d-m-Y, H:i" }}</h3></td>
 					{% if not user|has_group:"Almacenistas" %}
+						<td ><h3 style="color:#000000">{{ a.fecha|date:"d-m-Y, H:i" }}</h3></td>	
 						<td><h3 style="color:#000000">CREÓ solicitud de retiro de ítem</h3></td>
-					{% else %}
-						<td><h3 style="color:#000000">CREÓ y APROBÓ su solicitud de retiro de ítem</h3></td>
-					{% endif %}
-					{% for c in crear_todos %}
-						{% if c.id_solicitud == a.id_solicitud %}
-							<td><h3 style="color:#000000">{{ c.id_item.nombre }}</h3></td>
-						{% endif %}
-					{% endfor %}
-
-				{%elif a|class_name == "Aprueba" %}
-					{% if a.id_usuario != user %}
-						<td ><h3 style="color:#000000">{{ a.fecha|date:"d-m-Y, H:i" }}</h3></td>
-						<td><h3 style="color:#000000">APROBÓ solicitud de retiro de ítem</h3></td>
+						
 						{% for c in crear_todos %}
 							{% if c.id_solicitud == a.id_solicitud %}
 								<td><h3 style="color:#000000">{{ c.id_item.nombre }}</h3></td>
 							{% endif %}
 						{% endfor %}
 					{% endif %}
+				{%elif a|class_name == "Aprueba" %}
+					<td ><h3 style="color:#000000">{{ a.fecha|date:"d-m-Y, H:i" }}</h3></td>
+
+					{% for c in crear_todos %}
+						{% if c.id_solicitud == a.id_solicitud %}
+
+							{% if not c.id_usuario == a.id_usuario %}
+								<td><h3 style="color:#000000">APROBÓ solicitud de retiro de ítem</h3></td>
+							{% else %}
+								<td><h3 style="color:#000000">CREO/APROBÓ su solicitud de retiro de ítem</h3></td>
+							{% endif %}
+
+							<td><h3 style="color:#000000">{{ c.id_item.nombre }}</h3></td>
+						{% endif %}
+					{% endfor %}
 				{%else%}
 					<td ><h3 style="color:#000000">{{ a.fecha|date:"d-m-Y, H:i" }}</h3></td>
 					<td><h3 style="color:#000000">INGRESÓ {{a.cantidad}} item(s) al inventario</h3></td>
