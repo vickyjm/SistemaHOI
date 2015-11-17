@@ -23,7 +23,7 @@
 		<table  id="rowspan" cellspacing="0" class="tablesorter categorias" style="width:100%">
 			<thead>
 				<th id="head1"><h3>Nombre</h3></th>
-				<th><h3>Cantidad de ítems</h3></th>
+				<th id="head2"><h3>Cantidad de ítems</h3></th>
 				{% if user|has_group:"Almacenistas" %}
 				<th><h3>Estado</h3></th>
 				{% endif %}
@@ -71,8 +71,9 @@
 				}
 			}
 			var head1 = document.getElementById('head1');
-			if (cellCount == 1) {
-				head1.style.width = "735px";
+			if (cellCount == 2) {
+				head1.style.width = "365px";
+				head2.style.width = "370px";
 		    }
 
 		</script>
