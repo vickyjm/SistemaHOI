@@ -31,7 +31,7 @@
 				<td ><h3 style="color:#000000">{{ a.fecha|date:"d-m-Y, H:i" }}</h3></td>
 				
 				{%if a|class_name == "Crea" %}
-					<td><h3 style="color:#000000">CREÓ solicitud de retiro de item</h3></td>
+					<td><h3 style="color:#000000">CREÓ solicitud de retiro de ítem</h3></td>
 					{% for c in crear_todos %}
 						{% if c.id_solicitud == a.id_solicitud %}
 							<td><h3 style="color:#000000">{{ c.id_item.nombre }}</h3></td>
@@ -39,7 +39,7 @@
 					{% endfor %}
 
 				{%elif a|class_name == "Aprueba" %}
-					<td><h3 style="color:#000000">APROBÓ solicitud de retiro de item</h3></td>
+					<td><h3 style="color:#000000">APROBÓ solicitud de retiro de ítem</h3></td>
 					{% for c in crear_todos %}
 						{% if c.id_solicitud == a.id_solicitud %}
 							<td><h3 style="color:#000000">{{ c.id_item.nombre }}</h3></td>

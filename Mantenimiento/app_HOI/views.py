@@ -381,7 +381,6 @@ def item_editar(request, _id):
                         mensaje = "La categoría '%s' está inactiva, al cambiar el ítem '%s'\
                                    a esta categoría, también será desactivado.\n \
                                    ¿Está seguro de que desea editar el ítem '%s'?" %(icategoria,nombre,nombre)
-                        print (mensaje)
                         cantidad = form.cleaned_data['cantidad']
                         minimo = form.cleaned_data['minimo']
                         form = item_editarForm(request.POST)
@@ -486,14 +485,23 @@ def categoria(request):
                 color = green
                 form = categoriaForm()
         categorias = Categoria.objects.order_by('nombre')
+        cantidad= {}
+        for i in categorias:
+            item = Item.objects.filter(id_categoria = i.id)
+            cantidad[i.nombre] = item.count()
 
     else:
         form = categoriaForm()
         categorias = Categoria.objects.order_by('nombre')
+        cantidad = {}
+        for i in categorias:
+            item = Item.objects.filter(id_categoria = i.id)
+            cantidad[i.nombre] = item.count()
 
     return render(request,'categoria.html', {'form': form, 
                                              'categorias': categorias, 
                                              'mensaje': mensaje,
+                                             'cantidad': cantidad,
                                              'color': color})
 
 # Vista creada para editar una categoria en el sistema
@@ -541,20 +549,26 @@ def categoria_editar(request, _id):
                         accion = "Activar"
                         mensaje = "Al activar la categoría '%s' también se \
                                    activarán todos los ítems (%i) que le pertenecen.\
-                                   ¿Está seguro de que desea activar la categoría %s?" \
+                                   \n¿Está seguro de que desea activar la categoría %s?" \
                                    % (categoria.nombre,cantidad,categoria.nombre)
                     # si se desactivo
                     elif int(cestado) == 0:
                         accion = "Desactivar"
                         mensaje = "Al desactivar la categoría '%s' también se \
                                    desactivarán todos los ítems (%i) que le pertenecen.\
-                                   ¿Está seguro de que desea desactivar la categoría %s?" \
+                                   \n¿Está seguro de que desea desactivar la categoría %s?" \
                                    % (categoria.nombre,cantidad,categoria.nombre)
 
                     form = categoria_editarForm(request.POST)
+                    categorias = Categoria.objects.order_by('nombre')
+                    cantidad = {}
+                    for i in categorias:
+                        item = Item.objects.filter(id_categoria = i.id)
+                        cantidad[i.nombre] = item.count()
                     return render (request, 'categoria_estado.html', {'form': form,
                                                                       'accion': accion,
                                                                       'mensaje': mensaje,
+                                                                      'cantidad': cantidad,
                                                                       'categoria': categoria,
                                                                       'nombre': cnombre,
                                                                       'estado': int(cestado)})
@@ -568,8 +582,13 @@ def categoria_editar(request, _id):
             if "Guardar" in request.POST:
                 form = categoriaForm
                 categorias = Categoria.objects.order_by('nombre')
+                cantidad = {}
+                for i in categorias:
+                    item = Item.objects.filter(id_categoria = i.id)
+                    cantidad[i.nombre] = item.count()
                 return render(request,'categoria.html', {'form': form, 
-                                         'categorias': categorias, 
+                                         'categorias': categorias,
+                                         'cantidad':cantidad, 
                                          'mensaje': None,
                                          'mensaje2': mensaje,
                                          'color': color})
@@ -615,9 +634,14 @@ def categoria_estado(request, _id):
             if "Guardar" in request.POST:
                 form = categoriaForm
                 categorias = Categoria.objects.order_by('nombre')
+                cantidad = {}
+                for i in categorias:
+                    item = Item.objects.filter(id_categoria = i.id)
+                    cantidad[i.nombre] = item.count()
                 return render(request,'categoria.html', {'form': form, 
                                       'categorias': categorias, 
                                       'mensaje': None,
+                                      'cantidad':cantidad,
                                       'mensaje2': mensaje,
                                       'color': color})
     else:
@@ -825,12 +849,12 @@ def crearSolicitud(request):
 
                     if "Guardar" in request.POST:
                         solic_creadas = Crea.objects.order_by('-fecha')
-                        # Si es un técnico, solo puede ver sus solicitudes
+
                         if not request.user.groups.filter(name = "Almacenistas").exists():
                             solicitudes = solic_creadas.filter(id_usuario = request.user)
-                        # Si es almacenista o administrador, solo ve las solicitudes de los técnicos
+                            # Si es almacenista o administrador, puede ver las solicitudes de todos (incluyéndose)
                         else:
-                            solicitudes = solic_creadas.exclude(id_usuario = request.user)
+                            solicitudes = solic_creadas.all()
 
                         return render(request,'solicitud.html', {'user' : request.user,
                                                          'mensaje': mensaje,
@@ -889,9 +913,9 @@ def solicitud_editar(request, _id):
                     # Si es un técnico, solo puede ver sus solicitudes
                     if not request.user.groups.filter(name = "Almacenistas").exists():
                         solicitudes = solic_creadas.filter(id_usuario = request.user)
-                    # Si es almacenista o administrador, solo ve las solicitudes de los técnicos
+                    # Si es almacenista o administrador, puede ver las solicitudes de todos (incluyéndose)
                     else:
-                        solicitudes = solic_creadas.exclude(id_usuario = request.user)
+                        solicitudes = solic_creadas.all()
 
                     return render(request,'solicitud.html', {'user' : request.user,
                                                              'mensaje': mensaje,
