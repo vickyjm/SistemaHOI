@@ -28,10 +28,14 @@
 		{% for a in latest%}
 			{% if a.id_usuario == user %}
 			<tr>
-				<td ><h3 style="color:#000000">{{ a.fecha|date:"d-m-Y, H:i" }}</h3></td>
 				
 				{%if a|class_name == "Crea" %}
-					<td><h3 style="color:#000000">CREÓ solicitud de retiro de ítem</h3></td>
+					<td ><h3 style="color:#000000">{{ a.fecha|date:"d-m-Y, H:i" }}</h3></td>
+					{% if not user|has_group:"Almacenistas" %}
+						<td><h3 style="color:#000000">CREÓ solicitud de retiro de ítem</h3></td>
+					{% else %}
+						<td><h3 style="color:#000000">CREÓ y APROBÓ su solicitud de retiro de ítem</h3></td>
+					{% endif %}
 					{% for c in crear_todos %}
 						{% if c.id_solicitud == a.id_solicitud %}
 							<td><h3 style="color:#000000">{{ c.id_item.nombre }}</h3></td>
@@ -39,14 +43,17 @@
 					{% endfor %}
 
 				{%elif a|class_name == "Aprueba" %}
-					<td><h3 style="color:#000000">APROBÓ solicitud de retiro de ítem</h3></td>
-					{% for c in crear_todos %}
-						{% if c.id_solicitud == a.id_solicitud %}
-							<td><h3 style="color:#000000">{{ c.id_item.nombre }}</h3></td>
-						{% endif %}
-					{% endfor %}
-
+					{% if a.id_usuario != user %}
+						<td ><h3 style="color:#000000">{{ a.fecha|date:"d-m-Y, H:i" }}</h3></td>
+						<td><h3 style="color:#000000">APROBÓ solicitud de retiro de ítem</h3></td>
+						{% for c in crear_todos %}
+							{% if c.id_solicitud == a.id_solicitud %}
+								<td><h3 style="color:#000000">{{ c.id_item.nombre }}</h3></td>
+							{% endif %}
+						{% endfor %}
+					{% endif %}
 				{%else%}
+					<td ><h3 style="color:#000000">{{ a.fecha|date:"d-m-Y, H:i" }}</h3></td>
 					<td><h3 style="color:#000000">INGRESÓ {{a.cantidad}} item(s) al inventario</h3></td>
 					<td><h3 style="color:#000000">{{ a.id_item.nombre }}</h3></td>
 				{%endif%}
