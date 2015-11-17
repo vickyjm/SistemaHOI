@@ -27,13 +27,9 @@
 			{% for field in form %}
 			
 				{% if field.name != "estado" %}
-					<tr>
-						<td><h3>{{field.label_tag}}</h3></td>
-					</tr>
-			 		<h4 class="error">{{ field.errors}}</h4>
-					<tr>
-						<td><h3>{{field}}</h3></td>
-					</tr>
+					<h3>{{field.label_tag}}</h3>
+					<h4 class="error">{{ field.errors}}</h4>
+					<h3>{{field}}</h3>
 				{% else %}
 					<table>
 					<tr>

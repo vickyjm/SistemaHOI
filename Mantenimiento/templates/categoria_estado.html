@@ -12,11 +12,14 @@
 {% endblock page_title %}
 
 {% block page_left %}
+<td><a href="{% url 'categoria_editar' categoria.id %}" class="button"><i class="fa fa-arrow-left"></i></a></td>
 {% endblock page_left %}
 
 {% block page_content %}
 	{% if mensaje %}
-		<h2>{{mensaje}}</h2>	
+		<h2 style="text-align: justify;">{{mensaje}}</h2>
+		
+		<h2 style="text-align: justify;">¿Está seguro de que desea {{accion|lower}} la categoría {{nombrea}}?</h2>
 	{% endif %}
 
 	<form action="{% url 'categoria_estado' categoria.id %}" method="post">
@@ -45,7 +48,7 @@
 		 <tr>
 			<td align="right">
 				<input type="submit" class="button" name="Guardar" value={{accion}}>
-				<a href="{% url 'categoria_estado' categoria.id %}" class="button">Cancelar</a>
+				<a href="{% url 'categoria_editar' categoria.id %}" class="button">Cancelar</a>
 			</td>
 		</tr>
 		</tbody>

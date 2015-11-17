@@ -38,9 +38,30 @@
 			{% endif %}
 			
 			{% for field in form %}
-				<h3>{{field.label_tag}}</h3>
-				<h4 class="error">{{ field.errors}}</h4>
-				{{field}}<br><br>
+				{% if field.name != "estado" %}
+
+					 <h3>{{field.label_tag}}</h3>
+					 <h4 class="error">{{ field.errors}}</h4>
+					 {{field}}<br><br>
+				
+				{% else %}	
+
+				<table> 
+						<h3>Estado:</h3>						
+						<h4 class="error">{{ field.errors}}</h4>
+							<tr>
+								<td><input checked="checked" id="id_estado_1" name="estado" style="background-color:white" type="radio" value="1"></td>
+								<td><h4><label for="id_estado_1">Activo</label></h4></td>
+							</tr>
+							<tr>
+								<td><h3><input id="id_estado_0" name="estado" style="background-color:white" type="radio" value="0"></h3></td>
+								<td><h4><label for="id_estado_0">Inactivo</label></h4></td>
+
+							</tr>
+
+
+					</table>
+				{% endif %}
 			{% endfor %}
 
 			<tr>
