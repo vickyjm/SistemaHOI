@@ -24,7 +24,7 @@
 	<h2>Solicitudes de retiro de ítems</h2>
 
 	{% if mensaje %}
-		<h3 class="exito" style="text-align:center">{{mensaje}}</h3>
+		<h3 style={{color | safe}}>{{mensaje}}</h3>
 	{% endif %} 
 
 	{% if solicitudes %}

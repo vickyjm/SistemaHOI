@@ -715,34 +715,43 @@ def solicitud_estado(request, _id, _nuevo_estado):
 
     if request.method == "GET":
         obj = Crea.objects.get(pk=_id)
-        solicitud = Solicitud.objects.get(pk = obj.id_solicitud.pk)        
-        solicitud.estado = _nuevo_estado
-        solicitud.save()
-        
+        solicitud = Solicitud.objects.get(pk = obj.id_solicitud.pk)
         for s in solic_creadas: 
             if s.id_solicitud == solicitud:
                 item = Item.objects.get(pk = s.id_item.pk)
 
-        if _nuevo_estado == "A":
-            aprobado = Aprueba(id_usuario = request.user,
-                               id_solicitud = solicitud,
-                               fecha = datetime.datetime.now())
-            aprobado.save()
-            mensaje = "Solicitud aprobada exitosamente."
-
-            # Si la solicitud se aprobó, no se reduce la cantidad de ese item del inventario    
-            # porque ya se había reservado
-            item.save()
-        
+        if solicitud.cantidad > item.cantidad:
+            solicitud.estado = "R"
+            mensaje = "La solicitud no se puede aceptar. No quedan suficientes items en inventario."
+            color = red
         else:
-            # Si la solicitud se rechazó, se suma al inventario la cantidad que se había reservado
-            item.cantidad = item.cantidad + solicitud.cantidad
-            item.save()
-            mensaje = "Solicitud rechazada exitosamente."
+            solicitud.estado = _nuevo_estado
+        
+            if _nuevo_estado == "A":
+                aprobado = Aprueba(id_usuario = request.user,
+                                   id_solicitud = solicitud,
+                                   fecha = datetime.datetime.now())
+                aprobado.save()
+
+                # Si la solicitud se aprobó, no se reduce la cantidad de ese item del inventario    
+                # porque ya se había reservado
+                item.cantidad = item.cantidad - solicitud.cantidad
+                item.save()
+                mensaje = "Solicitud aprobada exitosamente."
+                color = green
+            else:
+                # Si la solicitud se rechazó, se suma al inventario la cantidad que se había reservado
+                item.cantidad = item.cantidad + solicitud.cantidad
+                item.save()
+                mensaje = "Solicitud rechazada exitosamente."
+                color = green
+        
+        solicitud.save()
     else:
         pass
     return render(request,'solicitud_estado.html', {'solicitudes':solicitudes,
-                                                    'mensaje':mensaje})
+                                                    'mensaje':mensaje,
+                                                    'color': color})
 
 @login_required
 def crearSolicitud(request):
@@ -819,9 +828,9 @@ def crearSolicitud(request):
                                           fecha = fecha)
                         aprobar.save() 
                     
-                    # Se hace una reserva hasta que "A" o "R"
-                    item.cantidad = item.cantidad - scantidad
-                    item.save()
+                        # Solo si es almacenista se elimina la cantidad del inventario
+                        item.cantidad = item.cantidad - scantidad
+                        item.save()
 
                     mensaje = "Solicitud creada exitosamente."
                     color = green
