@@ -548,16 +548,14 @@ def categoria_editar(request, _id):
                     if int(cestado) == 1:
                         accion = "Activar"
                         mensaje = "Al activar la categoría '%s' también se \
-                                   activarán todos los ítems (%i) que le pertenecen.\
-                                   \n¿Está seguro de que desea activar la categoría %s?" \
-                                   % (categoria.nombre,cantidad,categoria.nombre)
+                                   activarán todos los ítems (%i) que le pertenecen." \
+                                   % (categoria.nombre,cantidad)
                     # si se desactivo
                     elif int(cestado) == 0:
                         accion = "Desactivar"
                         mensaje = "Al desactivar la categoría '%s' también se \
-                                   desactivarán todos los ítems (%i) que le pertenecen.\
-                                   \n¿Está seguro de que desea desactivar la categoría %s?" \
-                                   % (categoria.nombre,cantidad,categoria.nombre)
+                                   desactivarán todos los ítems (%i) que le pertenecen." \
+                                   % (categoria.nombre,cantidad)
 
                     form = categoria_editarForm(request.POST)
                     categorias = Categoria.objects.order_by('nombre')
@@ -571,6 +569,7 @@ def categoria_editar(request, _id):
                                                                       'cantidad': cantidad,
                                                                       'categoria': categoria,
                                                                       'nombre': cnombre,
+                                                                      'nombrea': categoria.nombre,
                                                                       'estado': int(cestado)})
 
             categoria.nombre = cnombre
