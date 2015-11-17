@@ -26,18 +26,14 @@
 
 			{% for field in form %}
 				{% if field.name != "estado" %}
-					 <tr>
-					 	<td><h3>{{field.label_tag}}</h3></td>
-					 </tr>
-					 <h4 style = "color:#CC0000">{{ field.errors}}</h4>
-					 <tr>
-					 	<td>{{field}}<br><br></td>
-					 </tr>
+					 <h3>{{field.label_tag}}</h3>
+					<h4 class="error">{{ field.errors}}</h4>
+					<h3>{{field}}</h3>
 				{% else %}
 
 					<table> 
 						<h3>Estado:</h3>						
-						<h4 style = "color:#CC0000">{{ field.errors}}</h4>
+						<h4 style = "error">{{ field.errors}}</h4>
 						{% if item.estado == 1 %}
 							<tr>
 								<td><input checked="checked" id="id_estado_1" name="estado" style="background-color:white" type="radio" value="1"></td>
