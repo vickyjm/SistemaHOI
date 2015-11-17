@@ -893,7 +893,7 @@ def solicitud_editar(request, _id):
                     mensaje = "La solicitud no se puede modificar. No quedan unidades de este ítem."
                 else:
                     mensaje = "La solicitud no se puede editar. Solo quedan '%d' unidades de este ítem." % (item.cantidad)
-                    color = red
+                color = red
 
             elif scantidad == 0:
                 mensaje = "La cantidad de ítems a solicitar debe ser mayor a cero."
