@@ -779,7 +779,7 @@ def solicitud_estado(request, _id, _nuevo_estado):
 
 @login_required
 def crearSolicitud(request):
-    categorias = Categoria.objects.values_list('nombre', flat = True)
+    categorias = Categoria.objects.filter(estado=1).values_list('nombre', flat = True)
     items = Item.objects.order_by('nombre') 
     falta_item = None
     falta_categoria = None

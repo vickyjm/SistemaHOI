@@ -2,24 +2,25 @@
 {% load templatetags %}
 
 {% block page_menu %}
-    <script type="text/javascript">
+    <script>
         window.onload = function WindowLoad(event) {
             document.getElementById("inventario").setAttribute("class","current-page-item");
         }  
     </script>
 {% endblock page_menu%}
 
-{% block page_title %}
-{% endblock page_title %}
+{% block page_title %}{% endblock page_title %}
+
 {% block page_left %}{% endblock page_left %}
+
 {% block page_content %}
 
 {% if user|has_group:"Administradores" %}
-<table style="width:100%">
-<tr align="right">
-	<td><a href="{% url 'crearItem' %}" class="button" align = "right"><i class="fa fa-plus-square"></i>   Crear ítem</a></td>
-</tr>
-</table>
+	<table style="width:100%">
+	<tr align="right">
+		<td><a href="{% url 'crearItem' %}" class="button" align = "right"><i class="fa fa-plus-square"></i>   Crear ítem</a></td>
+	</tr>
+	</table>
 {%endif%}
 
 <h2>Ítems</h2>
@@ -28,7 +29,7 @@
 {% endif %} 
 
 {% if items %}
-<table  id="rowspan" cellspacing="0" class="tablesorter inventario" >
+	<table  id="rowspan" cellspacing="0" class="tablesorter inventario">
 	<thead >
 		<tr>
 		<th><h3>Nombre</h3></th>
@@ -48,21 +49,21 @@
 		{% for i in items %}
 		<tr>
 			{% if i.estado %}
-			<td><h3 style="color:#000000">{{ i }}</h3></td>
-			<td><h3 style="color:#000000">{{ i.cantidad }}</h3></td>
-			<td><h3 style="color:#000000">{{ i.id_categoria }}</h3></td>
-			<td><h3 style="color:#000000">{{ i.minimo }}</h3></td>
-			{% if user|has_group:"Almacenistas" %}
-			<td><h3 style="color:#000000">{{ i.get_estado_display }}</h3></td>
-			{% endif %}
+				<td><h3 class="activo">{{ i }}</h3></td>
+				<td><h3 class="activo">{{ i.cantidad }}</h3></td>
+				<td><h3 class="activo">{{ i.id_categoria }}</h3></td>
+				<td><h3 class="activo">{{ i.minimo }}</h3></td>
+				{% if user|has_group:"Almacenistas" %}
+					<td><h3 class="activo">{{ i.get_estado_display }}</h3></td>
+				{% endif %}
 			{% else %}
-			{% if user|has_group:"Almacenistas" %}
-			<td><h3>{{ i }}</h3></td>
-			<td><h3>{{ i.cantidad }}</h3></td>
-			<td><h3>{{ i.id_categoria }}</h3></td>
-			<td><h3>{{ i.minimo }}</h3></td>
-			<td><h3>{{ i.get_estado_display }}</h3></td>
-			{% endif %}
+				{% if user|has_group:"Almacenistas" %}
+					<td><h3 class="inactivo">{{ i }}</h3></td>
+					<td><h3 class="inactivo">{{ i.cantidad }}</h3></td>
+					<td><h3 class="inactivo">{{ i.id_categoria }}</h3></td>
+					<td><h3 class="inactivo">{{ i.minimo }}</h3></td>
+					<td><h3 class="inactivo">{{ i.get_estado_display }}</h3></td>
+				{% endif %}
 			{% endif %}
 			{% if user|has_group:"Almacenistas" %}
 				<td><h3><a href="{% url 'item_ingresar' i.id %}"><i class="fa fa-plus" style="color:green"></i></a></h3></td>
@@ -73,9 +74,10 @@
 		</tr>
 		{% endfor %}
 	</tbody>
+	</table>
 {% else %}
 	<h3>No hay ítems registrados.</h3>
 {% endif %}
-</table>
 {% endblock page_content %}
+
 {% block page_right %}{% endblock page_right %}
