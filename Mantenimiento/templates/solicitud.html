@@ -55,11 +55,11 @@
 				<td><h3>{{ s.id_solicitud.get_estado_display }}</h3></td>
 	            
 	            {% if not user|has_group:"Almacenistas" %}
-	                <td><a href="{% url 'solicitud_editar' s.id %}"><i class="fa fa-pencil-square-o"></i></a></td>
-
 					{% if s.id_solicitud.estado == "E" %}
+						<td><a href="{% url 'solicitud_editar' s.id %}"><i class="fa fa-pencil-square-o"></i></a></td>
 						<td><a href="{% url 'solicitud_eliminar' s.id %}"> <i class="fa fa-trash-o"></i></a></td>
 					{% else %}
+						<td>-</td>
 						<td>-</td>
 					{% endif%}
 				{% else %}
