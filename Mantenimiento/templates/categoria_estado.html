@@ -12,6 +12,7 @@
 {% endblock page_title %}
 
 {% block page_left %}
+<td><a href="{% url 'categoria_editar' categoria.id %}" class="button"><i class="fa fa-arrow-left"></i></a></td>
 {% endblock page_left %}
 
 {% block page_content %}
@@ -45,7 +46,7 @@
 		 <tr>
 			<td align="right">
 				<input type="submit" class="button" name="Guardar" value={{accion}}>
-				<a href="{% url 'categoria_estado' categoria.id %}" class="button">Cancelar</a>
+				<a href="{% url 'categoria_editar' categoria.id %}" class="button">Cancelar</a>
 			</td>
 		</tr>
 		</tbody>
