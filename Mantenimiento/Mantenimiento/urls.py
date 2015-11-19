@@ -4,6 +4,7 @@ from app_HOI import views
 from . import settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls import handler404, handler403
+from django.views.generic import TemplateView
 
 handler403 = 'app_HOI.views.permission_denied'
 handler404 = 'app_HOI.views.page_not_found'
@@ -33,6 +34,7 @@ urlpatterns = patterns('',
     url(r'^solicitud/(?P<_id>\d+)/editar', views.solicitud_editar,name = 'solicitud_editar'),
     url(r'^solicitud/(?P<_id>\d+)/eliminar', views.solicitud_eliminar,name = 'solicitud_eliminar'),
     url(r'^solicitud_estado/(?P<_id>\d+)/(?P<_nuevo_estado>[A|R]+)', views.solicitud_estado,name = 'solicitud_estado'),
+    url(r'^usuario_inactivo$', TemplateView.as_view(template_name="usuario_inactivo.html"), name='usuario_inactivo'),
     url(r'^usuarios$',views.adminUsuarios,name='adminUsuarios'),
     url(r'^usuarios/(?P<_id>\d+)/editar$', views.editarUsuario,name = 'editarUsuario'),
     url(r'^verperfil$', views.verperfil, name = 'verperfil'),

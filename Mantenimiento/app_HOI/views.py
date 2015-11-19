@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.core import validators
 from django.core.exceptions import ValidationError
@@ -11,7 +12,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, HttpResponse
 from app_HOI.forms import * 
 from app_HOI.models import *
-from django.contrib.auth.decorators import login_required 
 from app_HOI.generarPdf import *
 from io import BytesIO
 import datetime
@@ -24,6 +24,9 @@ red = "color:#CC0000"
 black = "color:#000000"
 green = "color:#009900"
 
+
+def isactive_check(user):
+    return user.is_active
 
 ########## ERROR HANDLING ##########
 
@@ -153,7 +156,7 @@ def recuperarContraseña(request):
 
 
 ########## VISTAS DEL PERFIL DEL USUARIO ##########
-
+@user_passes_test(isactive_check,login_url='usuario_inactivo')
 @login_required
 def verperfil(request):
     grupo = request.user.groups.values('name')
@@ -174,6 +177,7 @@ def verperfil(request):
                                              'crear_todos': crear_todos,
                                              'latest': latest_sorted})
 
+@user_passes_test(isactive_check,login_url='usuario_inactivo')
 @login_required
 def perfil_editar(request, _id):
 
@@ -247,6 +251,7 @@ def cerrarSesion(request):
     logout(request)
     return HttpResponseRedirect('/')
 
+@user_passes_test(isactive_check,login_url='usuario_inactivo')
 def crearItem(request):
     if not request.user.groups.filter(name = "Administradores").exists():
         raise PermissionDenied
@@ -304,6 +309,7 @@ def crearItem(request):
                                              'color' : color})
 
 # Vista utilizada para editar un item en el sistema
+@user_passes_test(isactive_check,login_url='usuario_inactivo')
 def item_editar(request, _id):
     if not request.user.groups.filter(name = "Administradores").exists():
         raise PermissionDenied
@@ -423,6 +429,7 @@ def item_editar(request, _id):
                                                 'mensaje': mensaje,
                                                 'color': color})
 
+@user_passes_test(isactive_check,login_url='usuario_inactivo')
 def item_estado(request, _id):
     if not request.user.groups.filter(name = "Administradores").exists():
         raise PermissionDenied
@@ -456,7 +463,7 @@ def item_estado(request, _id):
     return render(request, 'item_estado.html',{'mensaje':mensaje,
                                                'item': item})
 
-
+@user_passes_test(isactive_check,login_url='usuario_inactivo')
 @login_required
 def categoria(request):
 
@@ -505,6 +512,7 @@ def categoria(request):
                                              'color': color})
 
 # Vista creada para editar una categoria en el sistema
+@user_passes_test(isactive_check,login_url='usuario_inactivo')
 def categoria_editar(request, _id):
     if not request.user.groups.filter(name = "Administradores").exists():
         raise PermissionDenied
@@ -604,7 +612,7 @@ def categoria_editar(request, _id):
                                                     'cantidad': cantidad,
                                                     'color':color})
 
-
+@user_passes_test(isactive_check,login_url='usuario_inactivo')
 def categoria_estado(request, _id):
     if not request.user.groups.filter(name = "Administradores").exists():
         raise PermissionDenied      
@@ -648,6 +656,7 @@ def categoria_estado(request, _id):
     return render(request,'categoria_estado.html', {'mensaje': mensaje, 'categoria': categoria})
            
 # Vista utilizada para mostrar los items del inventario
+@user_passes_test(isactive_check,login_url='usuario_inactivo')
 @login_required
 def inventario(request):
     items = Item.objects.order_by('nombre')
@@ -658,6 +667,7 @@ def inventario(request):
         pass
     return render(request,'inventario.html', {'items': items, 'mensaje':mensaje})
 
+@user_passes_test(isactive_check,login_url='usuario_inactivo')
 def item_ingresar(request, _id):
     if not request.user.groups.filter(name = "Almacenistas").exists():
         raise PermissionDenied
@@ -703,7 +713,7 @@ def item_ingresar(request, _id):
                                                  'color': color})
 
 ########## GESTIÓN DE SOLICITUDES ##########
-
+@user_passes_test(isactive_check,login_url='usuario_inactivo')
 @login_required
 def solicitud(request):
     solic_creadas = Crea.objects.order_by('-fecha')
@@ -723,6 +733,7 @@ def solicitud(request):
                                              'solicitudes': solicitudes})
 
 # Actualiza el estado de las solicitudes de un técnico
+@user_passes_test(isactive_check,login_url='usuario_inactivo')
 def solicitud_estado(request, _id, _nuevo_estado):
     if not request.user.groups.filter(name = "Almacenistas").exists():
         raise PermissionDenied    
@@ -777,6 +788,7 @@ def solicitud_estado(request, _id, _nuevo_estado):
                                                     'color': color})
 
 @login_required
+@user_passes_test(isactive_check,login_url='usuario_inactivo')
 def crearSolicitud(request):
     categorias = Categoria.objects.filter(estado=1).values_list('nombre', flat = True)
     items = Item.objects.order_by('nombre') 
@@ -883,6 +895,8 @@ def crearSolicitud(request):
                                                   'falta_item': falta_item,
                                                   'categorias': categorias,
                                                   'items':items})
+
+@user_passes_test(isactive_check,login_url='usuario_inactivo')
 @login_required
 def solicitud_editar(request, _id):
     obj = Crea.objects.get(pk = _id)
@@ -943,6 +957,7 @@ def solicitud_editar(request, _id):
                                                      'mensaje': mensaje,
                                                      'color': color})
 
+@user_passes_test(isactive_check,login_url='usuario_inactivo')
 @login_required
 def solicitud_eliminar(request, _id):
     if request.method == "GET":
@@ -956,6 +971,7 @@ def solicitud_eliminar(request, _id):
         obj.delete()
     return HttpResponseRedirect('/solicitud')
 
+@user_passes_test(isactive_check,login_url='usuario_inactivo')
 def imprimirReporte(request):
     if not request.user.groups.filter(name = "Administradores").exists():
         raise PermissionDenied
@@ -984,6 +1000,7 @@ def imprimirReporte(request):
         form = reportesForm()
     return render(request,'reporte.html',{'form':form,'msg':msg})
 
+@user_passes_test(isactive_check,login_url='usuario_inactivo')
 def adminUsuarios(request):
     if not request.user.groups.filter(name = "Administradores").exists():
         raise PermissionDenied
@@ -994,6 +1011,7 @@ def adminUsuarios(request):
         pass
     return render(request,'adminUsuarios.html',{'usuarios':usuarios})
 
+@user_passes_test(isactive_check,login_url='usuario_inactivo')
 def editarUsuario(request,_id):
     if not request.user.groups.filter(name = "Administradores").exists():
         raise PermissionDenied
@@ -1055,6 +1073,7 @@ def editarUsuario(request,_id):
                                                 'color':color,
                                                 'mensaje':msg})
 
+@user_passes_test(isactive_check,login_url='usuario_inactivo')
 def adminDptos(request):
 
     if not request.user.groups.filter(name = "Administradores").exists():
@@ -1087,6 +1106,7 @@ def adminDptos(request):
 
     return render(request,'adminDptos.html',{'dptos':dptos,'form':form,'color':color,'mensaje':msg})
 
+@user_passes_test(isactive_check,login_url='usuario_inactivo')
 def editarDpto(request,_id):
     if not request.user.groups.filter(name = "Administradores").exists():
         raise PermissionDenied
