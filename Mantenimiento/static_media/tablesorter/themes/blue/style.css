@@ -38,8 +38,16 @@ table.tablesorter tbody td {
 	vertical-align: top;
 }
 
-table.tablesorter tbody td h3 {
+/*table.tablesorter tbody td h3 {
 	color: gray;
+}*/
+
+table.tablesorter tbody td h3.activo {
+	color: #000000;
+}
+
+table.tablesorter tbody td h3.inactivo {
+	color: #808080;
 }
 
 table.tablesorter tbody tr.odd td {
