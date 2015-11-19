@@ -27,6 +27,7 @@ green = "color:#009900"
 
 def isactive_check(user):
     return user.is_active
+    
 
 ########## ERROR HANDLING ##########
 
