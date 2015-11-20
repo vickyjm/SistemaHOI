@@ -14,6 +14,7 @@ table.tablesorter tbody {
     overflow-y: scroll;
 }
 
+table.tablesorter thead,
 table.tablesorter tbody tr {
     width: 100%;
 }
