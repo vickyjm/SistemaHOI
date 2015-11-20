@@ -31,10 +31,10 @@ def isactive_check(user):
 
 def close(request):
     logout(request)
-    form = iniciarSesionForm()
-    msg = "Su usuario ha sido desactivado. Contacte al administrador."
-    return render(request,'inicio_sesion.html',{'form': form, 'msg': msg})
-    #return HttpResponseRedirect('usuario_inactivo')
+    #form = iniciarSesionForm()
+    #msg = "Su usuario ha sido desactivado. Contacte al administrador."
+    #return render(request,'inicio_sesion.html',{'form': form, 'msg': msg})
+    return HttpResponseRedirect('usuario_inactivo')
 
 ########## ERROR HANDLING ##########
 
