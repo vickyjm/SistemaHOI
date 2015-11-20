@@ -1,4 +1,5 @@
 @import url("http://fonts.googleapis.com/css?family=Ubuntu+Condensed");
+@import url('table.css');
 /*
 	Minimaxing by HTML5 UP
 	html5up.net | @n33co
@@ -1269,10 +1270,10 @@
 			}
 
 			#header {
-				background-image: -moz-linear-gradient(left, #008ead, white);
-				background-image: -webkit-linear-gradient(left, #008ead, white);
-				background-image: -ms-linear-gradient(left, #008ead, white);
-				background-image: linear-gradient(to right, #008ead, #008ead, white, white);
+				background-image: -moz-linear-gradient(top, #008ead, #007b9d);
+				background-image: -webkit-linear-gradient(top, #008ead, #007b9d);
+				background-image: -ms-linear-gradient(top, #008ead, #007b9d);
+				background-image: linear-gradient(top, #008ead, #007b9d);
 				-moz-box-sizing: content-box;
 				-webkit-box-sizing: content-box;
 				-ms-box-sizing: content-box;
