@@ -19,13 +19,13 @@
 		{% csrf_token %}
 		<tbody>
 			{% if msg %}
-			 	{{ msg }}<br><br>
+			 	<h3 class="error">{{ msg }}</h3><br>
 			{% endif %}
 			{% for field in form %}
 
 			 <h3>{{field.label_tag}}</h3>
 
-			 <h4 style = "color:#CC0000">{{ field.errors}}</h4>
+			 <h4 class="error">{{ field.errors}}</h4>
 			 {{field}}<br><br>
 			 
 			 {% endfor %}

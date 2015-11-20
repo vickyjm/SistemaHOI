@@ -1,0 +1,16 @@
+{% extends "base-col3.html" %}
+{% load templatetags %}
+
+{% block page_menu %}
+{% endblock page_menu%}
+
+{% block page_title %}Su usuario ha sido desactivado.{% endblock page_title %}
+
+{% block page_left %}
+{% endblock page_left %}
+
+{% block page_content %}
+	<h3 style="color:#000000">Por favor, contacte al administrador o inicie sesión con otro usuario.</h3>
+	<ul align="right"><a href="{% url 'inicio_sesion' %}" class="button">Iniciar sesión</a></ul>
+{% endblock page_content %}
+{% block page_right %}{% endblock page_right %}

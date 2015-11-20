@@ -64,6 +64,7 @@
 					<td><h3 class="inactivo">{{ i.minimo }}</h3></td>
 					<td><h3 class="inactivo">{{ i.get_estado_display }}</h3></td>
 				{% endif %}
+
 			{% endif %}
 			{% if user|has_group:"Almacenistas" %}
 				<td><h3><a href="{% url 'item_ingresar' i.id %}"><i class="fa fa-plus" style="color:green"></i></a></h3></td>
