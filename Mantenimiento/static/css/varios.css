@@ -3,15 +3,16 @@
 table.tablesorter {
     display: flex;
     flex-flow: column;
-    height: 400px;
+    max-height: 56vh;
     width: 100%;
+    background-color: #FFFFFF;
 }
 
 table.tablesorter tbody {
     /* body takes all the remaining available space */
     flex: 1 1 auto;
     display: block;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 table.tablesorter tbody tr {
@@ -24,6 +25,9 @@ table.tablesorter tbody tr {
     table-layout: fixed;
 }
 
+table.tablesorter tbody {
+    max-height: 100%;
+}
 
 /*Colores*/
 
@@ -32,3 +36,6 @@ table.tablesorter tbody tr {
 .activo { color: #000000; }
 .inactivo { color: #808080; }
 
+#main {
+    padding-bottom: 2em;
+}
