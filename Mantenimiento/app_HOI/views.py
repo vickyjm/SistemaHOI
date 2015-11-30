@@ -303,7 +303,8 @@ def crearItem(request):
                     ingresar.save()
 
                 mensaje = "Ítem '%s' creado exitosamente." % (inombre)
-
+                color = green
+                
                 if "Guardar" in request.POST:
                     items = Item.objects.order_by('nombre')
                     return render(request,'inventario.html', {'items': items, 'mensaje': mensaje})
