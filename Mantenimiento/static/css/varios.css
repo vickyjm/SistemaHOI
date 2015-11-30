@@ -39,3 +39,7 @@ table.tablesorter tbody {
 #main {
     padding-bottom: 2em;
 }
+
+#footer-wrapper{
+    padding: 20px 0;
+}
