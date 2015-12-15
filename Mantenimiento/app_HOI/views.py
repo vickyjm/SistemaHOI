@@ -102,7 +102,11 @@ def registro(request):
 
             if (form.cleaned_data['tipo'] == "tecnico"):
                 user.groups.add(Group.objects.get(name='Técnicos'))
+            elif (form.cleaned_data['tipo'] == "almacenista"):
+                user.groups.add(Group.objects.get(name='Almacenistas'))
+                user.groups.add(Group.objects.get(name='Técnicos'))
             else:
+                user.groups.add(Group.objects.get(name='Administradores'))
                 user.groups.add(Group.objects.get(name='Almacenistas'))
                 user.groups.add(Group.objects.get(name='Técnicos'))
                             
@@ -173,10 +177,17 @@ def verperfil(request):
         request.user.groups.add(Group.objects.get(name='Almacenistas'))
         request.user.groups.add(Group.objects.get(name='Técnicos'))
 
-    crear = Crea.objects.filter(id_usuario = request.user).order_by('-fecha')
+    today = datetime.datetime.now()
+    crear = Crea.objects.filter(id_usuario = request.user
+                               ).filter(fecha__gte=datetime.datetime(today.year,today.month,1)
+                               ).order_by('-fecha')
     crear_todos = Crea.objects.all()
-    aprobar = Aprueba.objects.filter(id_usuario = request.user).order_by('-fecha')
-    ingresar = Ingresa.objects.filter(id_usuario = request.user).order_by('-fecha')
+    aprobar = Aprueba.objects.filter(id_usuario = request.user
+                                    ).filter(fecha__gte=datetime.datetime(today.year,today.month,1)
+                                    ).order_by('-fecha')
+    ingresar = Ingresa.objects.filter(id_usuario = request.user
+                                     ).filter(fecha__gte=datetime.datetime(today.year,today.month,1)
+                                     ).order_by('-fecha')
     latest =  list(crear) + list(aprobar) + list(ingresar)
     latest_sorted = sorted(latest, key=lambda x: x.fecha, reverse=True)
 
@@ -725,14 +736,17 @@ def item_ingresar(request, _id):
 @user_passes_test(isactive_check,login_url='close')
 @login_required
 def solicitud(request):
+    today = datetime.datetime.now()
     solic_creadas = Crea.objects.order_by('-fecha')
 
     # Si es un técnico, solo puede ver sus solicitudes
     if not request.user.groups.filter(name = "Almacenistas").exists():
-        solicitudes = solic_creadas.filter(id_usuario = request.user)
+        solicitudes = solic_creadas.filter(id_usuario = request.user
+                                          ).filter(fecha__gte=datetime.datetime(today.year,today.month,1))
+
     # Si es almacenista o administrador, puede ver las solicitudes de todos (incluyéndose)
     else:
-        solicitudes = solic_creadas.all()
+        solicitudes = solic_creadas.all().filter(fecha__gte=datetime.datetime(today.year,today.month,1))
     
     if request.method == "POST":
         pass  
@@ -747,14 +761,16 @@ def solicitud_estado(request, _id, _nuevo_estado):
     if not request.user.groups.filter(name = "Almacenistas").exists():
         raise PermissionDenied    
     
+    today = datetime.datetime.now()
     solic_creadas = Crea.objects.order_by('-fecha')
 
     # Si es un técnico, solo puede ver sus solicitudes
     if not request.user.groups.filter(name = "Almacenistas").exists():
-        solicitudes = solic_creadas.filter(id_usuario = request.user)
+        solicitudes = solic_creadas.filter(id_usuario = request.user
+                                          ).filter(fecha__gte=datetime.datetime(today.year,today.month,1))
     # Si es almacenista o administrador, puede ver las solicitudes de todos (incluyéndose)
     else:
-        solicitudes = solic_creadas.all()
+        solicitudes = solic_creadas.all().filter(fecha__gte=datetime.datetime(today.year,today.month,1))
 
     if request.method == "GET":
         obj = Crea.objects.get(pk=_id)
@@ -765,7 +781,7 @@ def solicitud_estado(request, _id, _nuevo_estado):
 
         if solicitud.cantidad > item.cantidad:
             solicitud.estado = "R"
-            mensaje = "La solicitud no se puede aceptar. No quedan suficientes items en inventario."
+            mensaje = "La solicitud no se puede aprobar. No quedan suficientes ítems en inventario."
             color = red
         else:
             solicitud.estado = _nuevo_estado
@@ -776,16 +792,11 @@ def solicitud_estado(request, _id, _nuevo_estado):
                                    fecha = datetime.datetime.now())
                 aprobado.save()
 
-                # Si la solicitud se aprobó, no se reduce la cantidad de ese item del inventario    
-                # porque ya se había reservado
                 item.cantidad = item.cantidad - solicitud.cantidad
                 item.save()
                 mensaje = "Solicitud aprobada exitosamente."
                 color = green
             else:
-                # Si la solicitud se rechazó, se suma al inventario la cantidad que se había reservado
-                item.cantidad = item.cantidad + solicitud.cantidad
-                item.save()
                 mensaje = "Solicitud rechazada exitosamente."
                 color = green
         
